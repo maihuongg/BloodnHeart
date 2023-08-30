@@ -21,7 +21,7 @@ function Header() {
                   placeholder="Type Something"
                   id="searchText"
                   name="searchKeyword"
-                  onkeypress="handle"
+                  onKeyPress="handle"
                 />
                 <i className="fa fa-search" />
               </form>
@@ -45,7 +45,7 @@ function Header() {
               </li>
               <li>
                 <a href="profile.html">
-                  Profile <img src="assets/images/profile-header.jpg" alt="" />
+                  Profile <img src="../assets/images/profile-header.jpg" alt="" />
                 </a>
               </li>
             </ul>
