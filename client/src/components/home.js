@@ -1,7 +1,101 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 function Home() {
     return (
         <>
+            {/* Navbar Start */}
+            <div className="container-fluid bg-light position-relative shadow">
+                <nav className="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0 px-lg-5">
+                    <a
+                        href=""
+                        className="navbar-brand font-weight-bold text-secondary"
+                        style={{ fontSize: 50 }}
+                    >
+                        <i className="flaticon-043-teddy-bear" />
+                        <span className="text-primary">KidKinder</span>
+                    </a>
+                    <button
+                        type="button"
+                        className="navbar-toggler"
+                        data-toggle="collapse"
+                        data-target="#navbarCollapse"
+                    >
+                        <span className="navbar-toggler-icon" />
+                    </button>
+                    <div
+                        className="collapse navbar-collapse justify-content-between"
+                        id="navbarCollapse"
+                    >
+                        <div className="navbar-nav font-weight-bold mx-auto py-0">
+                            <Link to="/" className="nav-item nav-link active">
+                                Home
+                            </Link>
+                            <Link to="/about" className="nav-item nav-link">
+                                About
+                            </Link>
+                            <Link to="/class" className="nav-item nav-link">
+                                Classes
+                            </Link>
+                            <Link to="/team" className="nav-item nav-link">
+                                Teachers
+                            </Link>
+                            <Link to="/gallery" className="nav-item nav-link">
+                                Gallery
+                            </Link>
+                            <div className="nav-item dropdown">
+                                <a
+                                    href="#"
+                                    className="nav-link dropdown-toggle"
+                                    data-toggle="dropdown"
+                                >
+                                    Pages
+                                </a>
+                                <div className="dropdown-menu rounded-0 m-0">
+                                    <Link to="/blog" className="dropdown-item">
+                                        Blog Grid
+                                    </Link>
+                                    <Link to="/single" className="dropdown-item">
+                                        Blog Detail
+                                    </Link>
+                                </div>
+                            </div>
+                            <Link to="/contact" className="nav-item nav-link">
+                                Contact
+                            </Link>
+                        </div>
+                        <a href="" className="btn btn-primary px-4">
+                            Join Class
+                        </a>
+                    </div>
+                </nav>
+            </div>
+            {/* Navbar End */}
+
+            {/* Header Start */}
+            <div className="container-fluid bg-primary px-0 px-md-5 mb-5">
+                <div className="row align-items-center px-3">
+                    <div className="col-lg-6 text-center text-lg-left">
+                        <h4 className="text-white mb-4 mt-5 mt-lg-0">Kids Learning Center</h4>
+                        <h1 className="display-3 font-weight-bold text-white">
+                            New Approach to Kids Education
+                        </h1>
+                        <p className="text-white mb-4">
+                            Sea ipsum kasd eirmod kasd magna, est sea et diam ipsum est amet sed
+                            sit. Ipsum dolor no justo dolor et, lorem ut dolor erat dolore sed
+                            ipsum at ipsum nonumy amet. Clita lorem dolore sed stet et est justo
+                            dolore.
+                        </p>
+                        <a href="" className="btn btn-secondary mt-1 py-3 px-5">
+                            Learn More
+                        </a>
+                    </div>
+                    <div className="col-lg-6 text-center text-lg-right">
+                        <img className="img-fluid mt-5" src="img/header.png" alt="" />
+                    </div>
+                </div>
+            </div>
+            {/* Header End */}
             {/* Facilities Start */}
             <div className="container-fluid pt-5">
                 <div className="container pb-3">

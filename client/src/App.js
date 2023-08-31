@@ -3,19 +3,25 @@
 import React from 'react';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './components/header';
-import Slider from './components/slider';
+// import Header from './components/header';
+// import Slider from './components/slider';
 import Home from './components/home';
 import Footer from './components/footer';
 import About from './components/about';
+import Blog from './components/blog';
+import Class  from './components/class';
+import Teachers from './components/teacher';
+import Gallery from './components/gallery';
 function App() {
   return (
     <Router>
-      <Header />
-      <Slider />
-      {/* <Home/> */}
+     
       <Routes>
         <Route path="/about" Component= {About} />
+        <Route path="/blog" Component= {Blog} />
+        <Route path="/class" Component= {Class} />
+        <Route path="/team" Component= {Teachers} />
+        <Route path="/gallery" Component= {Gallery} />
         <Route path="/" Component= {Home} /> {/* Example of the Home route */}
       </Routes>
       <Footer />
