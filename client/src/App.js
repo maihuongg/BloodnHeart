@@ -12,11 +12,15 @@ import Blog from './components/blog';
 import Class  from './components/class';
 import Teachers from './components/teacher';
 import Gallery from './components/gallery';
+import Contact from './components/contact';
+import BlogDetail from './components/blogdetail';
 function App() {
   return (
     <Router>
      
       <Routes>
+        <Route path="/contact" Component={Contact} />
+        <Route path="/single" Component={BlogDetail} />
         <Route path="/about" Component= {About} />
         <Route path="/blog" Component= {Blog} />
         <Route path="/class" Component= {Class} />
