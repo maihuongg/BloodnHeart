@@ -12,8 +12,10 @@ function Home() {
                         className="navbar-brand font-weight-bold text-secondary"
                         style={{ fontSize: 50 }}
                     >
-                        <i className="flaticon-043-teddy-bear" />
-                        <span className="text-primary">KidKinder</span>
+
+                        {/* <i className="flaticon-blood-pressure" /> */}
+                        <img src="img/logo.png"></img>
+                        <span className="text-primary"  style={{ fontSize: 40 }}> BloodnHeart</span>
                     </a>
                     <button
                         type="button"
@@ -76,7 +78,7 @@ function Home() {
             <div className="container-fluid bg-primary px-0 px-md-5 mb-5">
                 <div className="row align-items-center px-3">
                     <div className="col-lg-6 text-center text-lg-left">
-                        <h4 className="text-white mb-4 mt-5 mt-lg-0">Kids Learning Center</h4>
+                        <h4 className="text-white mb-4 mt-5 mt-lg-0">Một cuộc đời ý nghĩa</h4>
                         <h1 className="display-3 font-weight-bold text-white">
                             New Approach to Kids Education
                         </h1>

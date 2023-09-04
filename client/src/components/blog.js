@@ -12,8 +12,8 @@ function Blog() {
                             className="navbar-brand font-weight-bold text-secondary"
                             style={{ fontSize: 50 }}
                         >
-                            <i className="flaticon-043-teddy-bear" />
-                            <span className="text-primary">KidKinder</span>
+                            <img src="img/logo.png"></img>
+                            <span className="text-primary" style={{ fontSize: 40 }}> BloodnHeart</span>
                         </a>
                         <button
                             type="button"
