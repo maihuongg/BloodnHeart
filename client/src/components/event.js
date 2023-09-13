@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function Class() {
+function Event() {
     return (
         <>
             {/* Navbar Start */}
@@ -27,22 +27,19 @@ function Class() {
                         id="navbarCollapse"
                     >
                         <div className="navbar-nav font-weight-bold mx-auto py-0">
-                            <Link to="/" className="nav-item nav-link">
+                        <Link to="/" className="nav-item nav-link">
                                 Home
                             </Link>
-                            <Link to="/about" className="nav-item nav-link">
-                                About
+                            <Link to="/event" className="nav-item nav-link active">
+                                Event
                             </Link>
-                            <Link to="/class" className="nav-item nav-link active">
-                                Classes
-                            </Link>
-                            <Link to="/team" className="nav-item nav-link">
+                            {/* <Link to="/team" className="nav-item nav-link">
                                 Teachers
                             </Link>
                             <Link to="/gallery" className="nav-item nav-link">
                                 Gallery
-                            </Link>
-                            <div className="nav-item dropdown">
+                            </Link> */}
+                            {/* <div className="nav-item dropdown">
                                 <a
                                     href="#"
                                     className="nav-link dropdown-toggle"
@@ -58,9 +55,15 @@ function Class() {
                                         Blog Detail
                                     </Link>
                                 </div>
-                            </div>
-                            <Link href="contact.html" className="nav-item nav-link">
+                            </div> */}
+                            <Link to="/contact" className="nav-item nav-link">
                                 Contact
+                            </Link>
+                            <Link to="/profile" className="nav-item nav-link">
+                                Profile
+                            </Link>
+                            <Link to="/about" className="nav-item nav-link">
+                                About
                             </Link>
                         </div>
                         <a href="" className="btn btn-primary px-4">
@@ -97,6 +100,24 @@ function Class() {
                             <span className="px-2">Popular Classes</span>
                         </p>
                         <h1 className="mb-4">Classes for Your Kids</h1>
+                    </div>
+                    <div className="row">
+                        <div className="col-12 text-center mb-2">
+                            <ul className="list-inline mb-4" id="portfolio-flters">
+                                <li className="btn btn-outline-primary m-1 active" data-filter="*">
+                                    All
+                                </li>
+                                <li className="btn btn-outline-primary m-1" data-filter=".first">
+                                    Playing
+                                </li>
+                                <li className="btn btn-outline-primary m-1" data-filter=".second">
+                                    Drawing
+                                </li>
+                                <li className="btn btn-outline-primary m-1" data-filter=".third">
+                                    Reading
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-lg-4 mb-5">
@@ -312,4 +333,4 @@ function Class() {
 
     );
 }
-export default Class;
+export default Event;

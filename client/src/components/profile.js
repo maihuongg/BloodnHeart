@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function BlogDetail() {
+function Profile() {
     return (
         <>
             <>
@@ -31,37 +31,40 @@ function BlogDetail() {
                                 <Link to="/" className="nav-item nav-link">
                                     Home
                                 </Link>
-                                <Link to="/about" className="nav-item nav-link">
-                                    About
+                                <Link to="/event" className="nav-item nav-link">
+                                    Event
                                 </Link>
-                                <Link to="/class" className="nav-item nav-link">
-                                    Classes
-                                </Link>
-                                <Link to="/team" className="nav-item nav-link">
-                                    Teachers
-                                </Link>
-                                <Link to="/gallery" className="nav-item nav-link">
-                                    Gallery
-                                </Link>
-                                <div className="nav-item dropdown">
-                                    <a
-                                        href="#"
-                                        className="nav-link dropdown-toggle"
-                                        data-toggle="dropdown"
-                                    >
-                                        Pages
-                                    </a>
-                                    <div className="dropdown-menu rounded-0 m-0">
-                                        <Link to="/blog" className="dropdown-item">
-                                            Blog Grid
-                                        </Link>
-                                        <Link to="/single" className="dropdown-item active">
-                                            Blog Detail
-                                        </Link>
-                                    </div>
+                                {/* <Link to="/team" className="nav-item nav-link">
+                                Teachers
+                            </Link>
+                            <Link to="/gallery" className="nav-item nav-link">
+                                Gallery
+                            </Link> */}
+                                {/* <div className="nav-item dropdown">
+                                <a
+                                    href="#"
+                                    className="nav-link dropdown-toggle"
+                                    data-toggle="dropdown"
+                                >
+                                    Pages
+                                </a>
+                                <div className="dropdown-menu rounded-0 m-0">
+                                    <Link to="/blog" className="dropdown-item">
+                                        Blog Grid
+                                    </Link>
+                                    <Link to="/single" className="dropdown-item">
+                                        Blog Detail
+                                    </Link>
                                 </div>
+                            </div> */}
                                 <Link to="/contact" className="nav-item nav-link">
                                     Contact
+                                </Link>
+                                <Link to="/profile" className="nav-item nav-link active">
+                                    Profile
+                                </Link>
+                                <Link to="/about" className="nav-item nav-link">
+                                    About
                                 </Link>
                             </div>
                             <a href="" className="btn btn-primary px-4">
@@ -541,4 +544,4 @@ function BlogDetail() {
 
     )
 }
-export default BlogDetail;
+export default Profile;

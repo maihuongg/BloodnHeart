@@ -33,19 +33,16 @@ function Home() {
                             <Link to="/" className="nav-item nav-link active">
                                 Home
                             </Link>
-                            <Link to="/about" className="nav-item nav-link">
-                                About
+                            <Link to="/event" className="nav-item nav-link">
+                                Event
                             </Link>
-                            <Link to="/class" className="nav-item nav-link">
-                                Classes
-                            </Link>
-                            <Link to="/team" className="nav-item nav-link">
+                            {/* <Link to="/team" className="nav-item nav-link">
                                 Teachers
                             </Link>
                             <Link to="/gallery" className="nav-item nav-link">
                                 Gallery
-                            </Link>
-                            <div className="nav-item dropdown">
+                            </Link> */}
+                            {/* <div className="nav-item dropdown">
                                 <a
                                     href="#"
                                     className="nav-link dropdown-toggle"
@@ -61,9 +58,15 @@ function Home() {
                                         Blog Detail
                                     </Link>
                                 </div>
-                            </div>
+                            </div> */}
                             <Link to="/contact" className="nav-item nav-link">
                                 Contact
+                            </Link>
+                            <Link to="/profile" className="nav-item nav-link">
+                                Profile
+                            </Link>
+                            <Link to="/about" className="nav-item nav-link">
+                                About
                             </Link>
                         </div>
                         <a href="" className="btn btn-primary px-4">

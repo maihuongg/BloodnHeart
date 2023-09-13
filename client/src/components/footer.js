@@ -5,13 +5,13 @@ function Footer() {
     return (
         <>
             {/* Footer Start */}
-            <div className="container-fluid bg-secondary text-white mt-5 py-5 px-sm-3 px-md-5">
+            <div className="container-fluid bg-secondary text-white mt-4 py-4 px-sm-3 px-md-5">
                 <div className="row pt-5">
                     <div className="col-lg-3 col-md-6 mb-5">
                         <a
                             href=""
-                            className="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
-                            style={{ fontSize: 40, lineHeight: 40 }}
+                            className="navbar-brand font-weight-bold text-primary"
+                            style={{ fontSize: 40}}
                         >
                             <i className="flaticon-043-teddy-bear" />
                             <span className="text-white">KidKinder</span>
