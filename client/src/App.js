@@ -14,6 +14,8 @@ import Teachers from './components/teacher';
 import Gallery from './components/gallery';
 import Contact from './components/contact';
 import Profile from './components/profile';
+import login from './components/login/login';
+import signUP from './components/signup/signup';
 function App() {
   return (
     <Router>
@@ -26,9 +28,12 @@ function App() {
         <Route path="/event" Component= {Event} />
         <Route path="/team" Component= {Teachers} />
         <Route path="/gallery" Component= {Gallery} />
+        <Route path="/login" Component= {login} />
+        <Route path="/sign-up" Component= {signUP} />
+
         <Route path="/" Component= {Home} /> {/* Example of the Home route */}
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </Router>
   );
 }

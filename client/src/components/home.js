@@ -15,7 +15,7 @@ function Home() {
 
                         {/* <i className="flaticon-blood-pressure" /> */}
                         <img src="img/logo.png"></img>
-                        <span className="text-primary"  style={{ fontSize: 40 }}> BloodnHeart</span>
+                        <span className="text-primary" style={{ fontSize: 40 }}> BloodnHeart</span>
                     </a>
                     <button
                         type="button"
@@ -36,29 +36,7 @@ function Home() {
                             <Link to="/event" className="nav-item nav-link">
                                 Event
                             </Link>
-                            {/* <Link to="/team" className="nav-item nav-link">
-                                Teachers
-                            </Link>
-                            <Link to="/gallery" className="nav-item nav-link">
-                                Gallery
-                            </Link> */}
-                            {/* <div className="nav-item dropdown">
-                                <a
-                                    href="#"
-                                    className="nav-link dropdown-toggle"
-                                    data-toggle="dropdown"
-                                >
-                                    Pages
-                                </a>
-                                <div className="dropdown-menu rounded-0 m-0">
-                                    <Link to="/blog" className="dropdown-item">
-                                        Blog Grid
-                                    </Link>
-                                    <Link to="/single" className="dropdown-item">
-                                        Blog Detail
-                                    </Link>
-                                </div>
-                            </div> */}
+
                             <Link to="/contact" className="nav-item nav-link">
                                 Contact
                             </Link>
@@ -69,8 +47,11 @@ function Home() {
                                 About
                             </Link>
                         </div>
-                        <a href="" className="btn btn-primary px-4">
-                            Join Class
+                        <a href="/login" className="btn btn-primary" style={{ margin: "10px 10px" }}>
+                            Login
+                        </a>
+                        <a href="/sign-up" className="btn btn-primary">
+                            Sign up
                         </a>
                     </div>
                 </nav>

@@ -34,29 +34,6 @@ function About() {
                                 <Link to="/event" className="nav-item nav-link">
                                     Event
                                 </Link>
-                                {/* <Link to="/team" className="nav-item nav-link">
-                                Teachers
-                            </Link>
-                            <Link to="/gallery" className="nav-item nav-link">
-                                Gallery
-                            </Link> */}
-                                {/* <div className="nav-item dropdown">
-                                <a
-                                    href="#"
-                                    className="nav-link dropdown-toggle"
-                                    data-toggle="dropdown"
-                                >
-                                    Pages
-                                </a>
-                                <div className="dropdown-menu rounded-0 m-0">
-                                    <Link to="/blog" className="dropdown-item">
-                                        Blog Grid
-                                    </Link>
-                                    <Link to="/single" className="dropdown-item">
-                                        Blog Detail
-                                    </Link>
-                                </div>
-                            </div> */}
                                 <Link to="/contact" className="nav-item nav-link">
                                     Contact
                                 </Link>
