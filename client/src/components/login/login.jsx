@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../login/login.css";
+// import "../login/login.css";
 function login() {
     return (
         <>
@@ -50,7 +50,7 @@ function login() {
                                 <form>
                                     <div className="form-group">
                                         <label className="form-control-label">USERNAME</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control inputtext" />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-control-label">PASSWORD</label>
