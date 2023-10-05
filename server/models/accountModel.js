@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema(
-  {
-    username: {
+const accountSchema = new mongoose.Schema(
+  { 
+    cccd: {
       type: String,
       require: true,
-      min: 6,
-      max: 20,
+      min: 9,
+      max: 12,
       unique: true,
     },
     email: {
@@ -24,8 +24,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isHospital: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Account", accountSchema);
