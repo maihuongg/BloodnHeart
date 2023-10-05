@@ -7,19 +7,19 @@ function Footer() {
             {/* Footer Start */}
             <div className="container-fluid bg-secondary text-white mt-4 py-4 px-sm-3 px-md-5">
                 <div className="row pt-5">
-                    <div className="col-lg-3 col-md-6 mb-5">
+                    <div className="col-lg-4 col-md-6 mb-5">
                         <a
                             href=""
                             className="navbar-brand font-weight-bold text-primary"
                             style={{ fontSize: 40}}
                         >
-                            <i className="flaticon-043-teddy-bear" />
-                            <span className="text-white">KidKinder</span>
+                            <img src="img/logo.png" width="50px" height="50px"></img>
+                            <span className="text-white"> BloodnHeart</span>
                         </a>
                         <p>
-                            Labore dolor amet ipsum ea, erat sit ipsum duo eos. Volup amet ea
-                            dolor et magna dolor, elitr rebum duo est sed diam elitr. Stet elitr
-                            stet diam duo eos rebum ipsum diam ipsum elitr.
+                            Hiến máu không làm bạn mất đi gì, nhưng nó có thể mang lại cuộc sống mới cho người khác.
+                            Mỗi lần hiến máu, bạn không chỉ cứu sống một người, mà còn trao đi sự hi vọng và tình yêu thương. 
+                            Một giọt máu hiến tặng, một cuộc đời được cứu. Hãy chung tay cứu người, chia sẻ yêu thương.
                         </p>
                         <div className="d-flex justify-content-start mt-4">
                             <a
@@ -52,113 +52,57 @@ function Footer() {
                             </a>
                         </div>
                     </div>
-                    <div className="col-lg-3 col-md-6 mb-5">
-                        <h3 className="text-primary mb-4">Get In Touch</h3>
+                    <div className="col-lg-4 col-md-6 mb-5">
+                        <h3 className="text-primary mb-4">Liên Lạc</h3>
                         <div className="d-flex">
                             <h4 className="fa fa-map-marker-alt text-primary" />
                             <div className="pl-3">
-                                <h5 className="text-white">Address</h5>
-                                <p>123 Street, New York, USA</p>
+                                <h5 className="text-white">Địa chỉ</h5>
+                                <p>Số 1 Võ Văn Ngân, phường Linh Chiểu, Tp.Thủ Đức, Tp.HCM</p>
                             </div>
                         </div>
                         <div className="d-flex">
                             <h4 className="fa fa-envelope text-primary" />
                             <div className="pl-3">
                                 <h5 className="text-white">Email</h5>
-                                <p>info@example.com</p>
+                                <p>hangn3569@gmail.com</p>
+                                <p>dangmaihuong1108@gmail.com</p>
                             </div>
                         </div>
                         <div className="d-flex">
                             <h4 className="fa fa-phone-alt text-primary" />
                             <div className="pl-3">
-                                <h5 className="text-white">Phone</h5>
-                                <p>+012 345 67890</p>
+                                <h5 className="text-white">Số điện thoại</h5>
+                                <p>0387229935</p>
+                                <p>0795995352</p>
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-3 col-md-6 mb-5">
-                        <h3 className="text-primary mb-4">Quick Links</h3>
+                    <div className="col-lg-4 col-md-6 mb-5">
+                        <h3 className="text-primary mb-4">Links</h3>
                         <div className="d-flex flex-column justify-content-start">
-                            <a className="text-white mb-2" href="#">
+                            <a className="text-white mb-2" href="/">
                                 <i className="fa fa-angle-right mr-2" />
-                                Home
+                                Trang chủ
                             </a>
-                            <a className="text-white mb-2" href="#">
+                            <a className="text-white mb-2" href="/sukien">
                                 <i className="fa fa-angle-right mr-2" />
-                                About Us
+                                Sự kiện
                             </a>
-                            <a className="text-white mb-2" href="#">
+                            <a className="text-white mb-2" href="/lienhe">
                                 <i className="fa fa-angle-right mr-2" />
-                                Our Classes
+                                Liên hệ
                             </a>
-                            <a className="text-white mb-2" href="#">
+                            <a className="text-white mb-2" href="/hoso">
                                 <i className="fa fa-angle-right mr-2" />
-                                Our Teachers
+                                Hồ sơ cá nhân
                             </a>
-                            <a className="text-white mb-2" href="#">
+                            <a className="text-white mb-2" href="gioithieu">
                                 <i className="fa fa-angle-right mr-2" />
-                                Our Blog
-                            </a>
-                            <a className="text-white" href="#">
-                                <i className="fa fa-angle-right mr-2" />
-                                Contact Us
+                                Giới thiệu
                             </a>
                         </div>
                     </div>
-                    <div className="col-lg-3 col-md-6 mb-5">
-                        <h3 className="text-primary mb-4">Newsletter</h3>
-                        <form action="">
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    className="form-control border-0 py-4"
-                                    placeholder="Your Name"
-                                    required="required"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="email"
-                                    className="form-control border-0 py-4"
-                                    placeholder="Your Email"
-                                    required="required"
-                                />
-                            </div>
-                            <div>
-                                <button
-                                    className="btn btn-primary btn-block border-0 py-3"
-                                    type="submit"
-                                >
-                                    Submit Now
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div
-                    className="container-fluid pt-5"
-                    style={{ borderTop: "1px solid rgba(23, 162, 184, 0.2)" }}
-                >
-                    <p className="m-0 text-center text-white">
-                        ©
-                        <a className="text-primary font-weight-bold" href="#">
-                            Your Site Name
-                        </a>
-                        . All Rights Reserved.
-                        {/*/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. *** /*/}
-                        Designed by
-                        <a
-                            className="text-primary font-weight-bold"
-                            href="https://htmlcodex.com"
-                        >
-                            HTML Codex
-                        </a>
-                        <br />
-                        Distributed By:
-                        <a href="https://themewagon.com" target="_blank">
-                            ThemeWagon
-                        </a>
-                    </p>
                 </div>
             </div>
             {/* Footer End */}

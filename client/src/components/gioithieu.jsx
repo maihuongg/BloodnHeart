@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function About() {
+function Gioithieu() {
     return (
         <>
             <>
@@ -29,23 +29,27 @@ function About() {
                         >
                             <div className="navbar-nav font-weight-bold mx-auto py-0">
                                 <Link to="/" className="nav-item nav-link">
-                                    Home
+                                    Trang chủ
                                 </Link>
-                                <Link to="/event" className="nav-item nav-link">
-                                    Event
+                                <Link to="/sukien" className="nav-item nav-link">
+                                    Sự kiện
                                 </Link>
-                                <Link to="/contact" className="nav-item nav-link">
-                                    Contact
+
+                                <Link to="/lienhe" className="nav-item nav-link">
+                                    Liên hệ
                                 </Link>
-                                <Link to="/profile" className="nav-item nav-link">
-                                    Profile
+                                <Link to="/hoso" className="nav-item nav-link">
+                                    Hồ sơ cá nhân
                                 </Link>
-                                <Link to="/about" className="nav-item nav-link active">
-                                    About
+                                <Link to="/gioithieu" className="nav-item nav-link active">
+                                    Giới thiệu
                                 </Link>
                             </div>
-                            <a href="" className="btn btn-primary px-4">
-                                Join Class
+                            <a href="/dangnhap" className="btn btn-primary" style={{ margin: "10px 10px" }}>
+                                Đăng nhập
+                            </a>
+                            <a href="/dangky" className="btn btn-primary">
+                                Đăng ký
                             </a>
                         </div>
                     </nav>
@@ -370,4 +374,4 @@ function About() {
 
     );
 }
-export default About;
+export default Gioithieu;

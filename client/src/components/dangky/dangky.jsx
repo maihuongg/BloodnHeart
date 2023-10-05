@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import "../signup/signup.css"
-function signUP(){
+function Dangky(){
     return(
         <> {/* Navbar Start */}
         <div className="container-fluid bg-light position-relative shadow">
@@ -30,7 +30,7 @@ function signUP(){
 
                     </div>
                     <a href="/" className="btn btn-primary m-3 position-absolute" style={{ right: "0px" }}>
-                        BACK <i class="fa fa-arrow-right"></i>
+                        QUAY LẠI <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </nav>
@@ -44,7 +44,7 @@ function signUP(){
                         <div className="col-lg-12 signup-key">
                             <i className="fa-solid fa-shield-plus"></i>
                         </div>
-                        <div className="col-lg-12 signup-title">SIGN UP</div>
+                        <div className="col-lg-12 signup-title">ĐĂNG KÝ</div>
                         <div className="col-lg-12 signup-form">
                             <div className="col-lg-12 signup-form">
                                 <form>
@@ -53,15 +53,15 @@ function signUP(){
                                         <input type="email" className="form-control" />
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-control-label">Username</label>
+                                        <label className="form-control-label">Tên đăng nhập</label>
                                         <input type="text" className="form-control" />
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-control-label">Password</label>
+                                        <label className="form-control-label">Mật khẩu</label>
                                         <input type="password" className="form-control" i="" />
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-control-label"> Repeat Password</label>
+                                        <label className="form-control-label">Điền lại mật khẩu</label>
                                         <input type="password" className="form-control" i="" />
                                     </div>
                                     <div className="col-lg-12 signupbttm">
@@ -70,7 +70,7 @@ function signUP(){
                                         </div>
                                         <div className="col-lg-12 signup-btm signup-button d-flex justify-content-center align-items-center">
                                             <button type="submit" className="btn btn-outline-primary">
-                                                CONTINUE <i class="fa-solid fa-arrow-right"></i>
+                                                ĐĂNG KÝ <i class="fa-solid fa-arrow-right"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -85,4 +85,4 @@ function signUP(){
         </>
     );
 }
-export default signUP;
+export default Dangky;

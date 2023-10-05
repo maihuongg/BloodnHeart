@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import "../login/login.css";
-function login() {
+function Dangnhap() {
     return (
         <>
             {/* Navbar Start */}
@@ -31,7 +31,7 @@ function login() {
 
                         </div>
                         <a href="/" className="btn btn-primary m-3 position-absolute" style={{ right: "0px" }}>
-                            BACK <i class="fa fa-arrow-right"></i>
+                            QUAY LẠI <i class="fa fa-arrow-right"></i>
                         </a>
                     </div>
                 </nav>
@@ -44,16 +44,16 @@ function login() {
                         <div className="col-lg-12 login-key">
                             <i className="fa fa-key" aria-hidden="true" />
                         </div>
-                        <div className="col-lg-12 login-title">LOGIN</div>
+                        <div className="col-lg-12 login-title">ĐĂNG NHẬP</div>
                         <div className="col-lg-12 login-form">
                             <div className="col-lg-12 login-form">
                                 <form>
                                     <div className="form-group">
-                                        <label className="form-control-label">USERNAME</label>
+                                        <label className="form-control-label">Tên đăng nhập</label>
                                         <input type="text" className="form-control inputtext" />
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-control-label">PASSWORD</label>
+                                        <label className="form-control-label">Mật khẩu</label>
                                         <input type="password" className="form-control" i="" />
                                     </div>
                                     <div className="col-lg-12 loginbttm">
@@ -62,7 +62,7 @@ function login() {
                                         </div>
                                         <div className="col-lg-12 login-btm login-button d-flex justify-content-center align-items-center">
                                             <button type="submit" className="btn btn-outline-primary">
-                                                CONTINUE <i class="fa-solid fa-arrow-right"></i>
+                                                ĐĂNG NHẬP <i class="fa-solid fa-arrow-right"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -79,4 +79,4 @@ function login() {
         </>
     );
 }
-export default login;
+export default Dangnhap;

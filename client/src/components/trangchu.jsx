@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-function Home() {
+function Trangchu() {
     return (
         <>
             {/* Navbar Start */}
@@ -31,27 +31,27 @@ function Home() {
                     >
                         <div className="navbar-nav font-weight-bold mx-auto py-0">
                             <Link to="/" className="nav-item nav-link active">
-                                Home
+                                Trang chủ
                             </Link>
-                            <Link to="/event" className="nav-item nav-link">
-                                Event
+                            <Link to="/sukien" className="nav-item nav-link">
+                                Sự kiện
                             </Link>
 
-                            <Link to="/contact" className="nav-item nav-link">
-                                Contact
+                            <Link to="/lienhe" className="nav-item nav-link">
+                                Liên hệ
                             </Link>
-                            <Link to="/profile" className="nav-item nav-link">
-                                Profile
+                            <Link to="/hoso" className="nav-item nav-link">
+                                Hồ sơ cá nhân
                             </Link>
-                            <Link to="/about" className="nav-item nav-link">
-                                About
+                            <Link to="/gioithieu" className="nav-item nav-link">
+                                Giới thiệu 
                             </Link>
                         </div>
-                        <a href="/login" className="btn btn-primary" style={{ margin: "10px 10px" }}>
-                            Login
+                        <a href="/dangnhap" className="btn btn-primary" style={{ margin: "10px 10px" }}>
+                            Đăng nhập
                         </a>
-                        <a href="/sign-up" className="btn btn-primary">
-                            Sign up
+                        <a href="/dangky" className="btn btn-primary">
+                            Đăng ký
                         </a>
                     </div>
                 </nav>
@@ -785,4 +785,4 @@ function Home() {
     );
 
 }
-export default Home;
+export default Trangchu;
