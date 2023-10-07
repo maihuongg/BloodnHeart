@@ -1,7 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react"
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/apiRequest";
 // import "../login/login.css";
 function Dangnhap() {
+    const [cccd, setCccd] = useState("");
+    const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const newUser = {
+            cccd: cccd,
+            password: password,
+        };
+        loginUser(newUser, dispatch, navigate);
+    }
     return (
         <>
             {/* Navbar Start */}
@@ -47,14 +63,22 @@ function Dangnhap() {
                         <div className="col-lg-12 login-title">ĐĂNG NHẬP</div>
                         <div className="col-lg-12 login-form">
                             <div className="col-lg-12 login-form">
-                                <form>
+                                <form onSubmit={handleLogin}>
                                     <div className="form-group">
-                                        <label className="form-control-label">Tên đăng nhập</label>
-                                        <input type="text" className="form-control inputtext" />
+                                        <label className="form-control-label">CCCD/CMND</label>
+                                        <input 
+                                          type="text"
+                                          className="form-control inputtext"
+                                          onChange={(e) => setCccd(e.target.value)}
+                                        />
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-control-label">Mật khẩu</label>
-                                        <input type="password" className="form-control" i="" />
+                                        <label className="form-control-label">MẬT KHẨU</label>
+                                        <input 
+                                          type="password"
+                                          className="form-control"
+                                          onChange={(e) => setPassword(e.target.value)} 
+                                        />
                                     </div>
                                     <div className="col-lg-12 loginbttm">
                                         <div className="col-lg-6 login-btm login-text">
@@ -73,9 +97,6 @@ function Dangnhap() {
                     </div>
                 </div>
             </div>
-
-
-
         </>
     );
 }
