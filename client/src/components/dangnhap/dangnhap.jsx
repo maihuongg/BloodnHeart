@@ -47,7 +47,7 @@ function Dangnhap() {
 
                         </div>
                         <a href="/" className="btn btn-primary m-3 position-absolute" style={{ right: "0px" }}>
-                            QUAY LẠI <i class="fa fa-arrow-right"></i>
+                            QUAY LẠI <i className="fa fa-arrow-right"></i>
                         </a>
                     </div>
                 </nav>
@@ -86,7 +86,7 @@ function Dangnhap() {
                                         </div>
                                         <div className="col-lg-12 login-btm login-button d-flex justify-content-center align-items-center">
                                             <button type="submit" className="btn btn-outline-primary">
-                                                ĐĂNG NHẬP <i class="fa-solid fa-arrow-right"></i>
+                                                ĐĂNG NHẬP <i className="fa-solid fa-arrow-right"></i>
                                             </button>
                                         </div>
                                     </div>

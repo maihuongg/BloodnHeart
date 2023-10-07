@@ -14,8 +14,9 @@ import {
 export const loginUser = async (account, dispatch, navigate) => {
     dispatch(loginStart());
     try {
-        const res = await axios.post("/v1/auth/login", account);
+        const res = await axios.post("http://localhost:8000/v1/auth/login", account);
         dispatch(loginSuccess(res.data));
+        console.log(res.data)
         navigate("/");
     } catch (err) {
         dispatch(loginFailed());
