@@ -42,6 +42,16 @@ const authMiddleware = {
 
         })
 
+    },
+    isUser: (req, res, next) => {
+        authMiddleware.verifyToken(req, res, () => {
+            if (!req.account.isHospital && !req.account.isAdmin) {
+               return next();
+            }
+            return res.status(403).json({ message: "Bạn không có quyền này" });
+
+        })
+
     }
 }
 module.exports = authMiddleware;

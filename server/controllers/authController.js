@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const Account = require('../models/accountModel');
 const Validate = require('validator');
 const jwt = require('jsonwebtoken');
+const UserProfile = require('../models/userProfileModel');
+
 const authController = {
     // register
     registerAccount: async (req, res) => {
@@ -14,13 +16,34 @@ const authController = {
                 const salt = await bcrypt.genSalt(10);
                 const hashed = await bcrypt.hash(req.body.password, salt);
 
+                // console.log('cccd:', req.body.cccd);
+                // console.log('email:', req.body.email);
                 const newAccount = new Account({
                     cccd: req.body.cccd,
                     email: req.body.email,
                     password: hashed,
                 });
-
+                // mặc định là user               
                 const account = await newAccount.save();
+                const account_id = account.id;
+                console.log("account_id", account_id);
+                const newUserProfile = new UserProfile({
+                    account_id: account_id,
+                    cccd: req.body.cccd,
+                    // fullName: req.body.fullName,
+                    // gender: req.body.gender,
+                    // images: req.body.images,
+                    // birthDay: req.body.birthDay,
+                    // phone: req.body.phone,
+                    email: req.body.email,
+                    // address: req.body.address,
+                    // bloodgroup: req.body.bloodgroup,
+                    // history: req.body.history,
+                });
+
+
+                const userProfile = await newUserProfile.save();
+                // console.log(userProfile)
                 return res.status(200).json(account);
             } else {
                 return res.status(400).json({ message: validationResult.message });
@@ -50,7 +73,7 @@ const authController = {
                 },
                     process.env.JWT_ACCESS_KEY,
                     {
-                        expiresIn: "30s"
+                        expiresIn: "24h"
                     }
                 );
                 const refreshToken = jwt.sign({
@@ -71,6 +94,7 @@ const authController = {
                     sameSite: "strict",
                 })
                 //login OK
+
                 const { password, ...orthers } = account._doc;
                 // return res.status(200).json({account,accessToken});
                 return res.status(200).json({ ...orthers, accessToken, refreshToken });
@@ -132,7 +156,7 @@ const authController = {
 
         }
     },
-    logoutAccount: async(req,res)=>{
+    logoutAccount: async (req, res) => {
         try {
             res.clearCookie("refreshToken");
             return res.status(200).json({ message: "Logout successful" });
@@ -141,7 +165,6 @@ const authController = {
         }
     }
 };
-
 
 //hàm validate Register
 
