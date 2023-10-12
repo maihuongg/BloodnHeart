@@ -73,7 +73,7 @@ const authController = {
                 },
                     process.env.JWT_ACCESS_KEY,
                     {
-                        expiresIn: "24h"
+                        expiresIn: "6h"
                     }
                 );
                 const refreshToken = jwt.sign({

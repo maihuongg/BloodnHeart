@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const hospitalProfileSchema = new mongoose.Schema(
     {
+        //đối với bệnh viện dùng số định danh
         sdd: {
             type: String,
             require: true,

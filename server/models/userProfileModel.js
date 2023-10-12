@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userProfileSchema = new mongoose.Schema(
     {
-        account_id:{type: String},
+        account_id: { type: String },
         cccd: {
             type: String,
             required: true,
@@ -27,7 +27,7 @@ const userProfileSchema = new mongoose.Schema(
             require: true,
             default: null,
         },
-        birthDay:{
+        birthDay: {
             type: Date,
             require: true,
             default: null,
@@ -38,21 +38,21 @@ const userProfileSchema = new mongoose.Schema(
             min: 10,
             max: 11,
             default: null,
-            
+
         },
-       
-          email: {
+
+        email: {
             type: String,
             require: true,
             max: 50,
             unique: true,
-          },
+        },
         address: {
             type: String,
             require: true,
             default: null,
         },
-        bloodgroup:{
+        bloodgroup: {
             type: String,
             require: true,
             max: 10,
