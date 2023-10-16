@@ -7,17 +7,39 @@ import { loginUser } from "../../redux/apiRequest";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
     const [password, setPassword] = useState("");
+    const [msgErr, setMsgErr] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         const newUser = {
             cccd: cccd,
             password: password,
         };
-        loginUser(newUser, dispatch, navigate);
+        try {
+            // const response = await loginUser(newUser, dispatch, navigate);
+            const response = await fetch('http://localhost:8000/v1/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                setMsgErr(errorData.message);
+            }
+            
+        } catch (error) {
+          
+            setMsgErr("An unexpected error occurred. Please try again.");
+        }
     }
+
+
+
     return (
         <>
             {/* Navbar Start */}
@@ -66,23 +88,34 @@ function Dangnhap() {
                                 <form onSubmit={handleLogin}>
                                     <div className="form-group">
                                         <label className="form-control-label">CCCD/CMND</label>
-                                        <input 
-                                          type="text"
-                                          className="form-control inputtext"
-                                          onChange={(e) => setCccd(e.target.value)}
+                                        <input
+                                            type="text"
+                                            className="form-control inputtext"
+                                            onChange={(e) => setCccd(e.target.value)}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-control-label">MẬT KHẨU</label>
-                                        <input 
-                                          type="password"
-                                          className="form-control"
-                                          onChange={(e) => setPassword(e.target.value)} 
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            onChange={(e) => setPassword(e.target.value)}
                                         />
                                     </div>
+
+                                    {/* Wrap the error message in a common parent */}
+                                    <div className="form-group">
+                                        {/* Error Message */}
+                                        {msgErr && (
+                                            <div className="alert alert-danger" role="alert">
+                                                {msgErr}
+                                            </div>
+                                        )}
+                                    </div>
+
                                     <div className="col-lg-12 loginbttm">
                                         <div className="col-lg-6 login-btm login-text">
-                                            {/* Error Message */}
+                                            {/* You can remove the error message rendering from here */}
                                         </div>
                                         <div className="col-lg-12 login-btm login-button d-flex justify-content-center align-items-center">
                                             <button type="submit" className="btn btn-outline-primary">
