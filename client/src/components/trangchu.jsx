@@ -56,7 +56,7 @@ function Trangchu() {
                         {user ? (
                             <>
                                 <a href="" className="nav-item" style={{ margin: "10px 10px" }}>
-                                    Hi <span> {user.cccd} </span>
+                                    <span> {user.cccd} </span>
                                 </a>
                                 <a href="/dangxuat" className="btn btn-primary">
                                     Đăng xuất

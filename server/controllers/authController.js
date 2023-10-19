@@ -184,24 +184,16 @@ async function validateRegister(body) {
         }
 
         // Continue with other validations
-        if (Validate.isEmpty(cccd)) {
-            return { message: 'CCCD không được để trống' };
+        if (Validate.isEmpty(cccd) || Validate.isEmpty(email) || Validate.isEmpty(password)) {
+            return { message: 'Vui lòng điền vào các mục còn trống' };
         }
 
         if (!Validate.isNumeric(cccd)) {
             return { message: 'CCCD phải là số' };
         }
 
-        if (Validate.isEmpty(email)) {
-            return { message: 'Email không được để trống' };
-        }
-
         if (!Validate.isEmail(email)) {
             return { message: 'Email không đúng định dạng' };
-        }
-
-        if (Validate.isEmpty(password)) {
-            return { message: 'Password không được để trống' };
         }
 
         return { isValid: true };

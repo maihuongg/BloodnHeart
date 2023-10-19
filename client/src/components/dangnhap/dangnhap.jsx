@@ -2,7 +2,11 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../redux/apiRequest";
+import {
+    loginFailed,
+    loginStart,
+    loginSuccess,
+} from "../../redux/authSlice";
 // import "../login/login.css";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
@@ -17,8 +21,8 @@ function Dangnhap() {
             cccd: cccd,
             password: password,
         };
-        try {
-            // const response = await loginUser(newUser, dispatch, navigate);
+        dispatch(loginStart());
+        try {    
             const response = await fetch('http://localhost:8000/v1/auth/login', {
                 method: 'POST',
                 body: JSON.stringify(newUser),
@@ -30,15 +34,20 @@ function Dangnhap() {
             if (!response.ok) {
                 const errorData = await response.json();
                 setMsgErr(errorData.message);
+                dispatch(loginFailed());
+            }else{
+                const data = await response.json();
+                dispatch(loginSuccess(data));
+                localStorage.setItem('token', data.accessToken);
+                navigate("/");
             }
             
         } catch (error) {
           
-            setMsgErr("An unexpected error occurred. Please try again.");
+            setMsgErr("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
+            dispatch(loginFailed());
         }
     }
-
-
 
     return (
         <>
@@ -75,61 +84,63 @@ function Dangnhap() {
                 </nav>
             </div>
             {/* Navbar End */}
-            <div className="container ">
-                <div className="row align-items-center ">
-                    <div className="col-lg-4 col-md-4" />
-                    <div className="col-lg-4 col-md-4 login-box ">
-                        <div className="col-lg-12 login-key">
-                            <i className="fa fa-key" aria-hidden="true" />
-                        </div>
-                        <div className="col-lg-12 login-title">ĐĂNG NHẬP</div>
-                        <div className="col-lg-12 login-form">
-                            <div className="col-lg-12 login-form">
-                                <form onSubmit={handleLogin}>
-                                    <div className="form-group">
-                                        <label className="form-control-label">CCCD/CMND</label>
-                                        <input
-                                            type="text"
-                                            className="form-control inputtext"
-                                            onChange={(e) => setCccd(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-control-label">MẬT KHẨU</label>
-                                        <input
-                                            type="password"
-                                            className="form-control"
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
-                                    </div>
-
-                                    {/* Wrap the error message in a common parent */}
-                                    <div className="form-group">
-                                        {/* Error Message */}
-                                        {msgErr && (
-                                            <div className="alert alert-danger" role="alert">
-                                                {msgErr}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="col-lg-12 loginbttm">
-                                        <div className="col-lg-6 login-btm login-text">
-                                            {/* You can remove the error message rendering from here */}
-                                        </div>
-                                        <div className="col-lg-12 login-btm login-button d-flex justify-content-center align-items-center">
-                                            <button type="submit" className="btn btn-outline-primary">
-                                                ĐĂNG NHẬP <i className="fa-solid fa-arrow-right"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+            <section>
+                <div className="container ">
+                    <div className="row align-items-center ">
+                        <div className="col-lg-4 col-md-4" />
+                        <div className="col-lg-4 col-md-4 login-box ">
+                            <div className="col-lg-12 login-key">
+                                <i className="fa fa-key" aria-hidden="true" />
                             </div>
+                            <div className="col-lg-12 login-title">ĐĂNG NHẬP</div>
+                            <div className="col-lg-12 login-form">
+                                <div className="col-lg-12 login-form">
+                                    <form onSubmit={handleLogin}>
+                                        <div className="form-group">
+                                            <label className="form-control-label">CCCD/CMND</label>
+                                            <input
+                                                type="text"
+                                                className="form-control inputtext"
+                                                onChange={(e) => setCccd(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label">MẬT KHẨU</label>
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                        </div>
+
+                                        {/* Wrap the error message in a common parent */}
+                                        <div className="form-group">
+                                            {/* Error Message */}
+                                            {msgErr && (
+                                                <div className="alert alert-danger" role="alert">
+                                                    {msgErr}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="col-lg-12 loginbttm">
+                                            <div className="col-lg-6 login-btm login-text">
+                                                {/* You can remove the error message rendering from here */}
+                                            </div>
+                                            <div className="col-lg-12 login-btm login-button d-flex justify-content-center align-items-center">
+                                                <button type="submit" className="btn btn-outline-primary">
+                                                    ĐĂNG NHẬP <i className="fa-solid fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-2" />
                         </div>
-                        <div className="col-lg-3 col-md-2" />
                     </div>
                 </div>
-            </div>
+            </section>
         </>
     );
 }

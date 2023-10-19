@@ -1,6 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 function Hoso() {
+
+    const user = useSelector((state) => state.auth.login.currentUser);
+    const accessToken = user?.accessToken
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     return (
         <>
             <>
@@ -45,12 +54,25 @@ function Hoso() {
                                     Giới thiệu
                                 </Link>
                             </div>
-                            <a href="/dangnhap" className="btn btn-primary" style={{ margin: "10px 10px" }}>
-                                Đăng nhập
-                            </a>
-                            <a href="/dangky" className="btn btn-primary">
-                                Đăng ký
-                            </a>
+                            {user ? (
+                                <>
+                                    <a href="" className="nav-item" style={{ margin: "10px 10px" }}>
+                                        <span> {user.cccd} </span>
+                                    </a>
+                                    <a href="/dangxuat" className="btn btn-primary">
+                                        Đăng xuất
+                                    </a>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/dangnhap" className="btn btn-primary" style={{ margin: "10px 10px" }}>
+                                        Đăng nhập
+                                    </a>
+                                    <a href="/dangky" className="btn btn-primary">
+                                        Đăng ký
+                                    </a>
+                                </>
+                            )}
                         </div>
                     </nav>
                 </div>

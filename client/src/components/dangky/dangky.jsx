@@ -1,7 +1,65 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import "../signup/signup.css"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import isEmpty from "validator/lib/isEmpty";
+import {
+    registerStart,
+    registerSuccess,
+    registerFailed
+} from "../../redux/authSlice";
 function Dangky(){
+    const [email, setEmail] = useState("");
+    const [cccd, setCccd] = useState("");
+    const [password, setPassword] = useState("");
+    const [repassword, setRepassword] = useState("");
+    const [msgErr, setMsgErr] = useState(null);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleRegister = async (e)=>{
+        e.preventDefault();
+        const newUser = {
+            cccd: cccd,
+            password: password,
+            email: email
+        };
+        const repw = repassword;
+        dispatch(registerStart());
+        if (isEmpty(repassword)) {
+            setMsgErr("Vui lòng điền vào các mục còn trống");
+            dispatch(registerFailed());
+        }else{
+            if (repw == newUser.password){
+                try {
+                    const response = await fetch('http://localhost:8000/v1/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify(newUser),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        setMsgErr(errorData.message);
+                        dispatch(registerFailed());
+                    }else{
+                        dispatch(registerSuccess());
+                        navigate("/dangnhap");
+                    }    
+                } catch (error) {
+                  
+                    setMsgErr("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
+                    dispatch(registerFailed());
+                }
+            }else {
+                //e.preventDefault();
+                setMsgErr("Xác nhận lại mật khẩu không trùng nhau.");
+            }
+        } 
+    }
     return(
         <> {/* Navbar Start */}
         <div className="container-fluid bg-light position-relative shadow">
@@ -36,52 +94,76 @@ function Dangky(){
             </nav>
         </div>
         {/* Navbar End */}
-        
-        <div className="container ">
-                <div className="row align-items-center ">
-                    <div className="col-lg-4 col-md-4" />
-                    <div className="col-lg-4 col-md-4 signup-box ">
-                        <div className="col-lg-12 signup-key">
-                            <i className="fa-solid fa-shield-plus"></i>
-                        </div>
-                        <div className="col-lg-12 signup-title">ĐĂNG KÝ</div>
-                        <div className="col-lg-12 signup-form">
-                            <div className="col-lg-12 signup-form">
-                                <form>
-                                <div className="form-group">
-                                        <label className="form-control-label">Email</label>
-                                        <input type="email" className="form-control" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-control-label">Tên đăng nhập</label>
-                                        <input type="text" className="form-control" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-control-label">Mật khẩu</label>
-                                        <input type="password" className="form-control" i="" />
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-control-label">Điền lại mật khẩu</label>
-                                        <input type="password" className="form-control" i="" />
-                                    </div>
-                                    <div className="col-lg-12 signupbttm">
-                                        <div className="col-lg-6 signup-btm signup-text">
-                                            {/* Error Message */}
-                                        </div>
-                                        <div className="col-lg-12 signup-btm signup-button d-flex justify-content-center align-items-center">
-                                            <button type="submit" className="btn btn-outline-primary">
-                                                ĐĂNG KÝ <i class="fa-solid fa-arrow-right"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+        <section>
+            <div className="container ">
+                    <div className="row align-items-center ">
+                        <div className="col-lg-4 col-md-4" />
+                        <div className="col-lg-4 col-md-4 signup-box ">
+                            <div className="col-lg-12 signup-key">
+                                <i className="fa-solid fa-shield-plus"></i>
                             </div>
+                            <div className="col-lg-12 signup-title">ĐĂNG KÝ</div>
+                            <div className="col-lg-12 signup-form">
+                                <div className="col-lg-12 signup-form">
+                                <form onSubmit={handleRegister}>
+                                    <div className="form-group">
+                                            <label className="form-control-label">EMAIL</label>
+                                            <input 
+                                                type="email" 
+                                                className="form-control"
+                                                onChange={(e) => setEmail(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label">CCCD/CMND/SỐ ĐỊNH DANH</label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control"
+                                                onChange={(e) => setCccd(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label">MẬT KHẨU</label>
+                                            <input 
+                                                type="password" 
+                                                className="form-control"
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label">ĐIỀN LẠI MẬT KHẨU</label>
+                                            <input 
+                                                type="password" 
+                                                className="form-control"
+                                                onChange={(e) => setRepassword(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            {/* Error Message */}
+                                            {msgErr && (
+                                                <div className="alert alert-danger" role="alert">
+                                                    {msgErr}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="col-lg-12 signupbttm">
+                                            <div className="col-lg-6 signup-btm signup-text">
+                                                {/* Error Message */}
+                                            </div>
+                                            <div className="col-lg-12 signup-btm signup-button d-flex justify-content-center align-items-center">
+                                                <button type="submit" className="btn btn-outline-primary">
+                                                    ĐĂNG KÝ <i class="fa-solid fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-md-2" />
                         </div>
-                        <div className="col-lg-3 col-md-2" />
                     </div>
                 </div>
-            </div>
-
+            </section>
         </>
     );
 }

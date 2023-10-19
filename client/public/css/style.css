@@ -10126,3 +10126,18 @@ label {
 .signupbttm {
   padding: 0px;
 }
+
+section {
+  display: flex;
+  justify-content: center;
+  background-image: url(../img/background1.jpg);
+  background-position: center;
+  min-height: 110vh;
+  width: 100%;
+  align-items: center;
+  background-size: cover;
+}
+.red-text {
+  color: red;
+  font-size: 13px;
+}
