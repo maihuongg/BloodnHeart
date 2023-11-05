@@ -47,9 +47,26 @@ function Lienhe() {
                                 <Link to="/lienhe" className="nav-item nav-link active">
                                     Liên hệ
                                 </Link>
-                                <Link to="/hoso" className="nav-item nav-link">
-                                    Hồ sơ cá nhân
-                                </Link>
+                                <div className="nav-item dropdown">
+                                    <a
+                                        href="#"
+                                        className="nav-link dropdown-toggle"
+                                        data-toggle="dropdown"
+                                    >
+                                        Hồ sơ cá nhân
+                                    </a>
+                                    <div className="dropdown-menu rounded-0 m-0">
+                                        <Link to="/hoso" className="dropdown-item">
+                                            Thông tin cá nhân
+                                        </Link>
+                                        <Link to="#" className="dropdown-item">
+                                            Lịch hẹn của bạn
+                                        </Link>
+                                        <Link to="#" className="dropdown-item">
+                                            Lịch sử hiến máu
+                                        </Link>
+                                    </div>
+                                </div>
                                 <Link to="/gioithieu" className="nav-item nav-link">
                                     Giới thiệu
                                 </Link>

@@ -3,12 +3,70 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import {
+    userup1Start,
+    userup1Success,
+    userup1Failed
+} from "../redux/userSlice";
 function Hoso() {
-
     const user = useSelector((state) => state.auth.login.currentUser);
+    const userId = user?._id;
     const accessToken = user?.accessToken
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userPro = useSelector((state) => state.user.profile.getUser);
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [show1, setShow1] = useState(false);
+
+    const handleClose1 = () => setShow1(false);
+    const handleShow1 = () => setShow1(true);
+
+    
+    const [fullName, setfullName] = useState(userPro?.fullName);
+    const [birthDay, setbirthDay] = useState(userPro?.birthDay);
+    const [gender, setGender] = useState(userPro?.gender);
+    const [bloodgroup, setbloodGroup] = useState(userPro?.bloodgroup);
+    const [address, setAddress] = useState(userPro?.address);
+    const [phone, setPhone] = useState(userPro?.phone);
+    const [email, setEmail] = useState(userPro?.email);
+
+    const handleUpdate1 = async (e) => {
+        e.preventDefault();
+        const updateUser = {
+            fullName: fullName,
+            birthDay: birthDay,
+            gender: gender,
+            bloodgroup: bloodgroup,
+        };
+        dispatch(userup1Start());
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/profile/"+userId, {
+                method: 'PUT',
+                body: JSON.stringify(updateUser),
+                headers: {
+                    token: `Bearer ${accessToken}`
+                }
+            });
+
+            if(!response.ok) {
+                dispatch(userup1Failed());
+            }else{
+                const data = await response.json();
+                dispatch(userup1Success(data));
+                navigate("/hoso")
+                console.log(data);
+            }
+        } catch (error) {
+            dispatch(userup1Failed());
+        }
+    }
 
     return (
         <>
@@ -47,9 +105,26 @@ function Hoso() {
                                 <Link to="/lienhe" className="nav-item nav-link">
                                     Liên hệ
                                 </Link>
-                                <Link to="/hoso" className="nav-item nav-link active">
-                                    Hồ sơ cá nhân
-                                </Link>
+                                <div className="nav-item dropdown">
+                                    <a
+                                        href="#"
+                                        className="nav-link dropdown-toggle active"
+                                        data-toggle="dropdown"
+                                    >
+                                        Hồ sơ cá nhân
+                                    </a>
+                                    <div className="dropdown-menu rounded-0 m-0">
+                                        <Link to="/hoso" className="dropdown-item active">
+                                            Thông tin cá nhân
+                                        </Link>
+                                        <Link to="#" className="dropdown-item">
+                                            Lịch hẹn của bạn
+                                        </Link>
+                                        <Link to="#" className="dropdown-item">
+                                            Lịch sử hiến máu
+                                        </Link>
+                                    </div>
+                                </div>
                                 <Link to="/gioithieu" className="nav-item nav-link">
                                     Giới thiệu
                                 </Link>
@@ -84,460 +159,269 @@ function Hoso() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">Blog Detail</h3>
-                    <div className="d-inline-flex text-white">
-                        <p className="m-0">
-                            <a className="text-white" href="">
-                                Home
-                            </a>
-                        </p>
-                        <p className="m-0 px-2">/</p>
-                        <p className="m-0">Blog Detail</p>
-                    </div>
+                    <h4 className="display-4 font-weight-bold text-white">THÔNG TIN CÁ NHÂN</h4>
                 </div>
             </div>
             {/* Header End */}
             {/* Detail Start */}
             <div className="container py-5">
                 <div className="row pt-5">
-                    <div className="col-lg-8">
-                        <div className="d-flex flex-column text-left mb-3">
-                            <p className="section-title pr-5">
-                                <span className="pr-2">Blog Detail Page</span>
-                            </p>
-                            <h1 className="mb-3">Diam dolor est ipsum clita lorem</h1>
-                            <div className="d-flex">
-                                <p className="mr-3">
-                                    <i className="fa fa-user text-primary" /> Admin
-                                </p>
-                                <p className="mr-3">
-                                    <i className="fa fa-folder text-primary" /> Web Design
-                                </p>
-                                <p className="mr-3">
-                                    <i className="fa fa-comments text-primary" /> 15
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mb-5">
-                            <img
-                                className="img-fluid rounded w-100 mb-4"
-                                src="img/detail.jpg"
-                                alt="Image"
-                            />
-                            <p>
-                                Sadipscing labore amet rebum est et justo gubergren. Et eirmod ipsum
-                                sit diam ut magna lorem. Nonumy vero labore lorem sanctus rebum et
-                                lorem magna kasd, stet amet magna accusam consetetur eirmod. Kasd
-                                accusam sit ipsum sadipscing et at at sanctus et. Ipsum sit
-                                gubergren dolores et, consetetur justo invidunt at et aliquyam ut et
-                                vero clita. Diam sea sea no sed dolores diam nonumy, gubergren sit
-                                stet no diam kasd vero.
-                            </p>
-                            <p>
-                                Voluptua est takimata stet invidunt sed rebum nonumy stet, clita
-                                aliquyam dolores vero stet consetetur elitr takimata rebum sanctus.
-                                Sit sed accusam stet sit nonumy kasd diam dolores, sanctus lorem
-                                kasd duo dolor dolor vero sit et. Labore ipsum duo sanctus amet eos
-                                et. Consetetur no sed et aliquyam ipsum justo et, clita lorem sit
-                                vero amet amet est dolor elitr, stet et no diam sit. Dolor erat
-                                justo dolore sit invidunt.
-                            </p>
-                            <h2 className="mb-4">Est dolor lorem et ea</h2>
-                            <img
-                                className="img-fluid rounded w-50 float-left mr-4 mb-3"
-                                src="img/blog-1.jpg"
-                                alt="Image"
-                            />
-                            <p>
-                                Diam dolor est labore duo invidunt ipsum clita et, sed et lorem
-                                voluptua tempor invidunt at est sanctus sanctus. Clita dolores sit
-                                kasd diam takimata justo diam lorem sed. Magna amet sed rebum eos.
-                                Clita no magna no dolor erat diam tempor rebum consetetur, sanctus
-                                labore sed nonumy diam lorem amet eirmod. No at tempor sea diam
-                                kasd, takimata ea nonumy elitr sadipscing gubergren erat. Gubergren
-                                at lorem invidunt sadipscing rebum sit amet ut ut, voluptua diam
-                                dolores at sadipscing stet. Clita dolor amet dolor ipsum vero ea ea
-                                eos. Invidunt sed diam dolores takimata dolor dolore dolore sit. Sit
-                                ipsum erat amet lorem et, magna sea at sed et eos. Accusam eirmod
-                                kasd lorem clita sanctus ut consetetur et. Et duo tempor sea kasd
-                                clita ipsum et. Takimata kasd diam justo est eos erat aliquyam et
-                                ut. Ea sed sadipscing no justo et eos labore, gubergren ipsum magna
-                                dolor lorem dolore, elitr aliquyam takimata sea kasd dolores diam,
-                                amet et est accusam labore eirmod vero et voluptua. Amet labore
-                                clita duo et no. Rebum voluptua magna eos magna, justo gubergren
-                                labore sit voluptua eos.
-                            </p>
-                            <h3 className="mb-4">Est dolor lorem et ea</h3>
-                            <img
-                                className="img-fluid rounded w-50 float-right ml-4 mb-3"
-                                src="img/blog-2.jpg"
-                                alt="Image"
-                            />
-                            <p>
-                                Diam dolor est labore duo invidunt ipsum clita et, sed et lorem
-                                voluptua tempor invidunt at est sanctus sanctus. Clita dolores sit
-                                kasd diam takimata justo diam lorem sed. Magna amet sed rebum eos.
-                                Clita no magna no dolor erat diam tempor rebum consetetur, sanctus
-                                labore sed nonumy diam lorem amet eirmod. No at tempor sea diam
-                                kasd, takimata ea nonumy elitr sadipscing gubergren erat. Gubergren
-                                at lorem invidunt sadipscing rebum sit amet ut ut, voluptua diam
-                                dolores at sadipscing stet. Clita dolor amet dolor ipsum vero ea ea
-                                eos. Invidunt sed diam dolores takimata dolor dolore dolore sit. Sit
-                                ipsum erat amet lorem et, magna sea at sed et eos. Accusam eirmod
-                                kasd lorem clita sanctus ut consetetur et. Et duo tempor sea kasd
-                                clita ipsum et. Takimata kasd diam justo est eos erat aliquyam et
-                                ut. Ea sed sadipscing no justo et eos labore, gubergren ipsum magna
-                                dolor lorem dolore, elitr aliquyam takimata sea kasd dolores diam,
-                                amet et est accusam labore eirmod vero et voluptua. Amet labore
-                                clita duo et no.
-                            </p>
-                        </div>
-                        {/* Related Post */}
-                        <div className="mb-5 mx-n3">
-                            <h2 className="mb-4 ml-3">Related Post</h2>
-                            <div className="owl-carousel post-carousel position-relative">
-                                <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mx-3">
-                                    <img
-                                        className="img-fluid"
-                                        src="img/post-1.jpg"
-                                        style={{ width: 80, height: 80 }}
-                                    />
-                                    <div className="pl-3">
-                                        <h5 className="">Diam amet eos at no eos</h5>
-                                        <div className="d-flex">
-                                            <small className="mr-3">
-                                                <i className="fa fa-user text-primary" /> Admin
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-folder text-primary" /> Web Design
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-comments text-primary" /> 15
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mx-3">
-                                    <img
-                                        className="img-fluid"
-                                        src="img/post-2.jpg"
-                                        style={{ width: 80, height: 80 }}
-                                    />
-                                    <div className="pl-3">
-                                        <h5 className="">Diam amet eos at no eos</h5>
-                                        <div className="d-flex">
-                                            <small className="mr-3">
-                                                <i className="fa fa-user text-primary" /> Admin
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-folder text-primary" /> Web Design
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-comments text-primary" /> 15
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mx-3">
-                                    <img
-                                        className="img-fluid"
-                                        src="img/post-3.jpg"
-                                        style={{ width: 80, height: 80 }}
-                                    />
-                                    <div className="pl-3">
-                                        <h5 className="">Diam amet eos at no eos</h5>
-                                        <div className="d-flex">
-                                            <small className="mr-3">
-                                                <i className="fa fa-user text-primary" /> Admin
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-folder text-primary" /> Web Design
-                                            </small>
-                                            <small className="mr-3">
-                                                <i className="fa fa-comments text-primary" /> 15
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Comment List */}
-                        <div className="mb-5">
-                            <h2 className="mb-4">3 Comments</h2>
-                            <div className="media mb-4">
-                                <img
-                                    src="img/user.jpg"
-                                    alt="Image"
-                                    className="img-fluid rounded-circle mr-3 mt-1"
-                                    style={{ width: 45 }}
-                                />
-                                <div className="media-body">
-                                    <h6>
-                                        John Doe{" "}
-                                        <small>
-                                            <i>01 Jan 2045 at 12:00pm</i>
-                                        </small>
-                                    </h6>
-                                    <p>
-                                        Diam amet duo labore stet elitr ea clita ipsum, tempor labore
-                                        accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed
-                                        sed eirmod ipsum. Gubergren clita aliquyam consetetur
-                                        sadipscing, at tempor amet ipsum diam tempor consetetur at sit.
-                                    </p>
-                                    <button className="btn btn-sm btn-light">Reply</button>
-                                </div>
-                            </div>
-                            <div className="media mb-4">
-                                <img
-                                    src="img/user.jpg"
-                                    alt="Image"
-                                    className="img-fluid rounded-circle mr-3 mt-1"
-                                    style={{ width: 45 }}
-                                />
-                                <div className="media-body">
-                                    <h6>
-                                        John Doe{" "}
-                                        <small>
-                                            <i>01 Jan 2045 at 12:00pm</i>
-                                        </small>
-                                    </h6>
-                                    <p>
-                                        Diam amet duo labore stet elitr ea clita ipsum, tempor labore
-                                        accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed
-                                        sed eirmod ipsum. Gubergren clita aliquyam consetetur
-                                        sadipscing, at tempor amet ipsum diam tempor consetetur at sit.
-                                    </p>
-                                    <button className="btn btn-sm btn-light">Reply</button>
-                                    <div className="media mt-4">
-                                        <img
-                                            src="img/user.jpg"
-                                            alt="Image"
-                                            className="img-fluid rounded-circle mr-3 mt-1"
-                                            style={{ width: 45 }}
-                                        />
-                                        <div className="media-body">
-                                            <h6>
-                                                John Doe{" "}
-                                                <small>
-                                                    <i>01 Jan 2045 at 12:00pm</i>
-                                                </small>
-                                            </h6>
-                                            <p>
-                                                Diam amet duo labore stet elitr ea clita ipsum, tempor
-                                                labore accusam ipsum et no at. Kasd diam tempor rebum magna
-                                                dolores sed sed eirmod ipsum. Gubergren clita aliquyam
-                                                consetetur, at tempor amet ipsum diam tempor at sit.
-                                            </p>
-                                            <button className="btn btn-sm btn-light">Reply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Comment Form */}
-                        <div className="bg-light p-5">
-                            <h2 className="mb-4">Leave a comment</h2>
-                            <form>
-                                <div className="form-group">
-                                    <label htmlFor="name">Name *</label>
-                                    <input type="text" className="form-control" id="name" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email *</label>
-                                    <input type="email" className="form-control" id="email" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="website">Website</label>
-                                    <input type="url" className="form-control" id="website" />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="message">Message *</label>
-                                    <textarea
-                                        id="message"
-                                        cols={30}
-                                        rows={5}
-                                        className="form-control"
-                                        defaultValue={""}
-                                    />
-                                </div>
-                                <div className="form-group mb-0">
-                                    <input
-                                        type="submit"
-                                        defaultValue="Leave Comment"
-                                        className="btn btn-primary px-3"
-                                    />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div className="col-lg-4 mt-5 mt-lg-0">
-                        {/* Author Bio */}
+                    <div className="col-lg-3 mt-5 mt-lg-0">
                         <div className="d-flex flex-column text-center bg-primary rounded mb-5 py-5 px-4">
                             <img
                                 src="img/user.jpg"
                                 className="img-fluid rounded-circle mx-auto mb-3"
-                                style={{ width: 100 }}
+                                style={{ width: 200 }}
                             />
                             <h3 className="text-secondary mb-3">John Doe</h3>
-                            <p className="text-white m-0">
-                                Conset elitr erat vero dolor ipsum et diam, eos dolor lorem ipsum,
-                                ipsum ipsum sit no ut est. Guber ea ipsum erat kasd amet est elitr
-                                ea sit.
+                        </div>
+                    </div>
+                    <div className="col-lg-9">
+                        <div className="d-flex flex-column text-left mb-3" style={{ margin: "0px 0px 0px" }}>
+                            <p className="section-title pr-5" style={{ margin: "8px 0px 4px 0px" }}>
+                                <span className="pr-2">Thông tin chi tiết</span>
                             </p>
                         </div>
-                        {/* Search Form */}
-                        <div className="mb-5">
-                            <form action="">
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-lg"
-                                        placeholder="Keyword"
-                                    />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text bg-transparent text-primary">
-                                            <i className="fa fa-search" />
-                                        </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        {/* Category List */}
-                        <div className="mb-5">
-                            <h2 className="mb-4">Categories</h2>
-                            <ul className="list-group list-group-flush">
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="">Web Design</a>
-                                    <span className="badge badge-primary badge-pill">150</span>
-                                </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="">Web Development</a>
-                                    <span className="badge badge-primary badge-pill">131</span>
-                                </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="">Online Marketing</a>
-                                    <span className="badge badge-primary badge-pill">78</span>
-                                </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="">Keyword Research</a>
-                                    <span className="badge badge-primary badge-pill">56</span>
-                                </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="">Email Marketing</a>
-                                    <span className="badge badge-primary badge-pill">98</span>
-                                </li>
-                            </ul>
-                        </div>
-                        {/* Single Image */}
-                        <div className="mb-5">
-                            <img src="img/blog-1.jpg" alt="" className="img-fluid rounded" />
-                        </div>
-                        {/* Recent Post */}
-                        <div className="mb-5">
-                            <h2 className="mb-4">Recent Post</h2>
-                            <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mb-3">
-                                <img
-                                    className="img-fluid"
-                                    src="img/post-1.jpg"
-                                    style={{ width: 80, height: 80 }}
-                                />
-                                <div className="pl-3">
-                                    <h5 className="">Diam amet eos at no eos</h5>
-                                    <div className="d-flex">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mb-3">
-                                <img
-                                    className="img-fluid"
-                                    src="img/post-2.jpg"
-                                    style={{ width: 80, height: 80 }}
-                                />
-                                <div className="pl-3">
-                                    <h5 className="">Diam amet eos at no eos</h5>
-                                    <div className="d-flex">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
+                        <div className="infor_box">
+                            <div className="row">
+                                <div className="col-lg-12">
+                                    <Button className="nav-item nav-link float-right" style={{ padding: "0px 16px" }} onClick={handleShow}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 
+                                    1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4
+                                     1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5
+                                      0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0
+                                       0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                        </svg>
+                                        &nbsp;
+                                        Chỉnh sửa
+                                    </Button>
+
+                                    <Modal show={show} onHide={handleClose}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Thông tin cá nhân</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <form onSubmit={handleUpdate1}>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">CCCD/CMND/Số định danh</label>
+                                                    <input disabled
+                                                        type="text"
+                                                        class="form-control border-1"
+                                                        required="required"
+                                                        value={userPro?.cccd} 
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Họ và tên(*)</label>
+                                                    <input
+                                                        type="text"
+                                                        class="form-control border-1"
+                                                        placeholder="VD: Nguyễn Văn A"
+                                                        required="required"
+                                                        defaultValue={userPro?.fullName}
+                                                        onChange={(e) => setfullName(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Ngày sinh(*)</label>
+                                                    <input
+                                                        type="text"
+                                                        class="form-control border-1"
+                                                        placeholder="VD: 01/01/2000"
+                                                        required="required"
+                                                        defaultValue={userPro?.birthDay}
+                                                        onChange={(e) => setbirthDay(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Giới tính(*)</label>
+                                                    <select className="form-control" name="gender" required defaultValue={userPro?.gender} onChange={(e) => setGender(e.target.value)}>
+                                                        <option value="" disabled selected>Chọn giới tính</option>
+                                                        <option value="Nam">Nam</option>
+                                                        <option value="Nữ">Nữ</option>
+                                                    </select>
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Nhóm máu(*)</label>
+                                                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic" }}>Chọn 1 trong các nhóm A, B, AB, O, Rh+, Rh-</p>
+                                                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic" }}>Nếu chưa biết nhóm máu vui lòng chọn "Không rõ"</p>
+                                                    <select className="form-control" name="bloodType" required defaultValue={userPro?.bloodgroup} onChange={(e) => setbloodGroup(e.target.value)}>
+                                                        <option value="" disabled selected>Chọn nhóm máu</option>
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="AB">AB</option>
+                                                        <option value="O">O</option>
+                                                        <option value="Rh+">Rh+</option>
+                                                        <option value="Rh-">Rh-</option>
+                                                        <option value="Không rõ">Không rõ</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <Button variant="primary" type="submit" className="float-right" onClick={handleClose}>
+                                                        Lưu Lại
+                                                    </Button>
+                                                    <Button variant="secondary" className="float-right btnclose" onClick={handleClose}>
+                                                        Hủy
+                                                    </Button>
+                                                </div>
+                                            </form>
+                                        </Modal.Body>
+                                    </Modal>
                                 </div>
                             </div>
-                            <div className="d-flex align-items-center bg-light shadow-sm rounded overflow-hidden mb-3">
-                                <img
-                                    className="img-fluid"
-                                    src="img/post-3.jpg"
-                                    style={{ width: 80, height: 80 }}
-                                />
-                                <div className="pl-3">
-                                    <h5 className="">Diam amet eos at no eos</h5>
-                                    <div className="d-flex">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        CCCD/CMND/Số định danh:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.cccd}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Họ và tên:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.fullName}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Ngày sinh:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.birthDay}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Giới tính:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.gender}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Nhóm máu:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.bloodgroup}</p>
                                 </div>
                             </div>
                         </div>
-                        {/* Single Image */}
-                        <div className="mb-5">
-                            <img src="img/blog-2.jpg" alt="" className="img-fluid rounded" />
+                        <div className="d-flex flex-column text-left mb-3">
+                            <p className="section-title pr-5" style={{ margin: "8px 0px 4px 0px" }}>
+                                <span className="pr-2">Thông tin liên hệ</span>
+                            </p>
                         </div>
-                        {/* Tag Cloud */}
-                        <div className="mb-5">
-                            <h2 className="mb-4">Tag Cloud</h2>
-                            <div className="d-flex flex-wrap m-n1">
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    Design
-                                </a>
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    Development
-                                </a>
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    Marketing
-                                </a>
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    SEO
-                                </a>
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    Writing
-                                </a>
-                                <a href="" className="btn btn-outline-primary m-1">
-                                    Consulting
-                                </a>
+                        <div className="infor_box">
+                            <div className="row">
+                                <div className="col-lg-12">
+                                    <Button className="nav-item nav-link float-right" style={{ padding: "0px 16px" }} onClick={handleShow1}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 
+                                    1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4
+                                     1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5
+                                      0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0
+                                       0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                        </svg>
+                                        &nbsp;
+                                        Chỉnh sửa
+                                    </Button>
+
+                                    <Modal show={show1} onHide={handleClose1}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Thông tin liên hệ</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <form action="">
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Địa chỉ liên lạc</label>
+                                                    <input
+                                                        type="text"
+                                                        class="form-control border-1"
+                                                        placeholder="VD: Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM"
+                                                        required="required"
+                                                        defaultValue={userPro?.address}
+                                                        onChange={(e) => setAddress(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Số điện thoại</label>
+                                                    <input
+                                                        type="number"
+                                                        class="form-control border-1"
+                                                        placeholder="VD: 0303030303"
+                                                        required="required"
+                                                        defaultValue={userPro?.phone}
+                                                        onChange={(e) => setPhone(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label className="form-control-label label">Email</label>
+                                                    <input
+                                                        type="email"
+                                                        class="form-control border-1"
+                                                        placeholder="VD: a@gmail.com"
+                                                        required="required"
+                                                        defaultValue={userPro?.email}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Button variant="primary" type="submit" className="float-right">
+                                                        Lưu Lại
+                                                    </Button>
+                                                    <Button variant="secondary" className="float-right btnclose" onClick={handleClose1}>
+                                                        Hủy
+                                                    </Button>
+                                                </div>
+                                            </form>
+                                        </Modal.Body>
+                                    </Modal>
+                                </div>
                             </div>
-                        </div>
-                        {/* Single Image */}
-                        <div className="mb-5">
-                            <img src="img/blog-3.jpg" alt="" className="img-fluid rounded" />
-                        </div>
-                        {/* Plain Text */}
-                        <div>
-                            <h2 className="mb-4">Plain Text</h2>
-                            Aliquyam sed lorem stet diam dolor sed ut sit. Ut sanctus erat ea est
-                            aliquyam dolor et. Et no consetetur eos labore ea erat voluptua et. Et
-                            aliquyam dolore sed erat. Magna sanctus sed eos tempor rebum dolor,
-                            tempor takimata clita sit et elitr ut eirmod.
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Địa chỉ liên lạc:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.address}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Số điện thoại:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.phone}</p>
+                                </div>
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <li>
+                                        Email:
+                                    </li>
+                                </div>
+                                <div className="col-lg-8 break">
+                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.email}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

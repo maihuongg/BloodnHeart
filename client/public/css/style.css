@@ -10141,3 +10141,28 @@ section {
   color: red;
   font-size: 13px;
 }
+.infor_box {
+  max-width: 100%;
+  border-radius: 8px;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  min-height: inherit;
+  height: inherit;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+  padding: 13px 15px;
+}
+.break {
+  word-break: break-word;
+}
+
+.padding {
+  padding-bottom: 12px;
+  padding-top: 4px;
+}
+.btnclose {
+  margin-right: 8px;
+}
+.label {
+  font-size: 16px;
+}

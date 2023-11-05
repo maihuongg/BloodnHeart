@@ -41,7 +41,7 @@ const userProfileSchema = new mongoose.Schema(
             
         },
        
-          email: {
+        email: {
             type: String,
             require: true,
             max: 50,
