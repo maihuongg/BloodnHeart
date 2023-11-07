@@ -140,28 +140,28 @@ function Trangchu() {
             {/* Navbar End */}
 
             {/* Header Start */}
-            <div className="container-fluid bg-primary px-0 px-md-5 mb-5">
+            <div className="container-fluid bg-primary px-0 px-md-5 mb-6">
                 <div className="row align-items-center px-3">
                     <div className="col-lg-6 text-center text-lg-left">
-                        <h4 className="text-white mb-4 mt-5 mt-lg-0">Một cuộc đời ý nghĩa</h4>
+                        <h4 className="text-white mb-6 mt-5 mt-lg-2">Một cuộc đời ý nghĩa</h4>
                         <h1 className="display-3 font-weight-bold text-white">
-                            New Approach to Kids Education
+                        bắt đầu từ những giọt máu của bạn
                         </h1>
-                        <p className="text-white mb-4">
-                            Sea ipsum kasd eirmod kasd magna, est sea et diam ipsum est amet sed
-                            sit. Ipsum dolor no justo dolor et, lorem ut dolor erat dolore sed
-                            ipsum at ipsum nonumy amet. Clita lorem dolore sed stet et est justo
-                            dolore.
+                        <p className="text-white mb-8 text-align-justify"  >
+                            Khi bạn quyết định hiến máu, bạn đang chọn một cuộc sống ý nghĩa. Hành động này không chỉ
+                            giúp cứu sống người khác mà còn thể hiện lòng nhân ái,
+                            tình người và trách nhiệm xã hội.
+                            <br/>Mỗi giọt máu bạn hiến tặng có thể là cơ hội để một người khác có thể thở phào,
+                            sống thêm một ngày, một tuần, hay thậm chí là một cuộc đời mới.
                         </p>
-                        <a href="" className="btn btn-secondary mt-1 py-3 px-5">
-                            Learn More
-                        </a>
+                       
                     </div>
-                    <div className="col-lg-6 text-center text-lg-right">
-                        <img className="img-fluid mt-5" src="img/header.png" alt="" />
+                    <div className="col-lg-6 text-center text-lg-right" style={{ maxWidth: '120%', height: 'auto' }}>
+                        <img className="img-fluid mt-6" src="img/banners.png" alt="" />
                     </div>
                 </div>
             </div>
+
             {/* Header End */}
             {/* Facilities Start */}
             <div className="container-fluid pt-5">

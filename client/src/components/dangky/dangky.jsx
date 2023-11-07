@@ -88,7 +88,7 @@ function Dangky(){
 
                     </div>
                     <a href="/" className="btn btn-primary m-3 position-absolute" style={{ right: "0px" }}>
-                        QUAY LẠI <i class="fa fa-arrow-right"></i>
+                        QUAY LẠI <i className="fa fa-arrow-right"></i>
                     </a>
                 </div>
             </nav>
@@ -100,7 +100,7 @@ function Dangky(){
                         <div className="col-lg-4 col-md-4" />
                         <div className="col-lg-4 col-md-4 signup-box ">
                             <div className="col-lg-12 signup-key">
-                                <i className="fa-solid fa-shield-plus"></i>
+                            <i className="fa fa-key" aria-hidden="true" />
                             </div>
                             <div className="col-lg-12 signup-title">ĐĂNG KÝ</div>
                             <div className="col-lg-12 signup-form">
@@ -155,6 +155,14 @@ function Dangky(){
                                                     ĐĂNG KÝ <i class="fa-solid fa-arrow-right"></i>
                                                 </button>
                                             </div>
+                                        </div>
+                                        <div className="col-lg-12 login-btm text-center">
+                                            <p className="login-text">
+                                                <Link to="/forgot-password">Quên mật khẩu?</Link>
+                                            </p>
+                                            <p className="login-text">
+                                                Đã có tài khoản? <Link to="/dangnhap">Đăng nhập ngay </Link>
+                                            </p>
                                         </div>
                                     </form>
                                 </div>

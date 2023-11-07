@@ -16,6 +16,8 @@ import Lienhe from './components/lienhe';
 import Hoso from './components/hoso';
 import Dangnhap from './components/dangnhap/dangnhap';
 import Dangky from './components/dangky/dangky';
+import ResetMatKhau from './components/quenmatkhau/reset-matkhau'
+import QuenMatKhau from './components/quenmatkhau/quenmatkhau'
 function App() {
   return (
     <Router>
@@ -30,6 +32,8 @@ function App() {
         {/*<Route path="/gallery" Component= {Gallery} />*/}
         <Route path="/dangnhap" Component= {Dangnhap} />
         <Route path="/dangky" Component= {Dangky} />
+        <Route path="/reset-password/" Component= {ResetMatKhau} />
+        <Route path="/forgot-password/" Component= {QuenMatKhau} />
 
         <Route path="/" Component= {Trangchu} /> {/* Example of the Home route */}
       </Routes>
