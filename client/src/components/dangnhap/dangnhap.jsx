@@ -21,7 +21,7 @@ function Dangnhap() {
             password: password,
         };
         dispatch(loginStart());
-        try {    
+        try {
             const response = await fetch('http://localhost:8000/v1/auth/login', {
                 method: 'POST',
                 body: JSON.stringify(newUser),
@@ -29,20 +29,20 @@ function Dangnhap() {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             if (!response.ok) {
                 const errorData = await response.json();
                 setMsgErr(errorData.message);
                 dispatch(loginFailed());
-            }else{
+            } else {
                 const data = await response.json();
                 dispatch(loginSuccess(data));
                 localStorage.setItem('token', data.accessToken);
                 navigate("/");
             }
-            
+
         } catch (error) {
-          
+
             setMsgErr("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
             dispatch(loginFailed());
         }
@@ -83,11 +83,12 @@ function Dangnhap() {
                 </nav>
             </div>
             {/* Navbar End */}
-            <section>
-                <div className="container ">
-                    <div className="row align-items-center ">
+
+            <section className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
+                <div className="container">
+                    <div className="row align-items-center">
                         <div className="col-lg-4 col-md-4" />
-                        <div className="col-lg-4 col-md-4 login-box ">
+                        <div className="col-lg-4 col-md-4 login-box">
                             <div className="col-lg-12 login-key">
                                 <i className="fa fa-key" aria-hidden="true" />
                             </div>
@@ -112,7 +113,7 @@ function Dangnhap() {
                                             />
                                         </div>
 
-                                        {/* Wrap the error message in a common parent */}
+                                     {/* msgErr */}
                                         <div className="form-group">
                                             {/* Error Message */}
                                             {msgErr && (
@@ -132,6 +133,15 @@ function Dangnhap() {
                                                 </button>
                                             </div>
                                         </div>
+
+                                        <div className="col-lg-12 login-btm text-center">
+                                            <p className="login-text">
+                                                <Link to="/forgot-password">Quên mật khẩu?</Link>
+                                            </p>
+                                            <p className="login-text">
+                                                Chưa có tài khoản? <Link to="/dangky">Tạo tài khoản</Link>
+                                            </p>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -140,6 +150,7 @@ function Dangnhap() {
                     </div>
                 </div>
             </section>
+
         </>
     );
 }
