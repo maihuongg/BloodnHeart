@@ -51,6 +51,7 @@ function Hoso() {
                 method: 'PUT',
                 body: JSON.stringify(updateUser),
                 headers: {
+                    'Content-Type': 'application/json',
                     token: `Bearer ${accessToken}`
                 }
             });
