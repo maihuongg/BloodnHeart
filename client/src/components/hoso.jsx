@@ -6,10 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import {
-    userup1Start,
-    userup1Success,
-    userup1Failed
+    userprofileStart,
+    userprofileSuccess,
+    userprofileFailed
 } from "../redux/userSlice";
+import {
+    logOutStart,
+    logOutSuccess,
+    logOutFailed
+} from "../redux/authSlice";
 function Hoso() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -28,7 +33,7 @@ function Hoso() {
     const handleClose1 = () => setShow1(false);
     const handleShow1 = () => setShow1(true);
 
-    
+
     const [fullName, setfullName] = useState(userPro?.fullName);
     const [birthDay, setbirthDay] = useState(userPro?.birthDay);
     const [gender, setGender] = useState(userPro?.gender);
@@ -45,9 +50,9 @@ function Hoso() {
             gender: gender,
             bloodgroup: bloodgroup,
         };
-        dispatch(userup1Start());
+        dispatch(userprofileStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/"+userId, {
+            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
                 method: 'PUT',
                 body: JSON.stringify(updateUser),
                 headers: {
@@ -56,16 +61,69 @@ function Hoso() {
                 }
             });
 
-            if(!response.ok) {
-                dispatch(userup1Failed());
-            }else{
+            if (!response.ok) {
+                dispatch(userprofileFailed());
+            } else {
                 const data = await response.json();
-                dispatch(userup1Success(data));
+                dispatch(userprofileSuccess(data));
                 navigate("/hoso")
                 console.log(data);
             }
         } catch (error) {
-            dispatch(userup1Failed());
+            dispatch(userprofileFailed());
+        }
+    }
+
+    const handleUpdate2 = async (e) => {
+        e.preventDefault();
+        const updateUser = {
+            address: address,
+            phone: phone,
+            email: email,
+        };
+        dispatch(userprofileStart());
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                method: 'PUT',
+                body: JSON.stringify(updateUser),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                dispatch(userprofileFailed());
+            } else {
+                const data = await response.json();
+                dispatch(userprofileSuccess(data));
+                navigate("/hoso")
+                console.log(data);
+            }
+        } catch (error) {
+            dispatch(userprofileFailed());
+        }
+    }
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        dispatch(logOutStart());
+        try {
+            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+            if (!res.ok) {
+                dispatch(logOutFailed());
+            } else {
+                dispatch(logOutSuccess());
+                navigate("/");
+            }
+        } catch (error) {
+            dispatch(logOutFailed());
         }
     }
 
@@ -95,52 +153,68 @@ function Hoso() {
                             className="collapse navbar-collapse justify-content-between"
                             id="navbarCollapse"
                         >
-                            <div className="navbar-nav font-weight-bold mx-auto py-0">
-                                <Link to="/" className="nav-item nav-link">
-                                    Trang chủ
-                                </Link>
-                                <Link to="/sukien" className="nav-item nav-link">
-                                    Sự kiện
-                                </Link>
-
-                                <Link to="/lienhe" className="nav-item nav-link">
-                                    Liên hệ
-                                </Link>
-                                <div className="nav-item dropdown">
-                                    <a
-                                        href="#"
-                                        className="nav-link dropdown-toggle active"
-                                        data-toggle="dropdown"
-                                    >
-                                        Hồ sơ cá nhân
-                                    </a>
-                                    <div className="dropdown-menu rounded-0 m-0">
-                                        <Link to="/hoso" className="dropdown-item active">
-                                            Thông tin cá nhân
-                                        </Link>
-                                        <Link to="#" className="dropdown-item">
-                                            Lịch hẹn của bạn
-                                        </Link>
-                                        <Link to="#" className="dropdown-item">
-                                            Lịch sử hiến máu
-                                        </Link>
-                                    </div>
-                                </div>
-                                <Link to="/gioithieu" className="nav-item nav-link">
-                                    Giới thiệu
-                                </Link>
-                            </div>
                             {user ? (
                                 <>
+                                    <div className="navbar-nav font-weight-bold mx-auto py-0">
+                                        <Link to="/" className="nav-item nav-link">
+                                            Trang chủ
+                                        </Link>
+                                        <Link to="/sukien" className="nav-item nav-link">
+                                            Sự kiện
+                                        </Link>
+
+                                        <Link to="/lienhe" className="nav-item nav-link">
+                                            Liên hệ
+                                        </Link>
+                                        <div className="nav-item dropdown">
+                                            <a
+                                                href="#"
+                                                className="nav-link dropdown-toggle"
+                                                data-toggle="dropdown"
+                                            >
+                                                Hồ sơ cá nhân
+                                            </a>
+                                            <div className="dropdown-menu rounded-0 m-0">
+                                                <Link to="/hoso" className="dropdown-item active">
+                                                    Thông tin cá nhân
+                                                </Link>
+                                                <Link to="#" className="dropdown-item">
+                                                    Lịch hẹn của bạn
+                                                </Link>
+                                                <Link to="#" className="dropdown-item">
+                                                    Lịch sử hiến máu
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <Link to="/gioithieu" className="nav-item nav-link">
+                                            Giới thiệu
+                                        </Link>
+                                    </div>
                                     <a href="" className="nav-item" style={{ margin: "10px 10px" }}>
                                         <span> {user.cccd} </span>
                                     </a>
-                                    <a href="/dangxuat" className="btn btn-primary">
+                                    <a href="/dangxuat" className="btn btn-primary" onClick={handleLogout}>
                                         Đăng xuất
                                     </a>
                                 </>
                             ) : (
                                 <>
+                                    <div className="navbar-nav font-weight-bold mx-auto py-0">
+                                        <Link to="/" className="nav-item nav-link active">
+                                            Trang chủ
+                                        </Link>
+                                        <Link to="/sukien" className="nav-item nav-link">
+                                            Sự kiện
+                                        </Link>
+
+                                        <Link to="/lienhe" className="nav-item nav-link">
+                                            Liên hệ
+                                        </Link>
+
+                                        <Link to="/gioithieu" className="nav-item nav-link">
+                                            Giới thiệu
+                                        </Link>
+                                    </div>
                                     <a href="/dangnhap" className="btn btn-primary" style={{ margin: "10px 10px" }}>
                                         Đăng nhập
                                     </a>
@@ -210,7 +284,7 @@ function Hoso() {
                                                         type="text"
                                                         class="form-control border-1"
                                                         required="required"
-                                                        value={userPro?.cccd} 
+                                                        value={userPro?.cccd}
                                                     />
                                                 </div>
                                                 <div className="form-group">
@@ -347,7 +421,7 @@ function Hoso() {
                                             <Modal.Title>Thông tin liên hệ</Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
-                                            <form action="">
+                                            <form onSubmit={handleUpdate2}>
                                                 <div className="form-group">
                                                     <label className="form-control-label label">Địa chỉ liên lạc</label>
                                                     <input
@@ -381,7 +455,7 @@ function Hoso() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <Button variant="primary" type="submit" className="float-right">
+                                                    <Button variant="primary" type="submit" className="float-right" onClick={handleClose1}>
                                                         Lưu Lại
                                                     </Button>
                                                     <Button variant="secondary" className="float-right btnclose" onClick={handleClose1}>

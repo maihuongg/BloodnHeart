@@ -8,7 +8,10 @@ import {
     userprofileSuccess,
     userprofileFailed
 } from "../redux/userSlice";
-import { loginFailed } from "../redux/authSlice";
+import { 
+    logOutStart,
+    logOutSuccess,
+    logOutFailed} from "../redux/authSlice";
 function Trangchu() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -35,6 +38,28 @@ function Trangchu() {
             }
         } catch (error) {
             dispatch(userprofileFailed());
+        }
+    }
+    
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        dispatch(logOutStart());
+        try {
+            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+            if (!res.ok) {
+                dispatch(logOutFailed());
+            } else {
+                dispatch(logOutSuccess());
+                navigate("/");
+            }
+        } catch (error) {
+            dispatch(logOutFailed());
         }
     }
     return (
@@ -104,7 +129,7 @@ function Trangchu() {
                                 <a href="" className="nav-item" style={{ margin: "10px 10px" }}>
                                     <span> {user.cccd} </span>
                                 </a>
-                                <a href="/dangxuat" className="btn btn-primary">
+                                <a href="/dangxuat" className="btn btn-primary" onClick={handleLogout}>
                                     Đăng xuất
                                 </a>
                             </>
