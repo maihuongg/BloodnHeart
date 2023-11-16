@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const accountRoute = require("./routes/account");
 const userRoute = require("./routes/user");
+const adminRoute = require("./routes/admin")
 dotenv.config();
 const app = express()
 
@@ -20,16 +21,17 @@ mongoose.connect(process.env.MONGODB_URL, {
     .catch((error) => {
         console.error("Error connecting to database:", error);
     });
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:4000'];
 
 app.use(cors({
-    origin: 'http://localhost:3000',  // Replace with the actual origin of your client
+    origin: allowedOrigins,  // Replace with the actual origin of your client
     credentials: true,
 }));
 app.use(cookieParser());
 app.use(express.json());
 //ROUTES
 app.use("/v1/auth", authRoute);
-app.use("/v1/admin", accountRoute);
+app.use("/v1/admin", adminRoute);
 app.use("/v1/user", userRoute);
 app.listen(process.env.PORT, () => {
     console.log("Server is running");

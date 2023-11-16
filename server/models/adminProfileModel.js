@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const adminProfileSchema = new mongoose.Schema(
     {
+
+        account_id:{type: String},
         cccd: {
             type: String,
             require: true,
@@ -20,6 +22,30 @@ const adminProfileSchema = new mongoose.Schema(
             min: 10,
             max: 11,
             unique: true,
+        },
+        gender: {
+            type: String,
+            require: true,
+            max: 4,
+            default: null,
+        },
+        images: {
+            type: String,
+            require: true,
+            default: null,
+        },
+        birthDay:{
+            type: Date,
+            require: true,
+            default: null,
+        },
+        phone: {
+            type: String,
+            require: true,
+            min: 10,
+            max: 11,
+            default: null,
+            
         },
         email: {
             type: String,

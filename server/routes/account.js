@@ -1,9 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const authMiddleware = require('../middlewares/auth');
-const accountController = require('../controllers/accountController');
+// const express = require('express');
+// const router = express.Router();
+// const authMiddleware = require('../middlewares/auth');
+// const accountController = require('../controllers/accountController');
 
-// Admin get all user
-router.get('/users', authMiddleware.isAdmin, accountController.getAllAccount);
+// // Admin get all user
 
-module.exports = router;
+// module.exports = router;

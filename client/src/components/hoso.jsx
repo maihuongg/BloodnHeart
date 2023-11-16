@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import moment from "moment";
 import {
     userprofileStart,
     userprofileSuccess,
@@ -35,7 +36,9 @@ function Hoso() {
 
 
     const [fullName, setfullName] = useState(userPro?.fullName);
-    const [birthDay, setbirthDay] = useState(userPro?.birthDay);
+    const [birthDay, setbirthDay] = useState(moment(userPro?.birthDay).format('DD-MM-YYYY'));   
+     console.log('bday:', moment(userPro?.birthDay).format('DD-MM-YYYY'))
+
     const [gender, setGender] = useState(userPro?.gender);
     const [bloodgroup, setbloodGroup] = useState(userPro?.bloodgroup);
     const [address, setAddress] = useState(userPro?.address);
@@ -301,11 +304,11 @@ function Hoso() {
                                                 <div className="form-group">
                                                     <label className="form-control-label label">Ngày sinh(*)</label>
                                                     <input
-                                                        type="text"
+                                                        type="date"
                                                         class="form-control border-1"
                                                         placeholder="VD: 01/01/2000"
                                                         required="required"
-                                                        defaultValue={userPro?.birthDay}
+                                                        defaultValue={ moment(userPro?.birthDay).format('DD-MM-YYYY')}
                                                         onChange={(e) => setbirthDay(e.target.value)}
                                                     />
                                                 </div>
@@ -372,7 +375,7 @@ function Hoso() {
                                     </li>
                                 </div>
                                 <div className="col-lg-8 break">
-                                    <p style={{ margin: "0px 0px 0px" }}>{userPro?.birthDay}</p>
+                                    <p style={{ margin: "0px 0px 0px" }}>{moment(userPro?.birthDay).format('DD-MM-YYYY')}</p>
                                 </div>
                             </div>
                             <div className="row padding">
