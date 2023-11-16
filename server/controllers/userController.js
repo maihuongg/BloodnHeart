@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
+const cloudinary = require('cloudinary');
 
 const userController = {
     getUserById: async (req, res) => {
@@ -41,6 +42,40 @@ const userController = {
             return res.status(500).json({ error });
         }
     },
+
+    updateProfileImage: async (req, res) => {
+        try {
+            const accountId = req.params.account_id;
+            console.log('accountId', accountId);
+            const base64Image = req.body.images;
+            //console.log('img1',base64Image);
+
+            const result = await cloudinary.v2.uploader.upload(req.body.images, {
+                folder: 'profile',
+                width: 150,
+                crop: "scale"
+            })
+
+            console.log('url',result.secure_url);
+
+            const imageurl = result.secure_url;
+    
+            const userProfile = await UserProfile.findOneAndUpdate(
+                { account_id: accountId },
+                { $set: {images: imageurl}},
+                { new: true }
+            );
+    
+            if (!userProfile) {
+                return res.status(404).json({ message: 'User profile not found' });
+            }
+    
+            return res.status(200).json(userProfile);
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
+    },
+
     forgotPassword: async (req, res) => {
         try {
             const { cccd, email } = req.body;
