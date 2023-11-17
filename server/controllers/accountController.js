@@ -6,7 +6,8 @@ const accountController = {
     getAllAccount: async (req, res) => {
         try {
             const allAccount = await Account.find();
-            return res.status(200).json(allAccount);
+            const accountCount = allAccount.length;
+            return res.status(200).json({count: accountCount, allAccount});
         } catch (error) {
             return res.status(500).json(error);
         }
