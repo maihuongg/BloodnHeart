@@ -138,7 +138,7 @@ function Gioithieu() {
                             ) : (
                                 <>
                                     <div className="navbar-nav font-weight-bold mx-auto py-0">
-                                        <Link to="/" className="nav-item nav-link active">
+                                        <Link to="/" className="nav-item nav-link">
                                             Trang chủ
                                         </Link>
                                         <Link to="/sukien" className="nav-item nav-link">
@@ -149,7 +149,7 @@ function Gioithieu() {
                                             Liên hệ
                                         </Link>
 
-                                        <Link to="/gioithieu" className="nav-item nav-link">
+                                        <Link to="/gioithieu" className="nav-item nav-link active">
                                             Giới thiệu
                                         </Link>
                                     </div>

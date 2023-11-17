@@ -138,14 +138,14 @@ function Lienhe() {
                             ) : (
                                 <>
                                     <div className="navbar-nav font-weight-bold mx-auto py-0">
-                                        <Link to="/" className="nav-item nav-link active">
+                                        <Link to="/" className="nav-item nav-link">
                                             Trang chủ
                                         </Link>
                                         <Link to="/sukien" className="nav-item nav-link">
                                             Sự kiện
                                         </Link>
 
-                                        <Link to="/lienhe" className="nav-item nav-link">
+                                        <Link to="/lienhe" className="nav-item nav-link active">
                                             Liên hệ
                                         </Link>
 

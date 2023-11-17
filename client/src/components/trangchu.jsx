@@ -8,10 +8,11 @@ import {
     userprofileSuccess,
     userprofileFailed
 } from "../redux/userSlice";
-import { 
+import {
     logOutStart,
     logOutSuccess,
-    logOutFailed} from "../redux/authSlice";
+    logOutFailed
+} from "../redux/authSlice";
 function Trangchu() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -22,7 +23,7 @@ function Trangchu() {
     const handleProfile = async () => {
         dispatch(userprofileStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/"+userId, {
+            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ function Trangchu() {
             dispatch(userprofileFailed());
         }
     }
-    
+
     const handleLogout = async (e) => {
         e.preventDefault();
         dispatch(logOutStart());
@@ -170,16 +171,16 @@ function Trangchu() {
                     <div className="col-lg-6 text-center text-lg-left">
                         <h4 className="text-white mb-6 mt-5 mt-lg-2">Một cuộc đời ý nghĩa</h4>
                         <h1 className="display-3 font-weight-bold text-white">
-                        bắt đầu từ những giọt máu của bạn
+                            Bắt đầu từ những giọt máu của bạn
                         </h1>
                         <p className="text-white mb-8 text-align-justify"  >
                             Khi bạn quyết định hiến máu, bạn đang chọn một cuộc sống ý nghĩa. Hành động này không chỉ
                             giúp cứu sống người khác mà còn thể hiện lòng nhân ái,
                             tình người và trách nhiệm xã hội.
-                            <br/>Mỗi giọt máu bạn hiến tặng có thể là cơ hội để một người khác có thể thở phào,
+                            <br />Mỗi giọt máu bạn hiến tặng có thể là cơ hội để một người khác có thể thở phào,
                             sống thêm một ngày, một tuần, hay thậm chí là một cuộc đời mới.
                         </p>
-                       
+
                     </div>
                     <div className="col-lg-6 text-center text-lg-right" style={{ maxWidth: '120%', height: 'auto' }}>
                         <img className="img-fluid mt-6" src="img/banners.png" alt="" />
@@ -191,18 +192,25 @@ function Trangchu() {
             {/* Facilities Start */}
             <div className="container-fluid pt-5">
                 <div className="container pb-3">
+                    <div className="text-center pb-2">
+                        <p className="section-title px-5">
+                            <span className="px-2">Tiêu chuẩn</span>
+                        </p>
+                        <h1 className="mb-4">Tiêu Chuẩn Tham Gia Hiến Máu</h1>
+                    </div>
                     <div className="row">
                         <div className="col-lg-4 col-md-6 pb-1">
                             <div
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-050-fence h1 font-weight-normal text-primary mb-3" />
+                                <img className="icon" src="img/weight.png"></img>
                                 <div className="pl-4">
-                                    <h4>Play Ground</h4>
+                                    <h4> Cân Nặng</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Nam ≥ 45 kg
+                                        <br />
+                                        Nữ ≥ 45 kg
                                     </p>
                                 </div>
                             </div>
@@ -212,12 +220,11 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-022-drum h1 font-weight-normal text-primary mb-3" />
+                                <img className="icon" src="img/age.png"></img>
                                 <div className="pl-4">
-                                    <h4>Music and Dance</h4>
+                                    <h4>Độ Tuổi</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Người khỏe mạnh trong độ tuổi từ đủ 18 đến 60 tuổi
                                     </p>
                                 </div>
                             </div>
@@ -227,12 +234,11 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-030-crayons h1 font-weight-normal text-primary mb-3" />
+                                <img className="icon" src="img/identity.jpg"></img>
                                 <div className="pl-4">
-                                    <h4>Arts and Crafts</h4>
+                                    <h4>Giấy Tờ Tùy Thân</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Mang theo CCCD/CMND/Hộ chiếu
                                     </p>
                                 </div>
                             </div>
@@ -242,12 +248,11 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-017-toy-car h1 font-weight-normal text-primary mb-3" />
+                                <img className="icon" src="img/injection.png"></img>
                                 <div className="pl-4">
-                                    <h4>Safe Transportation</h4>
+                                    <h4>Chất Gây Nghiện</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Không nghiện ma túy, rượu bia và các chất kích thích
                                     </p>
                                 </div>
                             </div>
@@ -257,12 +262,11 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-025-sandwich h1 font-weight-normal text-primary mb-3" />
+                               <img className="icon" src="img/patient.png"></img>
                                 <div className="pl-4">
-                                    <h4>Healthy food</h4>
+                                    <h4>Bệnh Nền</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Không mắc các bệnh mãn tính hoặc cấp tính về tim mạch, huyết áp, hô hấp, dạ dày…
                                     </p>
                                 </div>
                             </div>
@@ -272,12 +276,54 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                                <i className="flaticon-047-backpack h1 font-weight-normal text-primary mb-3" />
+                                <img className="icon" src="img/virus.png"></img>
                                 <div className="pl-4">
-                                    <h4>Educational Tour</h4>
+                                    <h4>Bệnh Truyền Nhiễm</h4>
                                     <p className="m-0">
-                                        Kasd labore kasd et dolor est rebum dolor ut, clita dolor vero
-                                        lorem amet elitr vero...
+                                        Không mắc hoặc không có các hành vi nguy cơ lây nhiễm HIV,
+                                        không nhiễm viêm gan B, viêm gan C, và các virus lây qua đường truyền máu
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-6 pb-1">
+                            <div
+                                className="d-flex bg-light shadow-sm border-top rounded mb-4"
+                                style={{ padding: 30 }}
+                            >
+                                <img className="icon" src="img/distance.png"></img>
+                                <div className="pl-4">
+                                    <h4>Khoảng Cách</h4>
+                                    <p className="m-0">
+                                        Thời gian tối thiểu giữa 2 lần hiến máu là 12 tuần đối với cả Nam và Nữ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-6 pb-1">
+                            <div
+                                className="d-flex bg-light shadow-sm border-top rounded mb-4"
+                                style={{ padding: 30 }}
+                            >
+                                <img className="icon" src="img/hemoglobin-test.png"></img>
+                                <div className="pl-4">
+                                    <h4>Chỉ Số Huyết Sắc Tố</h4>
+                                    <p className="m-0">
+                                        Chỉ số huyết sắc tố (Hb) ≥120g/l (≥125g/l nếu hiến từ 350ml trở lên).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-6 pb-1">
+                            <div
+                                className="d-flex bg-light shadow-sm border-top rounded mb-4"
+                                style={{ padding: 30 }}
+                            >
+                                <img className="icon" src="img/blood-test.png"></img>
+                                <div className="pl-4">
+                                    <h4>Test Nhanh</h4>
+                                    <p className="m-0">
+                                        Kết quả test nhanh âm tính với kháng nguyên bề mặt của siêu vi B.
                                     </p>
                                 </div>
                             </div>
@@ -299,7 +345,7 @@ function Trangchu() {
                         </div>
                         <div className="col-lg-7">
                             <p className="section-title pr-5">
-                                <span className="pr-2">Learn About Us</span>
+                                <span className="pr-2">Nổi Bật</span>
                             </p>
                             <h1 className="mb-4">Best School For Your Kids</h1>
                             <p>
@@ -336,225 +382,101 @@ function Trangchu() {
                 </div>
             </div>
             {/* About End */}
-            {/* Class Start */}
+            {/* Blog Start */}
             <div className="container-fluid pt-5">
                 <div className="container">
                     <div className="text-center pb-2">
                         <p className="section-title px-5">
-                            <span className="px-2">Popular Classes</span>
+                            <span className="px-2">Latest Blog</span>
                         </p>
-                        <h1 className="mb-4">Classes for Your Kids</h1>
+                        <h1 className="mb-4">Latest Articles From Blog</h1>
                     </div>
-                    <div className="row">
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-1.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Drawing Class</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
+                    <div className="row pb-3">
+                        <div className="col-lg-4 mb-4">
+                            <div className="card border-0 shadow-sm mb-2">
+                                <img className="card-img-top mb-2" src="img/blog-1.jpg" alt="" />
+                                <div className="card-body bg-light text-center p-4">
+                                    <h4 className="">Diam amet eos at no eos</h4>
+                                    <div className="d-flex justify-content-center mb-3">
+                                        <small className="mr-3">
+                                            <i className="fa fa-user text-primary" /> Admin
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-folder text-primary" /> Web Design
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-comments text-primary" /> 15
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
+                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
+                                        lorem. Tempor ipsum justo amet stet...
                                     </p>
+                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
+                                        Read More
+                                    </a>
                                 </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
                             </div>
                         </div>
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-2.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Language Learning</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
+                        <div className="col-lg-4 mb-4">
+                            <div className="card border-0 shadow-sm mb-2">
+                                <img className="card-img-top mb-2" src="img/blog-2.jpg" alt="" />
+                                <div className="card-body bg-light text-center p-4">
+                                    <h4 className="">Diam amet eos at no eos</h4>
+                                    <div className="d-flex justify-content-center mb-3">
+                                        <small className="mr-3">
+                                            <i className="fa fa-user text-primary" /> Admin
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-folder text-primary" /> Web Design
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-comments text-primary" /> 15
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
+                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
+                                        lorem. Tempor ipsum justo amet stet...
                                     </p>
+                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
+                                        Read More
+                                    </a>
                                 </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
                             </div>
                         </div>
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-3.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Basic Science</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
+                        <div className="col-lg-4 mb-4">
+                            <div className="card border-0 shadow-sm mb-2">
+                                <img className="card-img-top mb-2" src="img/blog-3.jpg" alt="" />
+                                <div className="card-body bg-light text-center p-4">
+                                    <h4 className="">Diam amet eos at no eos</h4>
+                                    <div className="d-flex justify-content-center mb-3">
+                                        <small className="mr-3">
+                                            <i className="fa fa-user text-primary" /> Admin
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-folder text-primary" /> Web Design
+                                        </small>
+                                        <small className="mr-3">
+                                            <i className="fa fa-comments text-primary" /> 15
+                                        </small>
+                                    </div>
+                                    <p>
+                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
+                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
+                                        lorem. Tempor ipsum justo amet stet...
                                     </p>
-                                </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Class End */}
-            {/* Registration Start */}
-            <div className="container-fluid py-5">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-7 mb-5 mb-lg-0">
-                            <p className="section-title pr-5">
-                                <span className="pr-2">Book A Seat</span>
-                            </p>
-                            <h1 className="mb-4">Book A Seat For Your Kid</h1>
-                            <p>
-                                Invidunt lorem justo sanctus clita. Erat lorem labore ea, justo
-                                dolor lorem ipsum ut sed eos, ipsum et dolor kasd sit ea justo. Erat
-                                justo sed sed diam. Ea et erat ut sed diam sea ipsum est dolor
-                            </p>
-                            <ul className="list-inline m-0">
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Labore eos amet dolor amet diam
-                                </li>
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Etsea et sit dolor amet ipsum
-                                </li>
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Diam dolor diam elitripsum vero.
-                                </li>
-                            </ul>
-                            <a href="" className="btn btn-primary mt-4 py-2 px-4">
-                                Book Now
-                            </a>
-                        </div>
-                        <div className="col-lg-5">
-                            <div className="card border-0">
-                                <div className="card-header bg-secondary text-center p-4">
-                                    <h1 className="text-white m-0">Book A Seat</h1>
-                                </div>
-                                <div className="card-body rounded-bottom bg-primary p-5">
-                                    <form>
-                                        <div className="form-group">
-                                            <input
-                                                type="text"
-                                                className="form-control border-0 p-4"
-                                                placeholder="Your Name"
-                                                required="required"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <input
-                                                type="email"
-                                                className="form-control border-0 p-4"
-                                                placeholder="Your Email"
-                                                required="required"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <select
-                                                className="custom-select border-0 px-4"
-                                                style={{ height: 47 }}
-                                            >
-                                                <option selected="">Select A Class</option>
-                                                <option value={1}>Class 1</option>
-                                                <option value={2}>Class 1</option>
-                                                <option value={3}>Class 1</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <button
-                                                className="btn btn-secondary btn-block border-0 py-3"
-                                                type="submit"
-                                            >
-                                                Book Now
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
+                                        Read More
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Registration End */}
+            {/* Blog End */}
             {/* Team Start */}
             <div className="container-fluid pt-5">
                 <div className="container">
@@ -701,193 +623,7 @@ function Trangchu() {
                 </div>
             </div>
             {/* Team End */}
-            {/* Testimonial Start */}
-            <div className="container-fluid py-5">
-                <div className="container p-0">
-                    <div className="text-center pb-2">
-                        <p className="section-title px-5">
-                            <span className="px-2">Testimonial</span>
-                        </p>
-                        <h1 className="mb-4">What Parents Say!</h1>
-                    </div>
-                    <div className="owl-carousel testimonial-carousel">
-                        <div className="testimonial-item px-3">
-                            <div className="bg-light shadow-sm rounded mb-4 p-4">
-                                <h3 className="fas fa-quote-left text-primary mr-3" />
-                                Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr
-                                eirmod clita lorem. Dolor tempor ipsum clita
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <img
-                                    className="rounded-circle"
-                                    src="img/testimonial-1.jpg"
-                                    style={{ width: 70, height: 70 }}
-                                    alt="Image"
-                                />
-                                <div className="pl-3">
-                                    <h5>Parent Name</h5>
-                                    <i>Profession</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="testimonial-item px-3">
-                            <div className="bg-light shadow-sm rounded mb-4 p-4">
-                                <h3 className="fas fa-quote-left text-primary mr-3" />
-                                Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr
-                                eirmod clita lorem. Dolor tempor ipsum clita
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <img
-                                    className="rounded-circle"
-                                    src="img/testimonial-2.jpg"
-                                    style={{ width: 70, height: 70 }}
-                                    alt="Image"
-                                />
-                                <div className="pl-3">
-                                    <h5>Parent Name</h5>
-                                    <i>Profession</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="testimonial-item px-3">
-                            <div className="bg-light shadow-sm rounded mb-4 p-4">
-                                <h3 className="fas fa-quote-left text-primary mr-3" />
-                                Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr
-                                eirmod clita lorem. Dolor tempor ipsum clita
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <img
-                                    className="rounded-circle"
-                                    src="img/testimonial-3.jpg"
-                                    style={{ width: 70, height: 70 }}
-                                    alt="Image"
-                                />
-                                <div className="pl-3">
-                                    <h5>Parent Name</h5>
-                                    <i>Profession</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="testimonial-item px-3">
-                            <div className="bg-light shadow-sm rounded mb-4 p-4">
-                                <h3 className="fas fa-quote-left text-primary mr-3" />
-                                Sed ea amet kasd elitr stet, stet rebum et ipsum est duo elitr
-                                eirmod clita lorem. Dolor tempor ipsum clita
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <img
-                                    className="rounded-circle"
-                                    src="img/testimonial-4.jpg"
-                                    style={{ width: 70, height: 70 }}
-                                    alt="Image"
-                                />
-                                <div className="pl-3">
-                                    <h5>Parent Name</h5>
-                                    <i>Profession</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Testimonial End */}
-            {/* Blog Start */}
-            <div className="container-fluid pt-5">
-                <div className="container">
-                    <div className="text-center pb-2">
-                        <p className="section-title px-5">
-                            <span className="px-2">Latest Blog</span>
-                        </p>
-                        <h1 className="mb-4">Latest Articles From Blog</h1>
-                    </div>
-                    <div className="row pb-3">
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-1.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-2.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-3.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Blog End */}
         </>
-
     );
 
 }
