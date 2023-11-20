@@ -39,14 +39,6 @@ const adminProfileSchema = new mongoose.Schema(
             require: true,
             default: null,
         },
-        phone: {
-            type: String,
-            require: true,
-            min: 10,
-            max: 11,
-            default: null,
-            
-        },
         email: {
             type: String,
             require: true,

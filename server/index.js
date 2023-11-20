@@ -10,7 +10,7 @@ const accountRoute = require("./routes/account");
 const userRoute = require("./routes/user");
 const fileupload = require("express-fileupload");
 const adminRoute = require("./routes/admin")
-
+const hospitalRoute = require("./routes/hospital");
 
 dotenv.config();
 const app = express()
@@ -46,6 +46,7 @@ cloudinary.config({
 //ROUTES
 app.use("/v1/auth", authRoute);
 app.use("/v1/admin", adminRoute);
+app.use("/v1/hospital", hospitalRoute);
 app.use("/v1/user", userRoute);
 app.listen(process.env.PORT, () => {
     console.log("Server is running");

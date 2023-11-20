@@ -1,0 +1,72 @@
+[
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện A",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện S",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện D",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện F",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện G",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện H",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    },
+    {
+        "hospital_id" : "65578395ef220668138776da",
+        "eventName" : "Bệnh viện J",
+        "images" : "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
+        "date_start" : null,
+        "date_end" : null,
+        "amount" : 20,
+        "address" : "Việt Nam",
+        "listusers": []
+    }
+]

@@ -9,58 +9,87 @@ function SuKien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
+    const hospitalProfile = useSelector((state) => state.hospital.profile.gethospital);
+    const hospitalId = hospitalProfile?._id;
     const accessToken = currentAdmin?.accessToken;
+    const isAdmin = currentAdmin?.isAdmin;
+    const isHospital = currentAdmin?.isHospital;
+    useEffect(() => {
+        if (isAdmin) {
+            //Function to fetch data from the API
+            const fetchData1 = async () => {
+                try {
+                    const response1 = await fetch("http://localhost:8000/v1/admin/event", {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            token: `Bearer ${accessToken}`
+                        }
+                    });
 
-    // useEffect(() => {
-    //     // Function to fetch data from the API
-    //     const fetchData = async () => {
-    //         try {
-    //             const response2 = await fetch("http://localhost:8000/v1/admin/users", {
-    //                 method: 'GET',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     token: `Bearer ${accessToken}`
-    //                 }
-    //             });
+                    if (response1.ok) {
+                        const data1 = await response1.json();
+                        //data gồm count và allAccount
+                        console.log(data1.allEvent)
+                        setData(data1.allEvent);
+                    }
+                    else return 0;
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchData1();
+        } else {
+            if (isHospital) {
+                //Function to fetch data from the API
+                const fetchData2 = async () => {
+                    try {
+                        const response2 = await fetch("http://localhost:8000/v1/hospital/event/" + hospitalId, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                token: `Bearer ${accessToken}`
+                            }
+                        });
 
-    //             if (response2.ok) {
-    //                 const data2 = await response2.json();
-    //                 //data gồm count và allAccount
-    //                 console.log(data2.allAccount)
-    //                 setData(data2.allAccount);
-    //             }
-    //             else return 0;
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+                        if (response2.ok) {
+                            const data2 = await response2.json();
+                            //data gồm count và allAccount
+                            console.log(data2.allEvent)
+                            setData(data2.allEvent);
+                        }
+                        else return 0;
+                    } catch (error) {
+                        console.error("Error fetching data:", error);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
 
-    //     fetchData();
-    // }, []);
+                fetchData2();
+            } else {
+                console.log("Error fetching data");
+            }
+        }    
+    }, []);
 
     const columns = [
         {
-            title: "CCCD",
-            dataIndex: "cccd",
-            key: "cccd",
+            title: "Tên sự kiện",
+            dataIndex: "eventName",
+            key: "eventName",
         },
         {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Ngày bắt đầu",
+            dataIndex: "date_start",
+            key: "date_start",
         },
         {
-            title: "Vai trò",
-            dataIndex: "role",
-            key: "role",
-            render: (text, record) => (
-                // Hiển thị vai trò dựa trên điều kiện
-                record.isAdmin ? "Admin" :
-                    record.isHospital ? "Bệnh viện" :
-                        "Người dùng"
-            ),
+            title: "Ngày kết thúc",
+            dataIndex: "date_end",
+            key: "date_end",
         },
         {
             title: "Ngày tạo",

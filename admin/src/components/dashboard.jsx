@@ -12,8 +12,8 @@ import Panel from "./dashboard/panel";
 import "../redux/adminSlice"
 import "../redux/authSlice"
 import moment from 'moment'
-import { adminprofileFailed, adminprofileStart, adminprofileSuccess } from "../redux/adminSlice";
 async function totalUser(accessToken) {
+
   try {
     const response2 = await fetch("http://localhost:8000/v1/admin/users", {
       method: 'GET',
@@ -35,13 +35,14 @@ async function totalUser(accessToken) {
 
 function Dashboard() {
   const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
-  const accountId = currentAdmin?._id
-  const isAdmin = currentAdmin?.isAdmin;
-  const accessToken = currentAdmin?.accessToken;
-  // console.log("accessToken", accessToken);
   const adminProfile = useSelector((state) => state.admin.profile.getadmin);
-  const adminanem = adminProfile?.adminName
-  // console.log("admin name", adminanem)
+  const hospitalProfile = useSelector((state) => state.hospital.profile.gethospital);
+  const accountId = currentAdmin?._id
+  const accessToken = currentAdmin?.accessToken;
+  const isAdmin = currentAdmin?.isAdmin;
+  const isHospital = currentAdmin?.isHospital;
+  const [isAdminOrHospital, setAdminOrHospital] = useState(null);
+  const [name, setName] = useState(null);
   const [currentTime, setCurrentTime] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
   const [userTotal, setUserTotal] = useState(null);
 
@@ -65,10 +66,20 @@ function Dashboard() {
     return () => clearInterval(intervalId);
   }, []);
   
+  useEffect(() => {
+    if (isAdmin) {
+      setAdminOrHospital(isAdmin);
+      setName(adminProfile?.adminName);
+    } else if (isHospital) {
+      setAdminOrHospital(isHospital);
+      setName(hospitalProfile?.hospitalName);
+    }
+  }, [isAdmin, isHospital, adminProfile, hospitalProfile]);
+
   
   return (
     <div className="container-scroller">
-      {isAdmin ? (
+      {isAdminOrHospital ? (
         <>
           <Navbar />
           <div class="container-fluid page-body-wrapper">
@@ -79,7 +90,7 @@ function Dashboard() {
                   <div className="col-md-12 grid-margin">
                     <div className="row">
                       <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h3 className="font-weight-bold">Xin chào {adminanem}</h3>
+                        <h3 className="font-weight-bold">Xin chào {name}</h3>
                         <h6 className="font-weight-normal mb-0">
                           Chúc bạn ngày mới tràn đầy năng lượng !
                           <span className="text-primary"></span>

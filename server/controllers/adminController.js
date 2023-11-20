@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
+const Event = require('../models/eventModel')
 const adminController ={
     getAdminById: async (req, res) => {
         try {
@@ -18,6 +19,16 @@ const adminController ={
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
+
+    getAllEvent: async (req, res) => {
+        try {
+            const allEvent = await Event.find();
+            const eventCount = allEvent.length;
+            return res.status(200).json({count: eventCount, allEvent});
+        } catch (error) {
+            return res.status(500).json(error);
         }
     },
 }

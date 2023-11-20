@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const hospitalProfileSchema = new mongoose.Schema(
     {
+        account_id:{type: String},
         sdd: {
             type: String,
             require: true,
@@ -15,8 +16,9 @@ const hospitalProfileSchema = new mongoose.Schema(
             require: true,
         },
         images: {
-            type: Array,
+            type: String,
             require: true,
+            default: 'https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg',
         },
         phone: {
             type: String,
@@ -24,6 +26,7 @@ const hospitalProfileSchema = new mongoose.Schema(
             min: 10,
             max: 11,
             unique: true,
+            default: null,
         },
         email: {
             type: String,

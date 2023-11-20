@@ -16,6 +16,7 @@ async function processAccounts() {
                 account_id: account._id,
                 adminName: "admin",
                 address: "Việt Nam",
+                images: "https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg",
                 email: account.email
             };
 

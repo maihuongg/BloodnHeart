@@ -5,12 +5,20 @@ import {
     loginStart,
     loginFailed,
     loginSuccess
-} from "../redux/authSlice"
-
-import "../redux/adminSlice"
-import { adminprofileFailed, adminprofileStart, adminprofileSuccess } from "../redux/adminSlice";
+} from "../redux/authSlice";
+import { 
+    adminprofileFailed, 
+    adminprofileStart, 
+    adminprofileSuccess 
+} from "../redux/adminSlice";
+import { 
+    hospitalprofileStart,
+    hospitalprofileSuccess,
+    hospitalrofileFailed
+} from "../redux/hospitalSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+// import { isHospital } from "../../../server/middlewares/auth";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
     const [password, setPassword] = useState("");
@@ -34,12 +42,12 @@ function Dangnhap() {
             });
             if (response.ok) {
                 const data = await response.json();
-                if (data.isAdmin) {
-                    dispatch(loginSuccess(data));
                     console.log("data login", data)
                     const accessToken = data.accessToken;
                     console.log(accessToken)
                     const accountId = data._id;
+                if (data.isAdmin) {
+                    dispatch(loginSuccess(data));
                     dispatch(adminprofileStart());
                     try {
                         const response2 = await fetch("http://localhost:8000/v1/admin/profile/" + accountId, {
@@ -66,9 +74,35 @@ function Dangnhap() {
                     navigate("/dashboard");
                 }
                 else {
+                    if (data.isHospital) {
+                        dispatch(loginSuccess(data));
+                        dispatch(hospitalprofileStart());
+                        try {
+                            const response3 = await fetch("http://localhost:8000/v1/hospital/profile/" + accountId, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    token: `Bearer ${accessToken}`
+                                }
+                            });
 
-                    setMsgErr("Vui lòng đăng nhập bằng tài khoản Admin.");
-                    dispatch(loginFailed());
+                            if (!response3.ok) {
+                                dispatch(hospitalrofileFailed());
+                            } else {
+                                const data3 = await  response3.json();
+                                console.log("data pro", data3)
+                                dispatch(hospitalprofileSuccess(data3));
+                            }
+                        } catch (error) {
+                            dispatch(hospitalrofileFailed());
+                        }
+
+                        localStorage.setItem('token', data.accessToken);
+                        navigate("/dashboard");
+                    } else {
+                        setMsgErr("Vui lòng đăng nhập bằng tài khoản Admin hoặc Bệnh viện");
+                        dispatch(loginFailed());
+                    }
                 }
             }
             else {

@@ -51,6 +51,7 @@ function Hoso() {
     const [email, setEmail] = useState(userPro?.email);
     const [images, setImages] = useState('');
     const [imagesdefault, setImagesdefault] = useState(userPro?.images);
+    console.log(imagesdefault);
 
     const handleUpdate1 = async (e) => {
         e.preventDefault();
