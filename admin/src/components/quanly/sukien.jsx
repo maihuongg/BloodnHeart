@@ -160,8 +160,9 @@ function SuKien() {
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-sm btn-outline-primary btn-icon-prepend" type="button"><i class="mdi mdi-note-plus"></i> Thêm sự kiện</button>
-                                                    
+                                                    <button class="btn btn-sm btn-outline-primary btn-icon-prepend" type="button">
+                                                        <i class="mdi mdi-note-plus"></i> Thêm sự kiện</button>
+
                                                 </div>
                                             </div></div>
                                         <p class="card-description"></p>

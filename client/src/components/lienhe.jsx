@@ -172,15 +172,15 @@ function Lienhe() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">Contact Us</h3>
+                    <h3 className="display-3 font-weight-bold text-white">HỢP TÁC</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
                             <a className="text-white" href="">
-                                Home
+                                Trang chủ
                             </a>
                         </p>
                         <p className="m-0 px-2">/</p>
-                        <p className="m-0">Contact Us</p>
+                        <p className="m-0">Hợp tác</p>
                     </div>
                 </div>
             </div>
@@ -190,12 +190,48 @@ function Lienhe() {
                 <div className="container">
                     <div className="text-center pb-2">
                         <p className="section-title px-5">
-                            <span className="px-2">Get In Touch</span>
+                            <span className="px-2">Hợp tác</span>
                         </p>
-                        <h1 className="mb-4">Contact Us For Any Query</h1>
+                        <h1 className="mb-4">Đăng ký trở thành bệnh viện hợp tác</h1>
                     </div>
                     <div className="row">
-                        <div className="col-lg-7 mb-5">
+                        <div className="col-md-12">
+                            <p>
+                                BloodnHeart xin trân trọng kính mời các bệnh viện, các trung tâm y tế cộng đồng,
+                                các tổ chức y tế có lòng nhân ái và sẵn sàng hỗ trợ cộng đồng,
+                                tham gia vào dự án hiến máu nhân đạo cùng chúng tôi.
+                            </p>
+                        </div>
+
+                        <div className="col-md-12 mt-6">
+                            <h3>Mục Đích Dự Án</h3>
+                            <p>
+                                Dự án hiến máu nhân đạo của chúng tôi được tạo ra với mục tiêu chính là
+                                xây dựng một nguồn cung máu ổn định, đáp ứng nhu cầu y tế cộng đồng và
+                                giúp cải thiện tình hình sức khỏe của những người cần máu khẩn cấp.
+                            </p>
+                        </div>
+                        <div className="col-md-12 mt-6">
+                            <h3>Lợi Ích của Bệnh Viện Hợp Tác</h3>
+                            <ul>
+                                <li>Tăng cường uy tín và nhận thức trong cộng đồng y tế.</li>
+                                <li>Thúc đẩy tinh thần hiến máu và trách nhiệm xã hội.</li>
+                                <li>Được hỗ trợ thông tin và quản lý chất lượng hiệu quả.</li>
+                                <li>Tham gia vào một mạng lưới liên kết mạnh mẽ với các đối tác y tế.</li>
+                            </ul>
+                        </div>
+                        <div className="col-md-12">
+                            <p>
+                                Để đăng ký và biết thêm chi tiết, vui lòng để lại thông tin bên dưới
+                                Chúng tôi sẽ nhanh chóng xem xét đăng ký của quý đối tác và cung cấp phản hồi chi tiết thông qua email.
+                                Chúng tôi rất mong đợi sự hợp tác tích cực từ các bệnh viện nhân đạo để cùng nhau giúp đỡ và
+                                lan tỏa tình người qua dự án hiến máu nhân đạo.
+                                Cảm ơn bạn đã chú ý và đồng lòng chung tay xây dựng một cộng đồng khỏe mạnh hơn.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-lg-6 mx-auto">
                             <div className="contact-form">
                                 <div id="success" />
                                 <form name="sentMessage" id="contactForm" noValidate="novalidate">
@@ -203,10 +239,10 @@ function Lienhe() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="name"
-                                            placeholder="Your Name"
+                                            id="leaderName"
+                                            placeholder="Leader's Name"
                                             required="required"
-                                            data-validation-required-message="Please enter your name"
+                                            data-validation-required-message="Please enter the leader's name"
                                         />
                                         <p className="help-block text-danger" />
                                     </div>
@@ -225,10 +261,39 @@ function Lienhe() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="subject"
-                                            placeholder="Subject"
+                                            id="fax"
+                                            placeholder="Fax Number"
                                             required="required"
-                                            data-validation-required-message="Please enter a subject"
+                                            data-validation-required-message="Please enter the fax number"
+                                        />
+                                        <p className="help-block text-danger" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div className="col-lg-6 mx-auto">
+                            <div className="contact-form">
+                                <form name="sentMessage" id="contactForm" noValidate="novalidate">
+                                    <div className="control-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="hospitalName"
+                                            placeholder="Hospital Name"
+                                            required="required"
+                                            data-validation-required-message="Please enter the hospital name"
+                                        />
+                                        <p className="help-block text-danger" />
+                                    </div>
+                                    <div className="control-group">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="hospitalId"
+                                            placeholder="Hospital ID"
+                                            required="required"
+                                            data-validation-required-message="Please enter the hospital ID"
                                         />
                                         <p className="help-block text-danger" />
                                     </div>
@@ -236,10 +301,10 @@ function Lienhe() {
                                         <textarea
                                             className="form-control"
                                             rows={6}
-                                            id="message"
-                                            placeholder="Message"
+                                            id="address"
+                                            placeholder="Hospital Address"
                                             required="required"
-                                            data-validation-required-message="Please enter your message"
+                                            data-validation-required-message="Please enter the hospital address"
                                             defaultValue={""}
                                         />
                                         <p className="help-block text-danger" />
@@ -250,64 +315,19 @@ function Lienhe() {
                                             type="submit"
                                             id="sendMessageButton"
                                         >
-                                            Send Message
+                                            Gửi yêu cầu
                                         </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div className="col-lg-5 mb-5">
-                            <p>
-                                Labore sea amet kasd diam justo amet ut vero justo. Ipsum ut et kasd
-                                duo sit, ipsum sea et erat est dolore, magna ipsum et magna elitr.
-                                Accusam accusam lorem magna, eos et sed eirmod dolor est eirmod
-                                eirmod amet.
-                            </p>
-                            <div className="d-flex">
-                                <i
-                                    className="fa fa-map-marker-alt d-inline-flex align-items-center justify-content-center bg-primary text-secondary rounded-circle"
-                                    style={{ width: 45, height: 45 }}
-                                />
-                                <div className="pl-3">
-                                    <h5>Address</h5>
-                                    <p>123 Street, New York, USA</p>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <i
-                                    className="fa fa-envelope d-inline-flex align-items-center justify-content-center bg-primary text-secondary rounded-circle"
-                                    style={{ width: 45, height: 45 }}
-                                />
-                                <div className="pl-3">
-                                    <h5>Email</h5>
-                                    <p>info@example.com</p>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <i
-                                    className="fa fa-phone-alt d-inline-flex align-items-center justify-content-center bg-primary text-secondary rounded-circle"
-                                    style={{ width: 45, height: 45 }}
-                                />
-                                <div className="pl-3">
-                                    <h5>Phone</h5>
-                                    <p>+012 345 67890</p>
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <i
-                                    className="far fa-clock d-inline-flex align-items-center justify-content-center bg-primary text-secondary rounded-circle"
-                                    style={{ width: 45, height: 45 }}
-                                />
-                                <div className="pl-3">
-                                    <h5>Opening Hours</h5>
-                                    <strong>Sunday - Friday:</strong>
-                                    <p className="m-0">08:00 AM - 05:00 PM</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+
+
+
                 </div>
             </div>
+
             {/* Contact End */}
         </>
 
