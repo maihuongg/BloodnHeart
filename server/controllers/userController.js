@@ -4,7 +4,11 @@ const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
+<<<<<<< Updated upstream
 const Event = require('../models/eventModel')
+=======
+const HospitalProfile = require('../models/hospitalProfileModel')
+>>>>>>> Stashed changes
 
 const userController = {
     getUserById: async (req, res) => {
@@ -57,20 +61,20 @@ const userController = {
                 crop: "scale"
             })
 
-            console.log('url',result.secure_url);
+            console.log('url', result.secure_url);
 
             const imageurl = result.secure_url;
-    
+
             const userProfile = await UserProfile.findOneAndUpdate(
                 { account_id: accountId },
-                { $set: {images: imageurl}},
+                { $set: { images: imageurl } },
                 { new: true }
             );
-    
+
             if (!userProfile) {
                 return res.status(404).json({ message: 'User profile not found' });
             }
-    
+
             return res.status(200).json(userProfile);
         } catch (error) {
             return res.status(500).json({ error });
@@ -88,7 +92,8 @@ const userController = {
                 // Send reset password email
                 const emailResponse = await sendMail(user, resetPasswordURL);
                 console.log('Email response:', emailResponse);
-                return res.status(200).json({token,
+                return res.status(200).json({
+                    token,
                     message: 'Chúng tôi đã gửi một hộp thư thay đổi mật khẩu đến địa chỉ email mà bạn đã đăng ký. Vui lòng kiểm tra hộp thư của bạn và làm theo hướng dẫn để hoàn tất quá trình thay đổi mật khẩu. '
                 });
 
@@ -99,6 +104,7 @@ const userController = {
             return res.status(500).json({ error });
         }
     },
+<<<<<<< Updated upstream
 
     getAllEventByUser: async (req, res) => {
         try {
@@ -110,9 +116,86 @@ const userController = {
         }
     },
     
+=======
+    tobeHospital: async (req, res) => {
+        try {
+            //async function
+            const validationResult = await validateHospital(req.body);
+            //validate đúng thì tạo hospitalProfile mới
+            // và tạo account mới chưa có password
+            if (validationResult.isValid) {
+                console.log('cccd:', req.body.sdd);
+                console.log('email:', req.body.sdd);
+                const newAccount = new Account({
+                    cccd: req.body.sdd,
+                    email: req.body.email,
+                    isHospital: true,
+                });
+                const account = await newAccount.save();
+                const account_id = account.id;
+                console.log("new account_id", account_id);
+                const newHospitalProfile = new HospitalProfile({
+                    account_id: account_id,
+                    cccd: req.body.sdd,
+                    hospitalName: req.body.hospitalName,
+                    phone: req.body.phone,
+                    address: req.body.address,
+                    leaderName: req.body.leaderName,
+                    email: req.body.email,
+                   
+                });
+
+                const hospitalProfile = await newHospitalProfile.save();
+                console.log(hospitalProfile)
+                return res.status(200).json({account,hospitalProfile});
+            } else {
+                return res.status(400).json({ message: validationResult.message });
+            }
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    }
+>>>>>>> Stashed changes
 
 };
 
+async function validateHospital(body) {
+    const { sdd, address, phone, leaderName, hospitalName, email } = body;
 
+    try {
+        // tồn tại sdd
+        const existingSdd = await Account.findOne({ sdd });
+        if (existingSdd) {
+            return { message: 'Số định danh đã tồn tại' };
+        }
+        //tồn tại email
+        const existingEmail = await Account.findOne({ email });
+        if (existingEmail) {
+            return { message: 'Email đã tồn tại' };
+        }
+
+        // Continue with other validations
+        if (Validate.isEmpty(sdd)
+            || Validate.isEmpty(email)
+            || Validate.isEmpty(hospitalName)
+            || Validate.isEmpty(address)
+            || Validate.isEmpty(phone)
+            || Validate.isEmpty(leaderName)) {
+            return { message: 'Vui lòng điền vào các mục còn trống' };
+        }
+
+        if (!Validate.isNumeric(sdd)) {
+            return { message: 'Số định danh phải là số' };
+        }
+
+        if (!Validate.isEmail(email)) {
+            return { message: 'Email không đúng định dạng' };
+        }
+
+        return { isValid: true };
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = userController;
