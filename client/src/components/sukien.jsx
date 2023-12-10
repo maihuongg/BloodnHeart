@@ -7,9 +7,6 @@ import {
     userprofileStart,
     userprofileSuccess,
     userprofileFailed,
-    allEventStart,
-    allEventSuccess,
-    allEventFailed
 } from "../redux/userSlice";
 import {
     logOutStart,
@@ -23,34 +20,6 @@ function Sukien() {
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // useEffect(() => {
-        const fetchData = async () => {
-            dispatch(allEventStart());
-            try {
-                const response = await fetch("http://localhost:8000/v1/user/event", {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    dispatch(allEventFailed());
-                    console.log("Get AllEvent Fail!");
-                }
-                else {
-                    const data = await response.json();
-                    dispatch(allEventSuccess(data));
-                    console.log("GET success!!!")
-                }
-            } catch (error) {
-                dispatch(allEventFailed());
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData();
-    // }, [dispatch]);
-
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
     const allEvent = dataEvent.allEvent;
 
@@ -133,7 +102,7 @@ function Sukien() {
                                     </Link>
 
                                     <Link to="/lienhe" className="nav-item nav-link">
-                                        Liên hệ
+                                        Hợp tác
                                     </Link>
                                     <div className="nav-item dropdown">
                                         <a
@@ -177,7 +146,7 @@ function Sukien() {
                                     </Link>
 
                                     <Link to="/lienhe" className="nav-item nav-link">
-                                        Liên hệ
+                                        Hợp tác
                                     </Link>
 
                                     <Link to="/gioithieu" className="nav-item nav-link">
