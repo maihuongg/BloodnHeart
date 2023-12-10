@@ -4,11 +4,9 @@ const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
-// <<<<<<< Updated upstream
 const Event = require('../models/eventModel')
-
 const HospitalProfile = require('../models/hospitalProfileModel')
-// >>>>>>> Stashed changes
+
 
 const userController = {
     getUserById: async (req, res) => {
