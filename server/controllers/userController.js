@@ -4,11 +4,11 @@ const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
-<<<<<<< Updated upstream
+// <<<<<<< Updated upstream
 const Event = require('../models/eventModel')
-=======
+
 const HospitalProfile = require('../models/hospitalProfileModel')
->>>>>>> Stashed changes
+// >>>>>>> Stashed changes
 
 const userController = {
     getUserById: async (req, res) => {
@@ -104,7 +104,7 @@ const userController = {
             return res.status(500).json({ error });
         }
     },
-<<<<<<< Updated upstream
+
 
     getAllEventByUser: async (req, res) => {
         try {
@@ -116,7 +116,7 @@ const userController = {
         }
     },
     
-=======
+
     tobeHospital: async (req, res) => {
         try {
             //async function
@@ -155,7 +155,7 @@ const userController = {
             return res.status(500).json(error);
         }
     }
->>>>>>> Stashed changes
+// >>>>>>> Stashed changes
 
 };
 

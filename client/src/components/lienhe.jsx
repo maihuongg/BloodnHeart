@@ -20,7 +20,14 @@ function Lienhe() {
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const [msgErr, setMsgErr] = useState(null);
+    const [msgSucess, setMsgSucess] = useState(null);
+    const [leaderName, setLeaderName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [cccd, setCccd] = useState("");
+    const [address, setAddress] = useState("");
+    const [hospitalName, setHospitalName] = useState("")
     const handleProfile = async () => {
         dispatch(userprofileStart());
         try {
@@ -64,7 +71,45 @@ function Lienhe() {
             dispatch(logOutFailed());
         }
     }
+    const handleToBeHospital = async (e) => {
+        e.preventDefault();
+        const tobeHospital = {
+            sdd: cccd,
+            leaderName: leaderName,
+            hospitalName: hospitalName,
+            phone: phone,
+            address: address,
+            email: email,
+        };
+        console.log(tobeHospital)
+        console.log('Request Payload:', JSON.stringify(tobeHospital));
 
+        try {
+            const response = await fetch('http://localhost:8000/v1/hospital/be-hospital/', {
+                method: 'POST',
+                body: JSON.stringify(tobeHospital),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                
+            });
+            console.log('Response Status:', response.status);
+
+            if (!response.ok) {
+                setMsgErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+            } else {
+                const data = await response.json();
+                console.log(data);
+                setMsgSucess(
+                    'Bạn đã gửi yêu cầu thành công. Chúng tôi sẽ sớm liên lạc với bạn trong vòng 2-3 ngày làm việc!'
+                );
+            }
+        } catch (error) {
+            setMsgErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+            console.log('error: ', error);
+        }
+    };
+    
     return (
         <>
             <>
@@ -233,89 +278,111 @@ function Lienhe() {
                     <div className="row">
                         <div className="col-lg-12 mx-auto">
                             <div className="contact-form">
-                                <form name="sentMessage" id="contactForm" noValidate="novalidate" >
-                                    <div className="control-group">
-                                        <label htmlFor="leaderName">Tên người đứng đầu</label>
+                                <h3>Thông tin đăng ký</h3>
+                                <form
+                                    
+                                    id="contactForm"
+                                    noValidate="novalidate"
+                                    onSubmit={handleToBeHospital}
+                                >
+                                    <div className="mb-3">
+                                        <label htmlFor="leaderName" className="form-label fw-bold">Tên người đứng đầu</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="leaderName"
                                             placeholder="Tên người đứng đầu"
                                             required="required"
-                                            data-validation-required-message="Please enter the leader's name"
+                                            onChange={(e) => setLeaderName(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter the leader's name.</div>
                                     </div>
 
-                                    <div className="control-group">
-                                        <label htmlFor="email">Email</label>
+                                    <div className="mb-3">
+                                        <label htmlFor="email" className="form-label fw-bold">Email</label>
                                         <input
                                             type="email"
                                             className="form-control"
                                             id="email"
                                             placeholder="Email"
                                             required="required"
-                                            data-validation-required-message="Please enter your email"
+                                            onChange={(e) => setEmail(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter a valid email address.</div>
                                     </div>
 
-                                    <div className="control-group">
-                                        <label htmlFor="fax">Số điện thoại / Fax</label>
+                                    <div className="mb-3">
+                                        <label htmlFor="fax" className="form-label fw-bold">Số điện thoại / Fax</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="fax"
                                             placeholder="Số điện thoại / Fax"
                                             required="required"
-                                            data-validation-required-message="Please enter the fax number"
+                                            onChange={(e) => setPhone(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter the fax number.</div>
                                     </div>
 
-                                    <div className="control-group">
-                                        <label htmlFor="hospitalName">Tên bệnh viện/cơ sở</label>
+                                    <div className="mb-3">
+                                        <label htmlFor="hospitalName" className="form-label fw-bold">Tên bệnh viện/cơ sở</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="hospitalName"
                                             placeholder="Tên bệnh viện/cơ sở"
                                             required="required"
-                                            data-validation-required-message="Please enter the hospital name"
+                                            onChange={(e) => setHospitalName(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter the hospital name.</div>
                                     </div>
 
-                                    <div className="control-group">
-                                        <label htmlFor="hospitalId">Mã bệnh viện/cơ sở</label>
+                                    <div className="mb-3">
+                                        <label htmlFor="hospitalId" className="form-label fw-bold">Mã bệnh viện/cơ sở</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="hospitalId"
                                             placeholder="Mã bệnh viện/cơ sở"
                                             required="required"
-                                            data-validation-required-message="Please enter the hospital ID"
+                                            onChange={(e) => setCccd(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter the hospital ID.</div>
                                     </div>
 
-                                    <div className="control-group">
-                                        <label htmlFor="address">Địa chỉ</label>
+                                    <div className="mb-3">
+                                        <label htmlFor="address" className="form-label fw-bold">Địa chỉ</label>
                                         <input
                                             className="form-control"
                                             id="address"
                                             placeholder="Địa chỉ"
                                             required="required"
-                                            data-validation-required-message="Please enter the hospital address"
+                                            onChange={(e) => setAddress(e.target.value)}
                                         />
                                         <div className="invalid-feedback">Please enter the hospital address.</div>
                                     </div>
-
+                                    <div className="mb-3">
+                                        {/* Error Message */}
+                                        {msgSucess && (
+                                            <div className="alert alert-success" role="alert">
+                                                {msgSucess}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* msgErr */}
+                                    <div className="mb-3">
+                                        {/* Error Message */}
+                                        {msgErr && (
+                                            <div className="alert alert-danger" role="alert">
+                                                {msgErr}
+                                            </div>
+                                        )}
+                                    </div>
                                     <div>
                                         <button
                                             className="btn btn-primary py-2 px-4"
                                             type="submit"
-                                            id="sendMessageButton"
+                                            
                                         >
                                             Gửi yêu cầu
                                         </button>

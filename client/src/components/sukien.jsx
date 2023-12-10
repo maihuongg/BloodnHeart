@@ -18,14 +18,12 @@ import {
 } from "../redux/authSlice";
 import moment from "moment";
 function Sukien() {
-
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    useEffect(() => {
+    // useEffect(() => {
         const fetchData = async () => {
             dispatch(allEventStart());
             try {
@@ -51,7 +49,7 @@ function Sukien() {
             }
         };
         fetchData();
-    }, [dispatch]);
+    // }, [dispatch]);
 
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
     const allEvent = dataEvent.allEvent;
