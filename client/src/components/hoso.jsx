@@ -221,7 +221,7 @@ function Hoso() {
                                         </Link>
 
                                         <Link to="/lienhe" className="nav-item nav-link">
-                                            Liên hệ
+                                            Hợp tác
                                         </Link>
                                         <div className="nav-item dropdown">
                                             <a
@@ -265,7 +265,7 @@ function Hoso() {
                                         </Link>
 
                                         <Link to="/lienhe" className="nav-item nav-link">
-                                            Liên hệ
+                                            Hợp tác
                                         </Link>
 
                                         <Link to="/gioithieu" className="nav-item nav-link">

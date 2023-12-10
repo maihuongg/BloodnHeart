@@ -102,7 +102,7 @@ function Lienhe() {
                                         </Link>
 
                                         <Link to="/lienhe" className="nav-item nav-link active">
-                                            Liên hệ
+                                            Hợp tác
                                         </Link>
                                         <div className="nav-item dropdown">
                                             <a
@@ -146,7 +146,7 @@ function Lienhe() {
                                         </Link>
 
                                         <Link to="/lienhe" className="nav-item nav-link active">
-                                            Liên hệ
+                                            Hợp tác
                                         </Link>
 
                                         <Link to="/gioithieu" className="nav-item nav-link">

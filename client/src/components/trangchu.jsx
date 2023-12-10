@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     userprofileStart,
     userprofileSuccess,
-    userprofileFailed
+    userprofileFailed,
+    allEventStart,
+    allEventSuccess,
+    allEventFailed
 } from "../redux/userSlice";
 import {
     logOutStart,
@@ -42,6 +45,31 @@ function Trangchu() {
         }
     }
 
+    const handleEvent = async (e) => {
+        e.preventDefault();
+        dispatch(allEventStart());
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/event", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                dispatch(allEventFailed());
+            }
+            else {
+                const data = await response.json();
+                dispatch(allEventSuccess(data));
+                navigate("/sukien");
+            }
+        } catch (error) {
+            dispatch(allEventFailed());
+            console.error("Error fetching data:", error);
+        }
+    }
+
     const handleLogout = async (e) => {
         e.preventDefault();
         dispatch(logOutStart());
@@ -63,7 +91,7 @@ function Trangchu() {
             dispatch(logOutFailed());
         }
     }
-    
+
     return (
         <>
             {/* Navbar Start */}
@@ -97,12 +125,12 @@ function Trangchu() {
                                     <Link to="/" className="nav-item nav-link active">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link">
+                                    <Link to="/sukien" className="nav-item nav-link" onClick={handleEvent}>
                                         Sự kiện
                                     </Link>
 
                                     <Link to="/lienhe" className="nav-item nav-link">
-                                        Liên hệ
+                                        Hợp tác
                                     </Link>
                                     <div className="nav-item dropdown">
                                         <a
@@ -141,12 +169,12 @@ function Trangchu() {
                                     <Link to="/" className="nav-item nav-link active">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link">
+                                    <Link to="/sukien" className="nav-item nav-link" onClick={handleEvent}>
                                         Sự kiện
                                     </Link>
 
                                     <Link to="/lienhe" className="nav-item nav-link">
-                                        Liên hệ
+                                        Hợp tác
                                     </Link>
 
                                     <Link to="/gioithieu" className="nav-item nav-link">
@@ -254,10 +282,10 @@ function Trangchu() {
                                     <h4>Chất Gây Nghiện</h4>
                                     <p className="m-0">
                                         Không nghiện ma túy, rượu bia và các chất kích thích
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
                                     </p>
                                 </div>
                             </div>
@@ -267,14 +295,14 @@ function Trangchu() {
                                 className="d-flex bg-light shadow-sm border-top rounded mb-4"
                                 style={{ padding: 30 }}
                             >
-                               <img className="icon" src="img/patient.png"></img>
+                                <img className="icon" src="img/patient.png"></img>
                                 <div className="pl-4">
                                     <h4>Bệnh Nền</h4>
                                     <p className="m-0">
                                         Không mắc các bệnh mãn tính hoặc cấp tính về tim mạch, huyết áp, hô hấp, dạ dày…
-                                        <br/>
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
+                                        <br />
                                     </p>
                                 </div>
                             </div>
@@ -304,8 +332,8 @@ function Trangchu() {
                                     <h4>Khoảng Cách</h4>
                                     <p className="m-0">
                                         Thời gian tối thiểu giữa 2 lần hiến máu là 12 tuần đối với cả Nam và Nữ
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
                                     </p>
                                 </div>
                             </div>
@@ -334,8 +362,8 @@ function Trangchu() {
                                     <h4>Test Nhanh</h4>
                                     <p className="m-0">
                                         Kết quả test nhanh âm tính với kháng nguyên bề mặt của siêu vi B.
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
                                     </p>
                                 </div>
                             </div>
@@ -363,7 +391,7 @@ function Trangchu() {
                             <p>
                                 Địa Chỉ
                             </p>
-                            
+
                             <a href="" className="btn btn-primary mt-2 py-2 px-4">
                                 Learn More
                             </a>
