@@ -4,6 +4,7 @@ const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
+const Event = require('../models/eventModel')
 
 const userController = {
     getUserById: async (req, res) => {
@@ -96,6 +97,16 @@ const userController = {
 
         } catch (error) {
             return res.status(500).json({ error });
+        }
+    },
+
+    getAllEventByUser: async (req, res) => {
+        try {
+            const allEvent = await Event.find({ status: "1" });
+            const eventCount = allEvent.length;
+            return res.status(200).json({ count: eventCount, allEvent });
+        } catch (error) {
+            return res.status(500).json(error);
         }
     },
     

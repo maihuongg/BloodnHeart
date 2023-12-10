@@ -7,6 +7,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -17,6 +18,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -27,6 +29,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -37,6 +40,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -47,6 +51,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -57,6 +62,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     },
     {
@@ -67,6 +73,7 @@
         "date_end" : null,
         "amount" : 20,
         "address" : "Việt Nam",
+        "status" : null,
         "listusers": []
     }
 ]

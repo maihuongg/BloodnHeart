@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,12 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     userprofileStart,
     userprofileSuccess,
-    userprofileFailed
+    userprofileFailed,
+    allEventStart,
+    allEventSuccess,
+    allEventFailed
 } from "../redux/userSlice";
-import { 
+import {
     logOutStart,
     logOutSuccess,
-    logOutFailed} from "../redux/authSlice";
+    logOutFailed
+} from "../redux/authSlice";
+import moment from "moment";
 function Sukien() {
 
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -20,10 +25,41 @@ function Sukien() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchData = async () => {
+            dispatch(allEventStart());
+            try {
+                const response = await fetch("http://localhost:8000/v1/user/event", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    dispatch(allEventFailed());
+                    console.log("Get AllEvent Fail!");
+                }
+                else {
+                    const data = await response.json();
+                    dispatch(allEventSuccess(data));
+                    console.log("GET success!!!")
+                }
+            } catch (error) {
+                dispatch(allEventFailed());
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, [dispatch]);
+
+    const dataEvent = useSelector((state) => state.user.allevent.getEvent);
+    const allEvent = dataEvent.allEvent;
+
     const handleProfile = async () => {
         dispatch(userprofileStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/"+userId, {
+            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +77,7 @@ function Sukien() {
             dispatch(userprofileFailed());
         }
     }
-    
+
     const handleLogout = async (e) => {
         e.preventDefault();
         dispatch(logOutStart());
@@ -88,7 +124,7 @@ function Sukien() {
                         className="collapse navbar-collapse justify-content-between"
                         id="navbarCollapse"
                     >
-                       {user ? (
+                        {user ? (
                             <>
                                 <div className="navbar-nav font-weight-bold mx-auto py-0">
                                     <Link to="/" className="nav-item nav-link">
@@ -168,15 +204,15 @@ function Sukien() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">Our Classes</h3>
+                    <h3 className="display-3 font-weight-bold text-white">Sự kiện</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
-                            <a className="text-white" href="">
-                                Home
+                            <a className="text-white" href="/">
+                                Trang chủ
                             </a>
                         </p>
                         <p className="m-0 px-2">/</p>
-                        <p className="m-0">Our Classes</p>
+                        <p className="m-0">Sự kiện</p>
                     </div>
                 </div>
             </div>
@@ -186,152 +222,62 @@ function Sukien() {
                 <div className="container">
                     <div className="text-center pb-2">
                         <p className="section-title px-5">
-                            <span className="px-2">Popular Classes</span>
+                            <span className="px-2">Sự kiện</span>
                         </p>
-                        <h1 className="mb-4">Classes for Your Kids</h1>
+                        <h1 className="mb-4">Danh Sách các sự kiện</h1>
                     </div>
                     <div className="row">
                         <div className="col-12 text-center mb-2">
                             <ul className="list-inline mb-4" id="portfolio-flters">
                                 <li className="btn btn-outline-primary m-1 active" data-filter="*">
-                                    All
+                                    Tất cả
                                 </li>
                                 <li className="btn btn-outline-primary m-1" data-filter=".first">
-                                    Playing
+                                    Đang diễn ra
                                 </li>
                                 <li className="btn btn-outline-primary m-1" data-filter=".second">
-                                    Drawing
-                                </li>
-                                <li className="btn btn-outline-primary m-1" data-filter=".third">
-                                    Reading
+                                    Sắp diễn ra
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-1.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Drawing Class</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
-                                    </p>
+                        {allEvent.map(event => (
+                            <div className="col-lg-4 mb-5">
+                                <div className="card border-0 bg-light shadow-sm pb-2">
+                                    <img className="card-img-top mb-2" src= {event.images} />
+                                    <div className="card-body text-center">
+                                        <h4 className="card-title">{event.eventName}</h4>
+                                        <p className="card-text">
+                                            Địa chỉ: {event.address}
+                                        </p>
+                                    </div>
+                                    <div className="card-footer bg-transparent py-4 px-5">
+                                        <div className="row border-bottom">
+                                            <div className="col-6 py-1 text-right border-right">
+                                                <strong>Ngày bắt đầu</strong>
+                                            </div>
+                                            <div className="col-6 py-1">{moment(event.date_start).format('DD-MM-YYYY')}</div>
+                                        </div>
+                                        <div className="row border-bottom">
+                                            <div className="col-6 py-1 text-right border-right">
+                                                <strong>Ngày kết thúc</strong>
+                                            </div>
+                                            <div className="col-6 py-1">{moment(event.date_end).format('DD-MM-YYYY')}</div>
+                                        </div>
+                                        <div className="row border-bottom">
+                                            <div className="col-6 py-1 text-right border-right">
+                                                <strong>Số lượng</strong>
+                                            </div>
+                                            <div className="col-6 py-1">{event.amount}</div>
+                                        </div>
+                                    </div>
+                                    <a href="" className="btn btn-primary px-4 mx-auto mb-4">
+                                        Đăng ký
+                                    </a>
                                 </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
                             </div>
-                        </div>
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-2.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Language Learning</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
-                                    </p>
-                                </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 mb-5">
-                            <div className="card border-0 bg-light shadow-sm pb-2">
-                                <img className="card-img-top mb-2" src="img/class-3.jpg" alt="" />
-                                <div className="card-body text-center">
-                                    <h4 className="card-title">Basic Science</h4>
-                                    <p className="card-text">
-                                        Justo ea diam stet diam ipsum no sit, ipsum vero et et diam
-                                        ipsum duo et no et, ipsum ipsum erat duo amet clita duo
-                                    </p>
-                                </div>
-                                <div className="card-footer bg-transparent py-4 px-5">
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Age of Kids</strong>
-                                        </div>
-                                        <div className="col-6 py-1">3 - 6 Years</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Total Seats</strong>
-                                        </div>
-                                        <div className="col-6 py-1">40 Seats</div>
-                                    </div>
-                                    <div className="row border-bottom">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Class Time</strong>
-                                        </div>
-                                        <div className="col-6 py-1">08:00 - 10:00</div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6 py-1 text-right border-right">
-                                            <strong>Tution Fee</strong>
-                                        </div>
-                                        <div className="col-6 py-1">$290 / Month</div>
-                                    </div>
-                                </div>
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                    Join Now
-                                </a>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

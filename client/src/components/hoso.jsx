@@ -412,7 +412,7 @@ function Hoso() {
                                                     <label className="form-control-label label">Ngày sinh(*)</label>
                                                     <input
                                                         type="date"
-                                                        class="form-control border-1"
+                                                        className="form-control border-1"
                                                         placeholder="VD: 01/01/2000"
                                                         required="required"
                                                         defaultValue={ moment(userPro?.birthDay).format('DD-MM-YYYY')}

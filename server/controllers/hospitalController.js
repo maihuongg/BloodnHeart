@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/email')
 const Validate = require('validator');
 const Event = require('../models/eventModel')
-const hospitalController ={
+const hospitalController = {
     getHospitalById: async (req, res) => {
         try {
             const accountId = req.params.account_id;
@@ -22,12 +22,71 @@ const hospitalController ={
     getEventByHospital: async (req, res) => {
         try {
             const hospitalId = req.params.hospital_id;
-            const allEvent = await Event.find({hospital_id: hospitalId});
+            const allEvent = await Event.find({ hospital_id: hospitalId });
             const eventCount = allEvent.length;
-            return res.status(200).json({count: eventCount, allEvent});
+            return res.status(200).json({ count: eventCount, allEvent });
         } catch (error) {
             return res.status(500).json(error);
         }
     },
+    addEvent: async (req, res) => {
+        try {
+            // console.log('name', req.body.eventName);
+            // const result = await cloudinary.v2.uploader.upload(req.body.images, {
+            //     folder: 'event',
+            //     width: 150,
+            //     crop: "scale"
+            // })
+
+            // const imageurl = result.secure_url;
+            // images: imageurl,
+            const newEvent = new Event({
+                hospital_id: req.body.hospital_id,
+                eventName: req.body.eventName,
+                date_start: req.body.date_start,
+                date_end: req.body.date_end,
+                amount: req.body.amount,
+                address: req.body.address,
+            })
+            const event = await newEvent.save();
+            return res.status(200).json(event);
+
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    getEventById: async (req, res) => {
+        try {
+            const eventId = req.params.id;
+            console.log(eventId);
+            const event = await Event.findOne({_id: eventId})
+            if (!event) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+            return res.status(200).json(event);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({error: "Internal Server Error"});
+        }
+    },
+    closeEvent: async (req, res) => {
+        try {
+            const eventId = req.params.id;
+            const eventClose = await Event.findOneAndUpdate(
+                { _id: eventId},
+                { $set: {status: "0"}},
+                {new:true}
+            );
+
+            if (!eventClose) {
+                return res.status(404).json({ message: 'Event not found' });
+            }
+
+            return res.status(200).json(eventClose);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({error: "Internal Server Error"});
+        }
+    }
 }
-module.exports= hospitalController;
+module.exports = hospitalController;

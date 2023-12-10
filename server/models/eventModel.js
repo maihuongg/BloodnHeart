@@ -12,7 +12,7 @@ const eventSchema = new mongoose.Schema(
         images: {
             type: String,
             require: true,
-            default: 'https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg',
+            default: 'https://res.cloudinary.com/bloodnheart/image/upload/v1702215425/event/default_event_hppznv.jpg',
         },
         date_start:{
             type: Date,
@@ -34,6 +34,11 @@ const eventSchema = new mongoose.Schema(
             require: true,
             default: null,
         },
+        status:{
+            type: String,
+            require: true,
+            default: null,
+        },
         listusers:  [{
             userid: {
                 type: String,
@@ -43,7 +48,7 @@ const eventSchema = new mongoose.Schema(
                 type: String,
                 require: true,
             },
-            status:{
+            status_user:{
                 type: String,
                 require: true,
             },

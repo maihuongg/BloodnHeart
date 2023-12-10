@@ -8,6 +8,11 @@ const userSlice = createSlice({
             isFetching: false,
             error: false
         },
+        allevent:{
+            getEvent: null,
+            isFetching: false,
+            error: false
+        }
     },
     reducers: {
         userprofileStart: (state) => {
@@ -22,6 +27,19 @@ const userSlice = createSlice({
             state.profile.isFetching = false;
             state.profile.error = true;
         },
+
+        allEventStart: (state) => {
+            state.allevent.isFetching = true;
+        },
+        allEventSuccess: (state, action) => {
+            state.allevent.isFetching = false;
+            state.allevent.getEvent = action.payload;
+            state.allevent.error = false;
+        },
+        allEventFailed: (state) => {
+            state.allevent.isFetching = false;
+            state.allevent.error = true;
+        },
     }
 });
 
@@ -29,6 +47,9 @@ export const {
     userprofileStart,
     userprofileSuccess,
     userprofileFailed,
+    allEventStart,
+    allEventSuccess,
+    allEventFailed
 } = userSlice.actions;
 
 export default userSlice.reducer;
