@@ -2,15 +2,23 @@ const mongoose = require("mongoose");
 
 const hospitalProfileSchema = new mongoose.Schema(
     {
-        account_id:{type: String},
-        sdd: {
+        //acccount_id :{type: String},
+        account_id:{ type: mongoose.Schema.Types.ObjectId},
+        //xem như sdd
+        cccd: {
             type: String,
             require: true,
             min: 9,
             max: 12,
             unique: true,
         },
+        
         hospitalName: {
+            type: String,
+            max: 50,
+            require: true,
+        },
+        leaderName: {
             type: String,
             max: 50,
             require: true,

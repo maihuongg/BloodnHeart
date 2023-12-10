@@ -231,84 +231,86 @@ function Lienhe() {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-lg-6 mx-auto">
+                        <div className="col-lg-12 mx-auto">
                             <div className="contact-form">
-                                <div id="success" />
-                                <form name="sentMessage" id="contactForm" noValidate="novalidate">
+                                <form name="sentMessage" id="contactForm" noValidate="novalidate" >
                                     <div className="control-group">
+                                        <label htmlFor="leaderName">Tên người đứng đầu</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="leaderName"
-                                            placeholder="Leader's Name"
+                                            placeholder="Tên người đứng đầu"
                                             required="required"
                                             data-validation-required-message="Please enter the leader's name"
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter the leader's name.</div>
                                     </div>
+
                                     <div className="control-group">
+                                        <label htmlFor="email">Email</label>
                                         <input
                                             type="email"
                                             className="form-control"
                                             id="email"
-                                            placeholder="Your Email"
+                                            placeholder="Email"
                                             required="required"
                                             data-validation-required-message="Please enter your email"
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter a valid email address.</div>
                                     </div>
+
                                     <div className="control-group">
+                                        <label htmlFor="fax">Số điện thoại / Fax</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="fax"
-                                            placeholder="Fax Number"
+                                            placeholder="Số điện thoại / Fax"
                                             required="required"
                                             data-validation-required-message="Please enter the fax number"
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter the fax number.</div>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
 
-                        <div className="col-lg-6 mx-auto">
-                            <div className="contact-form">
-                                <form name="sentMessage" id="contactForm" noValidate="novalidate">
                                     <div className="control-group">
+                                        <label htmlFor="hospitalName">Tên bệnh viện/cơ sở</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="hospitalName"
-                                            placeholder="Hospital Name"
+                                            placeholder="Tên bệnh viện/cơ sở"
                                             required="required"
                                             data-validation-required-message="Please enter the hospital name"
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter the hospital name.</div>
                                     </div>
+
                                     <div className="control-group">
+                                        <label htmlFor="hospitalId">Mã bệnh viện/cơ sở</label>
                                         <input
                                             type="text"
                                             className="form-control"
                                             id="hospitalId"
-                                            placeholder="Hospital ID"
+                                            placeholder="Mã bệnh viện/cơ sở"
                                             required="required"
                                             data-validation-required-message="Please enter the hospital ID"
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter the hospital ID.</div>
                                     </div>
+
                                     <div className="control-group">
-                                        <textarea
+                                        <label htmlFor="address">Địa chỉ</label>
+                                        <input
                                             className="form-control"
-                                            rows={6}
                                             id="address"
-                                            placeholder="Hospital Address"
+                                            placeholder="Địa chỉ"
                                             required="required"
                                             data-validation-required-message="Please enter the hospital address"
-                                            defaultValue={""}
                                         />
-                                        <p className="help-block text-danger" />
+                                        <div className="invalid-feedback">Please enter the hospital address.</div>
                                     </div>
+
                                     <div>
                                         <button
                                             className="btn btn-primary py-2 px-4"
