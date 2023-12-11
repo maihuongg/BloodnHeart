@@ -115,16 +115,16 @@ const adminController = {
     },
     setAcceptHospital: async (req, res) => {
         try {
-            const cccd = req.params.cccd;
-            console.log(cccd)
-            const { password1, repeatPassword } = req.body
+            // const cccd = req.params.cccd;
+            // console.log(cccd)
+            const { cccd,password1, repeatPassword } = req.body
             if (!password1 || !repeatPassword) {
                 return res.status(400).json({ message: "Trường thông tin không được để trống" });
             }
             if (password1 !== repeatPassword) {
                 return res.status(400).json({ message: "Mật khẩu không khớp" });
             }        
-            const user = await Account.findOne({ cccd });
+            const user = await Account.findOne({ cccd: req.body.cccd });
             console.log("user", user)
             // Update password
             const salt = await bcrypt.genSalt(14);

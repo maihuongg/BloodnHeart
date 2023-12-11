@@ -7,20 +7,75 @@ import { useNavigate } from 'react-router-dom';
 import isEmpty from "validator/lib/isEmpty";
 import Navbar from "../dashboard/navbar";
 import Sidebar from "../dashboard/sidebar";
-
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 function HopTac() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [showModal, setShowModal] = useState(false);
+    const [showClose, setShow] = useState(false);
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const accessToken = currentAdmin?.accessToken;
     const [msgErr, setMsgErr] = useState(null);
+    const [successMsg, setSuccessMsg] = useState(null);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [leaderName, setLeaderName] = useState("");
     const [email, setEmail] = useState("");
     const [cccd, setCccd] = useState("");
     const [hospitalName, setHospitalName] = useState("");
+    const isAdmin = currentAdmin.isAdmin;
+    const isHospital = currentAdmin.isHospital;
+    const [password1, setPassword1] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
+    const handleShowAccept = async (record) => {
+        const cccd = record.cccd;
+        console.log("cccd:", cccd);
+        setCccd(cccd);
+        setShowModal(true);
+
+    }
+    const handleCloseModal = () => {
+        setShowModal(false, () => {
+            navigate("/hop-tac");
+        });
+    };
+    const handleAccept = async (e) => {
+        e.preventDefault();
+        try {
+            const request = {
+                cccd: cccd,
+                password1: password1,
+                repeatPassword: repeatPassword
+            };
+            console.log("request",request)
+            const response = await fetch('http://localhost:8000/v1/admin/accept-hospital', {
+                method: 'POST',
+                body: JSON.stringify(request),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            }
+            );
+            if (!response.ok) {
+                setMsgErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+            } else {
+                const data = await response.json();
+                console.log(data);
+                setSuccessMsg(
+                    " Thành công"
+                );
+            }
+        } catch (error) {
+
+            console.error(" error:", error);
+            setMsgErr("Đã xảy ra lỗi. Vui lòng thử lại sau!");
+        }
+    };
 
     useEffect(() => {
         // Function to fetch data from the API
@@ -97,7 +152,7 @@ function HopTac() {
                     <i
                         className="mdi mdi-check"
                         style={{ fontSize: '20px', padding: '5px' }}
-
+                        onClick={() => handleShowAccept(record)}
                     ></i>
                     <i
                         className="mdi mdi-close-box"
@@ -115,7 +170,7 @@ function HopTac() {
             <Navbar />
             <div className="container-fluid page-body-wrapper">
                 <Sidebar />
-                <div className="main-panel">
+                {isAdmin ? (<div className="main-panel">
                     <div className="content-wrapper">
                         {/* quản lý người dùng  */}
                         <div className="row">
@@ -153,11 +208,78 @@ function HopTac() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>) : (
+                    <div className="row">
+                        <div className="col-lg-12 grid-margin stretch-card">
+                            <div className="card text-center">
+                                <div className="card-body">
+                                    <h3 className="card-title">Thông báo</h3>
+                                    <p className="card-text col-lg-12">Bạn không có quyền truy cập.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Phê duyệt yêu cầu</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form onSubmit={handleAccept}>
+
+                            <div className="form-group">
+                                <label className="form-control-label">Cấp mật khẩu lần đầu</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+
+                                    onChange={(e) => setPassword1(e.target.value)}
+                                />
+                            </div>
+
+
+                            <div className="form-group">
+                                <label className="form-control-label">Xác nhận mật khẩu</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+
+                                    onChange={(e) => setRepeatPassword(e.target.value)}
+                                />
+                            </div>
+
+
+                            <div className="form-group">
+                                {/* Error Message */}
+                                {msgErr && (
+                                    <div className="alert alert-danger" role="alert">
+                                        {msgErr}
+                                    </div>
+                                )}
+
+                            </div>
+                            <div className="form-group">
+                                {/* Error Message */}
+                                {successMsg && (
+                                    <div className="alert alert-success" >
+                                        {successMsg}
+                                    </div>
+                                )}
+
+                            </div>
+                            <div>
+                                <Button variant="primary" type="submit" className="float-right">
+                                    Lưu Lại
+                                </Button>
+                                <Button variant="secondary" className="float-right btnclose" onClick={handleCloseModal}>
+                                    Hủy
+                                </Button>
+                            </div>
+                        </form>
+                    </Modal.Body>
+                </Modal>
             </div >
-
         </div>
-
     )
 }
 

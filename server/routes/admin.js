@@ -15,7 +15,7 @@ router.get('/account/:id', adminController.getAccountById);
 router.get('/profile/info/:id', adminController.getInfoByAccountId);
 router.get('/tobe-hospital', adminController.getTobeHospital);
 router.get('/hospital-profile-accid', adminController.getHospitalbyAccountId);
-router.post('/accept-hospital/:cccd', authMiddleware.isAdmin,adminController.setAcceptHospital);
+router.post('/accept-hospital', authMiddleware.isAdmin,adminController.setAcceptHospital);
 
 
 
