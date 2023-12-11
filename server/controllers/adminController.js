@@ -69,7 +69,11 @@ const adminController = {
                 return res.status(200).json({ user, hospitalProfile });
             }
             else
-                return res.status(200).json(user);
+            {
+                const userProfile = await UserProfile.findOne({ account_id: accountId })
+                return res.status(200).json({user,userProfile});
+            }
+                
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: "Internal Server Error" });

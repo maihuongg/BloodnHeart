@@ -2,12 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Navbar from "../../dashboard/navbar";
 import Sidebar from "../../dashboard/sidebar";
-
+import { useNavigate } from "react-router-dom";
 function ChinhSuaNguoiDung() {
+    const navigate = useNavigate();
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const accessToken = currentAdmin?.accessToken;
-
+    const handleGoBack = async(req,res)=>{
+        navigate("/nguoi-dung")
+    }
 
 
     return (
@@ -22,7 +25,11 @@ function ChinhSuaNguoiDung() {
                                 <div className="col-lg-12 grid-margin stretch-card">
                                     <div className="card">
                                         <div className="card-body">
-                                            <i className="mdi mdi-keyboard-backspace" style={{ fontSize: "24px", padding: "5px" }}></i>
+                                            <i
+                                             className="mdi mdi-keyboard-backspace" 
+                                             style={{ fontSize: "24px", padding: "5px" }}
+                                             onClick={handleGoBack}
+                                             ></i>
                                             <br/>
                                             <br/> <h3 >Chỉnh sửa tài khoản </h3>
                                             <br/>
