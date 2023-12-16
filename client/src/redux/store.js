@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import userReducer from "./userSlice";
+import eventReducer from "./eventSlice";
 import {
   persistStore,
   persistReducer,
@@ -18,7 +19,7 @@ const persistConfig = {
   version: 1,
   storage,
 };//const rootReducer = combineReducers({ auth: authReducer});
-const rootReducer = combineReducers({ auth: authReducer, user: userReducer });
+const rootReducer = combineReducers({ auth: authReducer, user: userReducer, event: eventReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

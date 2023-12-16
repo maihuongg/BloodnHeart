@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const eventSchema = new mongoose.Schema(
     {
 
-        hospital_id:{type: String},
+        hospital_id: { type: String },
         eventName: {
             type: String,
             max: 50,
@@ -14,17 +14,17 @@ const eventSchema = new mongoose.Schema(
             require: true,
             default: 'https://res.cloudinary.com/bloodnheart/image/upload/v1702215425/event/default_event_hppznv.jpg',
         },
-        date_start:{
+        date_start: {
             type: Date,
             require: true,
             default: null,
         },
-        date_end:{
+        date_end: {
             type: Date,
             require: true,
             default: null,
         },
-        amount:{
+        amount: {
             type: Number,
             require: true,
             default: 0
@@ -34,29 +34,36 @@ const eventSchema = new mongoose.Schema(
             require: true,
             default: null,
         },
-        status:{
+        status: {
             type: String,
             require: true,
-            default: null,
+            default: "1",
         },
-        listusers:  [{
-            userid: {
-                type: String,
+        listusers: {
+            count: {
+                type: Number,
                 require: true,
+                default: 0,
             },
-            bloodgroup: {
-                type: String,
-                require: true,
-            },
-            status_user:{
-                type: String,
-                require: true,
-            },
-            dateregister: {
-                type: Date,
-                require: true,
-            }
-        }]
+            user: [{
+                userid: {
+                    type: String,
+                    require: true,
+                },
+                bloodgroup: {
+                    type: String,
+                    require: true,
+                },
+                status_user: {
+                    type: String,
+                    require: true,
+                },
+                dateregister: {
+                    type: Date,
+                    require: true,
+                }
+            }]
+        }
     },
     { timestamps: true }
 );

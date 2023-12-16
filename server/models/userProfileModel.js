@@ -60,14 +60,26 @@ const userProfileSchema = new mongoose.Schema(
 
         },
         history: [{
-            date: {
-                type: Date,
-                require: true,
-            },
             id_event: {
                 type: String,
                 require: true,
             },
+            eventName: {
+                type: String,
+                require: true,
+            },
+            address_event: {
+                type: String,
+                require: true,
+            },
+            date: {
+                type: Date,
+                require: true,
+            },
+            status_user: {
+                type: String,
+                require: true,
+            }
         }]
     },
     { timestamps: true }

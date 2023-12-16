@@ -4,10 +4,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    userprofileStart,
-    userprofileSuccess,
-    userprofileFailed,
+    allEventStart,
+    allEventSuccess,
+    allEventFailed
 } from "../redux/userSlice";
+import {
+    eventProfileStart,
+    eventProfileSuccess,
+    eventProfileFailed,
+    hospitalStart,
+    hospitalSuccess,
+    hospitalFailed
+} from "../redux/eventSlice";
 import {
     logOutStart,
     logOutSuccess,
@@ -23,27 +31,31 @@ function Sukien() {
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
     const allEvent = dataEvent.allEvent;
 
-    const handleProfile = async () => {
-        dispatch(userprofileStart());
-        try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
+    useEffect(() => {
+        const handleEvent = async () => {
+            dispatch(allEventStart());
+            try {
+                const response = await fetch("http://localhost:8000/v1/user/event", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    dispatch(allEventFailed());
                 }
-            });
-            if (!response.ok) {
-                dispatch(userprofileFailed());
-            } else {
-                const data = await response.json();
-                dispatch(userprofileSuccess(data));
-                navigate("/hoso");
+                else {
+                    const data = await response.json();
+                    dispatch(allEventSuccess(data));
+                }
+            } catch (error) {
+                dispatch(allEventFailed());
+                console.error("Error fetching data:", error);
             }
-        } catch (error) {
-            dispatch(userprofileFailed());
         }
-    }
+        handleEvent();
+    }, [dispatch]);
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -66,6 +78,55 @@ function Sukien() {
             dispatch(logOutFailed());
         }
     }
+
+    const handleRegisterEvent = async (e, eventId, hospitalId) => {
+        e.preventDefault();
+        if (user) {
+            dispatch(eventProfileStart());
+            try {
+                const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + eventId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if(!response1.ok) {
+                    dispatch(eventProfileFailed());
+                } else {
+                    const data1 = await response1.json();
+                    dispatch(eventProfileSuccess(data1));
+                }
+            } catch (error) {
+                dispatch(eventProfileFailed());
+            }
+
+            dispatch(hospitalStart());
+            try {
+                const response2 = await fetch("http://localhost:8000/v1/user/gethospital/" + hospitalId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if(!response2.ok) {
+                    dispatch(hospitalFailed());
+                } else {
+                    const data2 = await response2.json();
+                    dispatch(hospitalSuccess(data2));
+                }
+            } catch (error) {
+                dispatch(hospitalFailed());
+            }
+
+            navigate("/dangky-sukien");
+        } else {
+            navigate("/dangnhap");
+        }
+
+    }
+
     return (
         <>
             {/* Navbar Start */}
@@ -113,13 +174,13 @@ function Sukien() {
                                             Hồ sơ cá nhân
                                         </a>
                                         <div className="dropdown-menu rounded-0 m-0">
-                                            <Link to="/hoso" className="dropdown-item" onClick={handleProfile}>
+                                            <Link to="/hoso" className="dropdown-item">
                                                 Thông tin cá nhân
                                             </Link>
-                                            <Link to="#" className="dropdown-item">
+                                            <Link to="/lichhen" className="dropdown-item">
                                                 Lịch hẹn của bạn
                                             </Link>
-                                            <Link to="#" className="dropdown-item">
+                                            <Link to="/lichsu" className="dropdown-item">
                                                 Lịch sử hiến máu
                                             </Link>
                                         </div>
@@ -212,7 +273,7 @@ function Sukien() {
                         {allEvent.map(event => (
                             <div className="col-lg-4 mb-5">
                                 <div className="card border-0 bg-light shadow-sm pb-2">
-                                    <img className="card-img-top mb-2" src= {event.images} />
+                                    <img className="card-img-top mb-2" src={event.images} />
                                     <div className="card-body text-center">
                                         <h4 className="card-title">{event.eventName}</h4>
                                         <p className="card-text">
@@ -236,12 +297,19 @@ function Sukien() {
                                             <div className="col-6 py-1 text-right border-right">
                                                 <strong>Số lượng</strong>
                                             </div>
-                                            <div className="col-6 py-1">{event.amount}</div>
+                                            <div className="col-6 py-1">{event.listusers.count}/{event.amount}</div>
                                         </div>
                                     </div>
-                                    <a href="" className="btn btn-primary px-4 mx-auto mb-4">
-                                        Đăng ký
-                                    </a>
+
+                                    {event.listusers.count === event.amount ? (
+                                        <button className="btn btn-primary px-4 mx-auto mb-4" disabled>
+                                            Đã đủ số lượng
+                                        </button>
+                                    ) : (
+                                        <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e)=> handleRegisterEvent(e, event._id, event.hospital_id)}>
+                                            Đăng ký
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         ))}

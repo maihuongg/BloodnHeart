@@ -3,6 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"
 import { useDispatch } from "react-redux";
 import {
+    userprofileStart,
+    userprofileSuccess,
+    userprofileFailed,
+} from "../../redux/userSlice";
+import {
     loginFailed,
     loginStart,
     loginSuccess,
@@ -38,6 +43,26 @@ function Dangnhap() {
                 const data = await response.json();
                 dispatch(loginSuccess(data));
                 localStorage.setItem('token', data.accessToken);
+                const userId = data._id;
+                const accessToken = data.accessToken;
+                dispatch(userprofileStart());
+                try {
+                    const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            token: `Bearer ${accessToken}`
+                        }
+                    });
+                    if (!response1.ok) {
+                        dispatch(userprofileFailed());
+                    } else {
+                        const data1 = await response1.json();
+                        dispatch(userprofileSuccess(data1));
+                    }
+                } catch (error) {
+                    dispatch(userprofileFailed());
+                }
                 navigate("/");
             }
 
@@ -113,7 +138,7 @@ function Dangnhap() {
                                             />
                                         </div>
 
-                                     {/* msgErr */}
+                                        {/* msgErr */}
                                         <div className="form-group">
                                             {/* Error Message */}
                                             {msgErr && (

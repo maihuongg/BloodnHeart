@@ -18,6 +18,10 @@ import Dangnhap from './components/dangnhap/dangnhap';
 import Dangky from './components/dangky/dangky';
 import ResetMatKhau from './components/quenmatkhau/reset-matkhau'
 import QuenMatKhau from './components/quenmatkhau/quenmatkhau'
+import DangkySukien from './components/dangkySukien';
+import ChitietBenhvien from './components/chitietbenhvien';
+import LichHen from './components/lichhen';
+import LichSuHienMau from './components/lichsuhienmau';
 function App() {
   return (
     <Router>
@@ -34,6 +38,10 @@ function App() {
         <Route path="/dangky" Component= {Dangky} />
         <Route path="/reset-password/" Component= {ResetMatKhau} />
         <Route path="/forgot-password/" Component= {QuenMatKhau} />
+        <Route path="/dangky-sukien" Component= {DangkySukien} />
+        <Route path="/chitietbenhvien" Component= {ChitietBenhvien} />
+        <Route path="/lichhen" Component= {LichHen} />
+        <Route path="/lichsu" Component= {LichSuHienMau} />
 
         <Route path="/" Component= {Trangchu} /> {/* Example of the Home route */}
       </Routes>

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    userprofileStart,
-    userprofileSuccess,
-    userprofileFailed,
     allEventStart,
     allEventSuccess,
     allEventFailed
 } from "../redux/userSlice";
+import {
+    hospitalStart,
+    hospitalSuccess,
+    hospitalFailed
+} from "../redux/eventSlice";
 import {
     logOutStart,
     logOutSuccess,
@@ -22,53 +24,79 @@ function Trangchu() {
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [data, setdata] = useState([]);
 
-    const handleProfile = async () => {
-        dispatch(userprofileStart());
-        try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
+    useEffect(() => {
+        const handleHospital = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/v1/user/getfour", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.log("Error fetching data!");
                 }
-            });
-            if (!response.ok) {
-                dispatch(userprofileFailed());
-            } else {
-                const data = await response.json();
-                dispatch(userprofileSuccess(data));
-                navigate("/hoso");
+                else {
+                    const hospital = await response.json();
+                    setdata(hospital);
+                    console.log("ok!");
+                    console.log(hospital);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-        } catch (error) {
-            dispatch(userprofileFailed());
         }
-    }
+        handleHospital();
+        const handleEvent = async () => {
+            dispatch(allEventStart());
+            try {
+                const response1 = await fetch("http://localhost:8000/v1/user/event", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-    const handleEvent = async (e) => {
+                if (!response1.ok) {
+                    dispatch(allEventFailed());
+                }
+                else {
+                    const event = await response1.json();
+                    dispatch(allEventSuccess(event));
+                }
+            } catch (error) {
+                dispatch(allEventFailed());
+                console.error("Error fetching data:", error);
+            }
+        }
+        handleEvent()
+    }, [dispatch]);
+
+    const handleHospitalDetail = async (e, hospitalId) => {
         e.preventDefault();
-        dispatch(allEventStart());
+        dispatch(hospitalStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/event", {
+            const response2 = await fetch("http://localhost:8000/v1/user/hospital/" + hospitalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-
-            if (!response.ok) {
-                dispatch(allEventFailed());
-            }
-            else {
-                const data = await response.json();
-                dispatch(allEventSuccess(data));
-                navigate("/sukien");
+            if (!response2.ok) {
+                dispatch(hospitalFailed());
+            } else {
+                const data2 = await response2.json();
+                dispatch(hospitalSuccess(data2));
+                navigate("/chitietbenhvien")
             }
         } catch (error) {
-            dispatch(allEventFailed());
-            console.error("Error fetching data:", error);
+            dispatch(hospitalFailed());
         }
     }
+
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -125,7 +153,7 @@ function Trangchu() {
                                     <Link to="/" className="nav-item nav-link active">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link" onClick={handleEvent}>
+                                    <Link to="/sukien" className="nav-item nav-link">
                                         Sự kiện
                                     </Link>
 
@@ -141,13 +169,13 @@ function Trangchu() {
                                             Hồ sơ cá nhân
                                         </a>
                                         <div className="dropdown-menu rounded-0 m-0">
-                                            <Link to="/hoso" className="dropdown-item" onClick={handleProfile}>
+                                            <Link to="/hoso" className="dropdown-item">
                                                 Thông tin cá nhân
                                             </Link>
-                                            <Link to="#" className="dropdown-item">
+                                            <Link to="/lichhen" className="dropdown-item">
                                                 Lịch hẹn của bạn
                                             </Link>
-                                            <Link to="#" className="dropdown-item">
+                                            <Link to="/lichsu" className="dropdown-item">
                                                 Lịch sử hiến máu
                                             </Link>
                                         </div>
@@ -169,7 +197,7 @@ function Trangchu() {
                                     <Link to="/" className="nav-item nav-link active">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link" onClick={handleEvent}>
+                                    <Link to="/sukien" className="nav-item nav-link">
                                         Sự kiện
                                     </Link>
 
@@ -500,143 +528,32 @@ function Trangchu() {
                 <div className="container">
                     <div className="text-center pb-2">
                         <p className="section-title px-5">
-                            <span className="px-2">Our Teachers</span>
+                            <span className="px-2">Bệnh viện</span>
                         </p>
-                        <h1 className="mb-4">Meet Our Teachers</h1>
+                        <h1 className="mb-4">Một số bệnh viện hợp tác đầu tiên</h1>
                     </div>
                     <div className="row">
-                        <div className="col-md-6 col-lg-3 text-center team mb-5">
-                            <div
-                                className="position-relative overflow-hidden mb-4"
-                                style={{ borderRadius: "100%" }}
-                            >
-                                <img className="img-fluid w-100" src="img/team-1.jpg" alt="" />
-                                <div className="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-twitter" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-facebook-f" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-linkedin-in" />
-                                    </a>
+                        {data.map(hospital => (
+                            <div className="col-md-6 col-lg-3 text-center team mb-5">
+                                <div
+                                    className="position-relative overflow-hidden mb-4"
+                                    style={{ borderRadius: "100%" }}
+                                >
+                                    <img className="img-fluid w-100" src={hospital.images} />
+                                    <div className="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+                                        <a
+                                            className="btn btn-outline-light text-center mr-2 px-0"
+                                            style={{ width: 38, height: 38 }}
+                                            href="#" onClick={(e) => handleHospitalDetail(e, hospital._id)}
+                                        >
+                                            <i className="fas fa-eye" />
+                                        </a>
+                                    </div>
                                 </div>
+                                <h4>{hospital.hospitalName}</h4>
+                                <i>{hospital.address}</i>
                             </div>
-                            <h4>Julia Smith</h4>
-                            <i>Music Teacher</i>
-                        </div>
-                        <div className="col-md-6 col-lg-3 text-center team mb-5">
-                            <div
-                                className="position-relative overflow-hidden mb-4"
-                                style={{ borderRadius: "100%" }}
-                            >
-                                <img className="img-fluid w-100" src="img/team-2.jpg" alt="" />
-                                <div className="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-twitter" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-facebook-f" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-linkedin-in" />
-                                    </a>
-                                </div>
-                            </div>
-                            <h4>Jhon Doe</h4>
-                            <i>Language Teacher</i>
-                        </div>
-                        <div className="col-md-6 col-lg-3 text-center team mb-5">
-                            <div
-                                className="position-relative overflow-hidden mb-4"
-                                style={{ borderRadius: "100%" }}
-                            >
-                                <img className="img-fluid w-100" src="img/team-3.jpg" alt="" />
-                                <div className="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-twitter" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-facebook-f" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-linkedin-in" />
-                                    </a>
-                                </div>
-                            </div>
-                            <h4>Mollie Ross</h4>
-                            <i>Dance Teacher</i>
-                        </div>
-                        <div className="col-md-6 col-lg-3 text-center team mb-5">
-                            <div
-                                className="position-relative overflow-hidden mb-4"
-                                style={{ borderRadius: "100%" }}
-                            >
-                                <img className="img-fluid w-100" src="img/team-4.jpg" alt="" />
-                                <div className="team-social d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-twitter" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center mr-2 px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-facebook-f" />
-                                    </a>
-                                    <a
-                                        className="btn btn-outline-light text-center px-0"
-                                        style={{ width: 38, height: 38 }}
-                                        href="#"
-                                    >
-                                        <i className="fab fa-linkedin-in" />
-                                    </a>
-                                </div>
-                            </div>
-                            <h4>Donald John</h4>
-                            <i>Art Teacher</i>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

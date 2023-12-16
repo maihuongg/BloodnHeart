@@ -42,39 +42,12 @@ function SuKien() {
         const currentDate = new Date().toISOString().split('T')[0];
         console.log(currentDate);
         setMinDate(currentDate);
-
-        if (isAdmin) {
-            //Function to fetch data from the API
-            const fetchData1 = async () => {
-                try {
-                    const response1 = await fetch("http://localhost:8000/v1/admin/event", {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            token: `Bearer ${accessToken}`
-                        }
-                    });
-
-                    if (response1.ok) {
-                        const data1 = await response1.json();
-                        //data gồm count và allAccount
-                        console.log(data1.allEvent)
-                        setData(data1.allEvent);
-                    }
-                    else return 0;
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            fetchData1();
-        } else {
-            if (isHospital) {
+        if (!showModal) {
+            if (isAdmin) {
                 //Function to fetch data from the API
-                const fetchData2 = async () => {
+                const fetchData1 = async () => {
                     try {
-                        const response2 = await fetch("http://localhost:8000/v1/hospital/event/" + hospitalId, {
+                        const response1 = await fetch("http://localhost:8000/v1/admin/event", {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -82,10 +55,11 @@ function SuKien() {
                             }
                         });
 
-                        if (response2.ok) {
-                            const data2 = await response2.json();
+                        if (response1.ok) {
+                            const data1 = await response1.json();
                             //data gồm count và allAccount
-                            setData(data2.allEvent);
+                            console.log(data1.allEvent)
+                            setData(data1.allEvent);
                         }
                         else return 0;
                     } catch (error) {
@@ -94,14 +68,41 @@ function SuKien() {
                         setLoading(false);
                     }
                 };
-
-                fetchData2();
+                fetchData1();
             } else {
-                console.log("Error fetching data");
+                if (isHospital) {
+                    //Function to fetch data from the API
+                    const fetchData2 = async () => {
+                        try {
+                            const response2 = await fetch("http://localhost:8000/v1/hospital/event/" + hospitalId, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    token: `Bearer ${accessToken}`
+                                }
+                            });
+
+                            if (response2.ok) {
+                                const data2 = await response2.json();
+                                //data gồm count và allAccount
+                                setData(data2.allEvent);
+                            }
+                            else return 0;
+                        } catch (error) {
+                            console.error("Error fetching data:", error);
+                        } finally {
+                            setLoading(false);
+                        }
+                    };
+
+                    fetchData2();
+                } else {
+                    console.log("Error fetching data");
+                }
             }
+            console.log(data);
         }
-        console.log(data);
-    }, []);
+    }, [showModal]);
 
 
 
@@ -142,6 +143,7 @@ function SuKien() {
                 } else {
                     if (status === "1") {
                         if (endDate.isBefore(currentDate)) {
+                            handleCloseEvent(record._id)
                             return <span style={{ color: 'red' }}>Đã đóng</span>;
                         } else if (startDate.isAfter(currentDate)) {
                             return <span style={{ color: 'blue' }}>Sắp diễn ra</span>;

@@ -4,11 +4,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    userprofileStart,
-    userprofileSuccess,
-    userprofileFailed
-} from "../redux/userSlice";
-import {
     logOutStart,
     logOutSuccess,
     logOutFailed
@@ -20,28 +15,6 @@ function Gioithieu() {
     const accessToken = user?.accessToken;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const handleProfile = async () => {
-        dispatch(userprofileStart());
-        try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
-                }
-            });
-            if (!response.ok) {
-                dispatch(userprofileFailed());
-            } else {
-                const data = await response.json();
-                dispatch(userprofileSuccess(data));
-                navigate("/hoso");
-            }
-        } catch (error) {
-            dispatch(userprofileFailed());
-        }
-    }
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -113,13 +86,13 @@ function Gioithieu() {
                                                 Hồ sơ cá nhân
                                             </a>
                                             <div className="dropdown-menu rounded-0 m-0">
-                                                <Link to="/hoso" className="dropdown-item" onClick={handleProfile}>
+                                                <Link to="/hoso" className="dropdown-item">
                                                     Thông tin cá nhân
                                                 </Link>
-                                                <Link to="#" className="dropdown-item">
+                                                <Link to="/lichhen" className="dropdown-item">
                                                     Lịch hẹn của bạn
                                                 </Link>
-                                                <Link to="#" className="dropdown-item">
+                                                <Link to="/lichsu" className="dropdown-item">
                                                     Lịch sử hiến máu
                                                 </Link>
                                             </div>

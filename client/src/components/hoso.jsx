@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import moment from "moment";
 import {
     userprofileStart,
     userprofileSuccess,
-    userprofileFailed
+    userprofileFailed,
 } from "../redux/userSlice";
 import {
     logOutStart,
@@ -41,8 +41,8 @@ function Hoso() {
 
 
     const [fullName, setfullName] = useState(userPro?.fullName);
-    const [birthDay, setbirthDay] = useState(moment(userPro?.birthDay).format('DD-MM-YYYY'));   
-     console.log('bday:', moment(userPro?.birthDay).format('DD-MM-YYYY'))
+    const [birthDay, setbirthDay] = useState(moment(userPro?.birthDay).format('DD-MM-YYYY'));
+    console.log('bday:', moment(userPro?.birthDay).format('DD-MM-YYYY'))
 
     const [gender, setGender] = useState(userPro?.gender);
     const [bloodgroup, setbloodGroup] = useState(userPro?.bloodgroup);
@@ -51,7 +51,31 @@ function Hoso() {
     const [email, setEmail] = useState(userPro?.email);
     const [images, setImages] = useState('');
     const [imagesdefault, setImagesdefault] = useState(userPro?.images);
-    console.log(imagesdefault);
+    console.log(userPro?.images);
+
+    useEffect(() => {
+        const handleProfile = async () => {
+            dispatch(userprofileStart());
+            try {
+                const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if (!response1.ok) {
+                    dispatch(userprofileFailed());
+                } else {
+                    const data1 = await response1.json();
+                    dispatch(userprofileSuccess(data1));
+                }
+            } catch (error) {
+                dispatch(userprofileFailed());
+            }
+        }
+        handleProfile();
+    }, [dispatch]);
 
     const handleUpdate1 = async (e) => {
         e.preventDefault();
@@ -142,11 +166,11 @@ function Hoso() {
         e.preventDefault();
         const formData = new FormData();
         formData.append('images', images);
-    
+
         dispatch(userprofileStart());
 
         console.log('Fetch URL:', "http://localhost:8000/v1/user/profileimage/" + userId);
-    
+
         try {
             const response = await fetch("http://localhost:8000/v1/user/profileimage/" + userId, {
                 method: 'PUT',
@@ -155,7 +179,7 @@ function Hoso() {
                     token: `Bearer ${accessToken}`
                 }
             });
-    
+
             if (!response.ok) {
                 dispatch(userprofileFailed());
             } else {
@@ -168,10 +192,10 @@ function Hoso() {
             dispatch(userprofileFailed());
         }
     }
-    
+
     const onChange = e => {
         const file = e.target.files[0];
-    
+
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -180,7 +204,7 @@ function Hoso() {
                 setImagesdefault(base64Image);
                 console.log('imageform', base64Image);
             };
-    
+
             reader.readAsDataURL(file);
         }
     }
@@ -235,10 +259,10 @@ function Hoso() {
                                                 <Link to="/hoso" className="dropdown-item active">
                                                     Thông tin cá nhân
                                                 </Link>
-                                                <Link to="#" className="dropdown-item">
+                                                <Link to="/lichhen" className="dropdown-item">
                                                     Lịch hẹn của bạn
                                                 </Link>
-                                                <Link to="#" className="dropdown-item">
+                                                <Link to="/lichsu" className="dropdown-item">
                                                     Lịch sử hiến máu
                                                 </Link>
                                             </div>
@@ -353,7 +377,7 @@ function Hoso() {
                             </div>
                             <div>
                                 <img
-                                    src={imagesdefault}
+                                    src={userPro?.images}
                                     className="img-fluid rounded-circle mx-auto mb-3"
                                     style={{ width: 200 }}
                                 />
@@ -415,7 +439,7 @@ function Hoso() {
                                                         className="form-control border-1"
                                                         placeholder="VD: 01/01/2000"
                                                         required="required"
-                                                        defaultValue={ moment(userPro?.birthDay).format('DD-MM-YYYY')}
+                                                        defaultValue={moment(userPro?.birthDay).format('DD-MM-YYYY')}
                                                         onChange={(e) => setbirthDay(e.target.value)}
                                                     />
                                                 </div>

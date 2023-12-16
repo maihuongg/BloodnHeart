@@ -113,7 +113,21 @@ const userController = {
             return res.status(500).json(error);
         }
     },
-    
+
+    getHospitalById: async (req, res) => {
+        try {
+            const Id = req.params.id;
+            const hospital = await HospitalProfile.findOne({ _id: Id });
+
+            if (!hospital) {
+                return res.status(404).json({ message: "Hospital not found" });
+            }
+            return res.status(200).json(hospital);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
 
     tobeHospital: async (req, res) => {
         try {
@@ -140,20 +154,123 @@ const userController = {
                     address: req.body.address,
                     leaderName: req.body.leaderName,
                     email: req.body.email,
-                   
+
                 });
 
                 const hospitalProfile = await newHospitalProfile.save();
                 console.log(hospitalProfile)
-                return res.status(200).json({account,hospitalProfile});
+                return res.status(200).json({ account, hospitalProfile });
             } else {
                 return res.status(400).json({ message: validationResult.message });
             }
         } catch (error) {
             return res.status(500).json(error);
         }
+    },
+
+    registerEvent: async (req, res) => {
+        try {
+            const { eventId, userId, bloodGroup, dateRegister } = req.body;
+
+            // Find the event by ID
+            const event = await Event.findById(eventId);
+
+            if (!event) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+
+            // Check if the user already exists in the listusers array
+            const existingUser = event.listusers.user.find(user => user.userid === userId);
+
+            if (existingUser) {
+                return res.status(400).json({ message: "Bạn đã đăng ký sự kiện này!" });
+            }
+
+            // Add the user to the listusers array
+            event.listusers.user.push({
+                userid: userId,
+                bloodgroup: bloodGroup,
+                status_user: "0",
+                dateregister: dateRegister,
+            });
+
+            console.log('Updated Event (before saving):', event);
+
+            // Update the listusers count directly in the database
+            event.listusers.count = event.listusers.user.length;
+
+            // Save the updated event
+            const updatedEvent = await event.save();
+
+            console.log('Updated Event (after saving):', updatedEvent);
+
+
+            const user = await UserProfile.findById(userId);
+
+            console.log("user:", user);
+
+            if (!user) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+
+            user.history.push({
+                id_event: eventId,
+                eventName: event.eventName,
+                address_event: event.address,
+                date: dateRegister,
+                status_user: "0",
+            })
+
+            const updateProfile = await user.save();
+
+            res.status(200).json({ message: "Đăng ký sự kiện thành công" });
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    updateDateRegister: async (req, res) => {
+        try {
+            const { eventId, userId, date } = req.body;
+            // Tìm sự kiện có eventId và người dùng có userId trong danh sách
+            const event = await Event.findOne({
+                _id: eventId
+            });
+
+            if (!event) {
+                return res.status(404).json({ message: "Sự kiện hoặc người dùng không tồn tại" });
+            }
+
+            // Cập nhật ngày đăng ký của người dùng cho sự kiện
+            const userToUpdate = event.listusers.user.find(user => user.userid === userId);
+
+            userToUpdate.dateregister = date;
+            // Lưu sự kiện đã cập nhật
+            await event.save();
+
+            // Tìm người dùng có userId và sự kiện có eventId trong lịch sử sự kiện
+            const userProfile = await UserProfile.findOne({
+                _id: userId
+            });
+
+            if (!userProfile) {
+                return res.status(404).json({ message: "Người dùng hoặc sự kiện không tồn tại trong lịch sử" });
+            }
+
+            // Cập nhật ngày đăng ký của sự kiện cho người dùng
+            const updateEvent = userProfile.history.find(user => user.id_event === eventId);
+            updateEvent.date = date;
+
+            // Lưu thông tin người dùng đã cập nhật
+            await userProfile.save();
+
+            console.log("afuserProfile", userProfile);
+
+            return res.status(200).json({ message: "Cập nhật ngày đăng ký thành công" });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Lỗi server" });
+        }
     }
-// >>>>>>> Stashed changes
 
 };
 

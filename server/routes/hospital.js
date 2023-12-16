@@ -11,4 +11,5 @@ router.get('/detail/:id', hospitalController.getEventById);
 router.put('/close/:id', hospitalController.closeEvent);
 router.post('/be-hospital', userController.tobeHospital);
 
+
 module.exports = router;

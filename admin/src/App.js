@@ -10,7 +10,7 @@ import ChiTietSuKien from './components/quanly/sukien/chitietsukien';
 import HopTac from './components/hoptac/hoptac';
 function App() {
   return (
-    <Router>
+    <Router> 
       <Routes>
         <Route path="/dang-nhap" Component={Dangnhap} />
         <Route path="/" Component={Dangnhap} />
