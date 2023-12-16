@@ -28,7 +28,7 @@ const userProfileSchema = new mongoose.Schema(
             default: 'https://res.cloudinary.com/bloodnheart/image/upload/v1700060680/image-default/default_image_profile_mdpdlu.jpg',
         },
         birthDay:{
-            type: Date,
+            type: String,
             require: true,
             default: null,
         },

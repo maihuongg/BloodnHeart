@@ -1,6 +1,40 @@
 import React from "react";
 import "@fortawesome/fontawesome-free"
+import {
+  logOutStart,
+  logOutSuccess,
+  logOutFailed
+} from "../../redux/authSlice";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 export default function Sidebar() {
+  const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
+  const accessToken = currentAdmin?.accessToken;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    dispatch(logOutStart());
+    try {
+        const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                token: `Bearer ${accessToken}`
+            }
+        });
+        if (!res.ok) {
+            dispatch(logOutFailed());
+        } else {
+            dispatch(logOutSuccess());
+            navigate("/");
+        }
+    } catch (error) {
+        dispatch(logOutFailed());
+    }
+}
   return (
     <>
       {/* <div className="container-fluid page-body-wrapper"> */}
@@ -298,7 +332,7 @@ export default function Sidebar() {
                   {" "}
                   <a
                     className="nav-link"
-                    href="pages/ui-features/typography.html"
+                    href="/benh-vien"
                   >
                     Bệnh viện
                   </a>
@@ -363,7 +397,7 @@ export default function Sidebar() {
           </li>
 
           <li className="nav-item">
-            <a className="nav-link" href="pages/documentation/documentation.html">
+            <a className="nav-link" href="/dang-xuat" onClick={handleLogout}>
               <i className="icon-paper menu-icon" />
               <span className="menu-title">Đăng xuất</span>
             </a>
