@@ -133,7 +133,7 @@ const userController = {
                 const account_id = account.id;
                 console.log("new account_id", account_id);
                 const newHospitalProfile = new HospitalProfile({
-                    account_id: account_id,
+                    // account_id: account_id,
                     cccd: req.body.sdd,
                     hospitalName: req.body.hospitalName,
                     phone: req.body.phone,

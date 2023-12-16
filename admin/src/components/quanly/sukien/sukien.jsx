@@ -14,6 +14,8 @@ import {
     eventdetailSuccess,
     eventdetailFailed
 } from "../../../redux/eventSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function SuKien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -38,6 +40,7 @@ function SuKien() {
     const [address, setAddress] = useState("");
     const [msgErr, setMsgErr] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     useEffect(() => {
         const currentDate = new Date().toISOString().split('T')[0];
         console.log(currentDate);
@@ -102,8 +105,35 @@ function SuKien() {
         }
         console.log(data);
     }, []);
+    const fetchDataSearcg = async (keyword) => {
+        try {
+            const response2 = await fetch(`http://localhost:8000/v1/admin/search/event?keyword=${keyword}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // token: `Bearer ${accessToken}`
+                }
+            });
 
-
+            if (response2.ok) {
+                const data2 = await response2.json();
+                //data gồm count và allAccount
+                // console.log(data2.allAccount)
+                setData(data2);
+            }
+            else return 0;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const showNotification = (message) => {
+        toast.info(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
 
     const columns = [
         {
@@ -239,7 +269,10 @@ function SuKien() {
     };
 
     const handleShowModal = () => {
-        setShowModal(true);
+        if (isHospital) {
+            setShowModal(true);
+        }
+        else showNotification("Chức năng chỉ dành cho bệnh viện hợp tác !")
     };
     const handleCloseModal = () => {
         setShowModal(false, () => {
@@ -322,9 +355,15 @@ function SuKien() {
                                         <h3 class="card-title">Quản lý sự kiện </h3>
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                <input type="text" class="form-control"
+                                                    placeholder="Vui lòng nhập tên sự kiện"
+                                                    value={searchQuery}
+                                                    onChange={(e) => setSearchQuery(e.target.value)} />
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-sm btn-outline-primary btn-icon-prepend" type="button"><i class="mdi mdi-magnify"></i> Search</button>
+                                                    <button class="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                        type="button"
+                                                        onClick={() => fetchDataSearcg(searchQuery)}>
+                                                        <i class="mdi mdi-magnify"></i> Search</button>
                                                     <button class="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
                                                         <i class="mdi mdi-file-import"></i> Import</button>
                                                     <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
@@ -451,7 +490,9 @@ function SuKien() {
                     </div>
                 </div>
             </div >
+            <ToastContainer></ToastContainer>
         </div>
+
     )
 };
 

@@ -8,6 +8,8 @@ import SuKien from './components/quanly/sukien/sukien';
 import ChinhSuaNguoiDung from './components/quanly/nguoidung/chinhsuanguoidung';
 import ChiTietSuKien from './components/quanly/sukien/chitietsukien';
 import HopTac from './components/hoptac/hoptac';
+import BenhVien from './components/quanly/benhvien/benhvien';
+import ChinhSuaBenhVien from './components/quanly/benhvien/chinhsuabenhvien';
 function App() {
   return (
     <Router>
@@ -20,6 +22,8 @@ function App() {
         <Route path="/su-kien" Component={SuKien} />
         <Route path="/su-kien/chi-tiet/:id" Component={ChiTietSuKien}/>
         <Route path="/hop-tac" Component={HopTac} />
+        <Route path="/benh-vien" Component={BenhVien} />
+        <Route path="/benh-vien/chinh-sua/:id" Component={ChinhSuaBenhVien} />
       </Routes>
     </Router>
   );

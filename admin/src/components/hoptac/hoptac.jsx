@@ -51,7 +51,7 @@ function HopTac() {
                 password1: password1,
                 repeatPassword: repeatPassword
             };
-            console.log("request",request)
+            console.log("request", request)
             const response = await fetch('http://localhost:8000/v1/admin/accept-hospital', {
                 method: 'POST',
                 body: JSON.stringify(request),
@@ -170,56 +170,56 @@ function HopTac() {
             <Navbar />
             <div className="container-fluid page-body-wrapper">
                 <Sidebar />
-                {isAdmin ? (<div className="main-panel">
+                <div className="main-panel">
                     <div className="content-wrapper">
-                        {/* quản lý người dùng  */}
-                        <div className="row">
-                            <div className="col-lg-12 grid-margin stretch-card">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h3 className="card-title"> Danh sách các yêu cầu hợp tác  </h3>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <input type="text" className="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
-                                                <div className="input-group-append">
-                                                    <button className="btn btn-sm btn-outline-primary btn-icon-prepend" type="button"><i className="mdi mdi-magnify"></i> Search</button>
-                                                    <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Import</button>
-                                                    <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                        <i className="mdi mdi-export"></i> Export</button>
+                        {isAdmin ? (
+                            < div className="row">
+                                <div className="col-lg-12 grid-margin stretch-card">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h3 className="card-title"> Danh sách các yêu cầu hợp tác  </h3>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <input type="text" className="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                    <div className="input-group-append">
+                                                        <button className="btn btn-sm btn-outline-primary btn-icon-prepend" type="button"><i className="mdi mdi-magnify"></i> Search</button>
+                                                        <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
+                                                            <i className="mdi mdi-file-import"></i> Import</button>
+                                                        <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
+                                                            <i className="mdi mdi-export"></i> Export</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <div className="input-group-append">
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <div className="input-group-append">
 
-                                                </div>
-                                            </div></div>
-                                        <p className="card-description"></p>
-                                        <Table
-                                            dataSource={data}
-                                            columns={columns}
-                                            loading={loading}
-                                            rowKey="_id"
-                                        />
+                                                    </div>
+                                                </div></div>
+                                            <p className="card-description"></p>
+                                            <Table
+                                                dataSource={data}
+                                                columns={columns}
+                                                loading={loading}
+                                                rowKey="_id"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>) : (
-                    <div className="row">
-                        <div className="col-lg-12 grid-margin stretch-card">
-                            <div className="card text-center">
-                                <div className="card-body">
-                                    <h3 className="card-title">Thông báo</h3>
-                                    <p className="card-text col-lg-12">Bạn không có quyền truy cập.</p>
+                        ) : (
+                            <div className="row">
+                                <div class="col-lg-12 grid-margin stretch-card">
+                                    <div class="card">
+                                        <div className="card-body text-center">
+                                            <h3 class="card-title">Xin lỗi! Chức năng này chỉ dành cho Admin hệ thống</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )};
                     </div>
-                )}
+                </div>
                 <Modal show={showModal} onHide={handleCloseModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>Phê duyệt yêu cầu</Modal.Title>
@@ -279,7 +279,7 @@ function HopTac() {
                     </Modal.Body>
                 </Modal>
             </div >
-        </div>
+        </div >
     )
 }
 

@@ -14,61 +14,36 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ChinhSuaNguoiDung() {
+function ChinhSuaBenhVien() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [images, setImages] = useState("");
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
+    const proHospital = useSelector((state) => state.hospital.profile.gethospital);
     const accessToken = currentAdmin?.accessToken;
-    //accountId
+    //id
     const { id } = useParams();
-    const [cccd, setCCCd] = useState("");
-    const [fullName, setFullName] = useState("");
-    const [birthDay, setBirthDay] = useState("");
-    const [gender, setGender] = useState("");
-    const [bloodGroup, setBloodGroup] = useState("");
-    const [address, setAddress] = useState("");
-    const [phone, setPhone] = useState("");
+   
+    const [leaderName, setLeaderName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [phone, setPhone] = useState("");
+    const [cccd, setCccd] = useState("");
+    const [address, setAddress] = useState("");
+    const [hospitalName, setHospitalName] = useState("")
     const [isAdmin, setIsAdmin] = useState(false)
     const [isHospital, setIsHospital] = useState(false);
     const handleGoBack = () => {
-        navigate("/nguoi-dung");
+        navigate("/benh-vien");
     };
-    useEffect(() => {
-        const getAccountRole = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/v1/admin/account/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    console.log("Có lỗi xảy ra.");
-                } else {
-                    const dataAccountById = await response.json();
-                    // console.log(dataAccountById.isAdmin);
-                    setIsAdmin(dataAccountById.isAdmin);
-                    setIsHospital(dataAccountById.isHospital);
-                    console.log("Admin: ", isAdmin);
-                    console.log("Hospital: ", isHospital);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        getAccountRole();
-    }, id)
+   
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/v1/admin/profile/info/${id}`, {
+                const response = await fetch(`http://localhost:8000/v1/admin/hospital/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
                     },
                 });
 
@@ -77,11 +52,9 @@ function ChinhSuaNguoiDung() {
                 } else {
                     const data = await response.json();
                     console.log(data);
-                    setCCCd(data.cccd);
-                    setFullName(data.fullName);
-                    setBirthDay(moment(data.birthDay).format('DD-MM-YYYY'));
-                    setGender(data.gender);
-                    setBloodGroup(data.bloodGroup);
+                    setCccd(data.cccd);
+                    setLeaderName(data.leaderName);                  
+                    setHospitalName(data.hospitalName);
                     setAddress(data.address);
                     setPhone(data.phone);
                     setEmail(data.email);
@@ -120,7 +93,7 @@ function ChinhSuaNguoiDung() {
         try {
             const formData = new FormData();
             formData.append('images', images);
-            const response = await fetch(`http://localhost:8000/v1/admin/update-image/${id}`, {
+            const response = await fetch(`http://localhost:8000/v1/admin/hospital/update-image/${id}`, {
                 method: 'PUT',
                 body: formData,
                 headers: {
@@ -146,14 +119,13 @@ function ChinhSuaNguoiDung() {
         e.preventDefault();
         try {
             const newInfo = {
-                fullName: fullName,
-                gender: gender,
+                leaderName: leaderName,
+                hospitalName: hospitalName,
                 phone: phone,
-                birthDay: moment(birthDay, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-                address: address,
+                address: address
             }
-    
-            const response = await fetch(`http://localhost:8000/v1/admin/update-info/${id}`, {
+            console.log("NewInfo: ", newInfo)
+            const response = await fetch(`http://localhost:8000/v1/admin/hospital/update-info/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(newInfo),
                 headers: {
@@ -161,10 +133,7 @@ function ChinhSuaNguoiDung() {
                     token: `Bearer ${accessToken}`
                 }
             });
-    
             if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Error updating information:", errorData);
                 console.log("Có lỗi xảy ra.");
             } else {
                 const data = await response.json();
@@ -172,11 +141,9 @@ function ChinhSuaNguoiDung() {
                 console.log(data);
             }
         } catch (error) {
-            console.error("Unexpected error:", error);
             console.log("Có lỗi xảy ra.");
         }
     }
-    
     return (
         <>
             <div className="container-scroller">
@@ -191,7 +158,7 @@ function ChinhSuaNguoiDung() {
                                 onClick={handleGoBack}
                             ></i>
                             <br />
-                            <br /> <h3>Chỉnh sửa tài khoản </h3>
+                            <br /> <h3>Chỉnh sửa thông tin bệnh viện</h3>
                             <br />
                             <div className="row">
                                 <div className="col-lg-4">
@@ -206,8 +173,8 @@ function ChinhSuaNguoiDung() {
                                                     className="img-fluid rounded-circle"
                                                     style={{ width: "200px", height: "200px" }}
                                                 />
-                                                <h4 className="card-title mt-10">{fullName}</h4>
-                                                <p className="card-description">Người dùng</p>
+                                                <h4 className="card-title mt-10">{hospitalName}</h4>
+                                                <p className="card-description">Tài khoản bệnh viện</p>
                                                 <div className="custom-file">
                                                     <input
                                                         type="file"
@@ -254,36 +221,25 @@ function ChinhSuaNguoiDung() {
                                                     />
                                                 </div>
                                                 <div className="col-10 form-group">
-                                                    <label className="form-control-label">Họ và tên</label>
+                                                    <label className="form-control-label">Tên bệnh viện</label>
                                                     <input
                                                         type="text"
                                                         className="form-control"
-                                                        value={fullName}
-                                                        placeholder="Vui lòng nhập họ tên"
-
-                                                        onChange={(e) => setFullName(e.target.value)}
+                                                        value={hospitalName}
+                                                        placeholder="Vui lòng nhập tên bệnh viện"
+                                                        onChange={(e) => setHospitalName(e.target.value)}
                                                     />
                                                 </div>
-                                                <div className="col-10 form-group ">
-                                                    <label className="form-control-label">Giới tính</label>
-                                                    <select
-                                                        className="form-control"
-                                                        value={gender}
-                                                        onChange={(e) => setGender(e.target.value)}
-                                                    >
-                                                        <option value="">Chọn giới tính</option>
-                                                        <option value="Nam">Nam</option>
-                                                        <option value="Nữ">Nữ</option>
-                                                    </select>
-                                                </div>
+                                                
 
                                                 <div className="col-10 form-group">
-                                                    <label className="form-control-label">Ngày sinh</label>
+                                                    <label className="form-control-label">Tên người đứng đầu</label>
                                                     <input
-                                                        type="date"
+                                                        type="text"
                                                         className="form-control"
-                                                        value={birthDay}
-                                                        onChange={(e) => setBirthDay(e.target.value)}
+                                                        value={leaderName}
+                                                        placeholder="Vui lòng nhập tên người đứng đầu"
+                                                        onChange={(e) => setLeaderName(e.target.value)}
                                                     />
                                                 </div>
                                                 <div className="col-10 form-group">
@@ -331,4 +287,4 @@ function ChinhSuaNguoiDung() {
     );
 }
 
-export default ChinhSuaNguoiDung;
+export default ChinhSuaBenhVien;
