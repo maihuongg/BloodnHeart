@@ -93,10 +93,6 @@ function Footer() {
                                 <i className="fa fa-angle-right mr-2" />
                                 Liên hệ
                             </a>
-                            <a className="text-white mb-2" href="/hoso">
-                                <i className="fa fa-angle-right mr-2" />
-                                Hồ sơ cá nhân
-                            </a>
                             <a className="text-white mb-2" href="gioithieu">
                                 <i className="fa fa-angle-right mr-2" />
                                 Giới thiệu

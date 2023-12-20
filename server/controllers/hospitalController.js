@@ -19,6 +19,27 @@ const hospitalController = {
             return res.status(500).json({ error: "Internal Server Error" });
         }
     },
+    getEventById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const event = await Event.findOne({ _id: id });
+
+            if (!event) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+
+            // Count the number of users in the listusers array
+            const userCount = event.listusers.length;
+
+            // Add the userCount to the event object
+            const eventWithUserCount = { ...event.toObject(), count: userCount };
+
+            return res.status(200).json({ message: "Event found", eventWithUserCount});
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
     getEventByHospital: async (req, res) => {
         try {
             const hospitalId = req.params.hospital_id;
@@ -59,23 +80,23 @@ const hospitalController = {
         try {
             const eventId = req.params.id;
             console.log(eventId);
-            const event = await Event.findOne({_id: eventId})
+            const event = await Event.findOne({ _id: eventId })
             if (!event) {
                 return res.status(404).json({ message: "Event not found" });
             }
             return res.status(200).json(event);
         } catch (error) {
             console.error(error);
-            return res.status(500).json({error: "Internal Server Error"});
+            return res.status(500).json({ error: "Internal Server Error" });
         }
     },
     closeEvent: async (req, res) => {
         try {
             const eventId = req.params.id;
             const eventClose = await Event.findOneAndUpdate(
-                { _id: eventId},
-                { $set: {status: "0"}},
-                {new:true}
+                { _id: eventId },
+                { $set: { status: "0" } },
+                { new: true }
             );
 
             if (!eventClose) {
@@ -85,7 +106,16 @@ const hospitalController = {
             return res.status(200).json(eventClose);
         } catch (error) {
             console.error(error);
-            return res.status(500).json({error: "Internal Server Error"});
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
+    getFourHospital: async (req, res) => {
+        try {
+            const hospital = await HospitalProfile.find().limit(4);
+            return res.status(200).json(hospital);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Internal Server Error" });
         }
     }
 }

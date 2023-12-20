@@ -12,7 +12,7 @@ import BenhVien from './components/quanly/benhvien/benhvien';
 import ChinhSuaBenhVien from './components/quanly/benhvien/chinhsuabenhvien';
 function App() {
   return (
-    <Router>
+    <Router> 
       <Routes>
         <Route path="/dang-nhap" Component={Dangnhap} />
         <Route path="/" Component={Dangnhap} />
