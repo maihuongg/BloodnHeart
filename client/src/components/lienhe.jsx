@@ -91,7 +91,7 @@ function Lienhe() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                
+
             });
             console.log('Response Status:', response.status);
 
@@ -109,7 +109,7 @@ function Lienhe() {
             console.log('error: ', error);
         }
     };
-    
+
     return (
         <>
             <>
@@ -239,7 +239,7 @@ function Lienhe() {
                         </p>
                         <h1 className="mb-4">Đăng ký trở thành bệnh viện hợp tác</h1>
                     </div>
-                    <div className="row">
+                    <div className="row mb-4">
                         <div className="col-md-12">
                             <p>
                                 BloodnHeart xin trân trọng kính mời các bệnh viện, các trung tâm y tế cộng đồng,
@@ -247,24 +247,39 @@ function Lienhe() {
                                 tham gia vào dự án hiến máu nhân đạo cùng chúng tôi.
                             </p>
                         </div>
+                    </div>
 
-                        <div className="col-md-12 mt-6">
-                            <h3>Mục Đích Dự Án</h3>
-                            <p>
-                                Dự án hiến máu nhân đạo của chúng tôi được tạo ra với mục tiêu chính là
-                                xây dựng một nguồn cung máu ổn định, đáp ứng nhu cầu y tế cộng đồng và
-                                giúp cải thiện tình hình sức khỏe của những người cần máu khẩn cấp.
-                            </p>
+                    {/* Card Section */}
+                    <div className="row mb-4">
+                        <div className="col-md-6 mx-auto">
+                            <div className="card shadow">
+                                <div className="card-body">
+                                    <h3 className="card-title">Mục Đích Dự Án</h3>
+                                    <p className="card-text">
+                                        Dự án hiến máu nhân đạo của chúng tôi được tạo ra với mục tiêu chính là
+                                        xây dựng một nguồn cung máu ổn định, đáp ứng nhu cầu y tế cộng đồng và
+                                        giúp cải thiện tình hình sức khỏe của những người cần máu khẩn cấp.
+                                        Tăng cường tuyên truyền về hoạt động hiến máu cứu người. 
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-12 mt-6">
-                            <h3>Lợi Ích của Bệnh Viện Hợp Tác</h3>
-                            <ul>
-                                <li>Tăng cường uy tín và nhận thức trong cộng đồng y tế.</li>
-                                <li>Thúc đẩy tinh thần hiến máu và trách nhiệm xã hội.</li>
-                                <li>Được hỗ trợ thông tin và quản lý chất lượng hiệu quả.</li>
-                                <li>Tham gia vào một mạng lưới liên kết mạnh mẽ với các đối tác y tế.</li>
-                            </ul>
+                        <div className="col-md-6 mx-auto mt-md-0 mt-4">
+                            <div className="card shadow">
+                                <div className="card-body">
+                                    <h3 className="card-title">Lợi Ích của Bệnh Viện Hợp Tác</h3>
+                                    <ul className="card-text">
+                                        <li>Tăng cường uy tín và nhận thức trong cộng đồng y tế.</li>
+                                        <li>Thúc đẩy tinh thần hiến máu và trách nhiệm xã hội.</li>
+                                        <li>Được hỗ trợ thông tin và quản lý chất lượng hiệu quả.</li>
+                                        <li>Tham gia vào một mạng lưới liên kết mạnh mẽ với các đối tác y tế.</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    <div className="row mb-4">
                         <div className="col-md-12">
                             <p>
                                 Để đăng ký và biết thêm chi tiết, vui lòng để lại thông tin bên dưới
@@ -275,12 +290,13 @@ function Lienhe() {
                             </p>
                         </div>
                     </div>
+
                     <div className="row">
                         <div className="col-lg-12 mx-auto">
                             <div className="contact-form">
                                 <h3>Thông tin đăng ký</h3>
                                 <form
-                                    
+
                                     id="contactForm"
                                     noValidate="novalidate"
                                     onSubmit={handleToBeHospital}
@@ -382,7 +398,7 @@ function Lienhe() {
                                         <button
                                             className="btn btn-primary py-2 px-4"
                                             type="submit"
-                                            
+
                                         >
                                             Gửi yêu cầu
                                         </button>
