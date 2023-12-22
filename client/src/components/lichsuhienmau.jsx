@@ -91,24 +91,6 @@ function LichSuHienMau() {
                 moment(text).format('DD-MM-YYYY')
             ),
         },
-        {
-            title: "Action",
-            key: "action",
-            render: (text, record) => (
-                <div className="d-flex gap-3">
-                    <i
-                        className="fas fa-pencil-alt"
-                        style={{ fontSize: '15px', padding: '5px' }}
-
-                    ></i>
-                    <i
-                        className="fas fa-trash-alt"
-                        style={{ fontSize: '15px', padding: '5px' }}
-
-                    ></i>
-                </div>
-            )
-        }
     ]
 
     return (
@@ -216,7 +198,7 @@ function LichSuHienMau() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">LỊCH HẸN</h3>
+                    <h3 className="display-3 font-weight-bold text-white">LỊCH SỬ HIẾN MÁU</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
                             <a className="text-white" href="/">
@@ -224,7 +206,7 @@ function LichSuHienMau() {
                             </a>
                         </p>
                         <p className="m-0 px-2">/</p>
-                        <p className="m-0">Lịch hẹn</p>
+                        <p className="m-0">Lịch sử hiến máu</p>
                     </div>
                 </div>
             </div>
@@ -233,7 +215,7 @@ function LichSuHienMau() {
             <div className="container-fluid pt-5 pb-3">
                 <div className="container">
                     <div className="text-center pb-2">
-                        <h1 className="mb-4">Lịch hẹn của bạn</h1>
+                        <h1 className="mb-4">Lịch sử hiến máu của bạn</h1>
                     </div>
                     <div class="card">
                         <div class="card-body">
