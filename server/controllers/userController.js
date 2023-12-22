@@ -114,6 +114,15 @@ const userController = {
         }
     },
 
+    getAllHospital: async (req, res) => {
+        try {
+            const AllHospital = await HospitalProfile.find();
+            return res.status(200).json(AllHospital);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+
     getHospitalById: async (req, res) => {
         try {
             const Id = req.params.id;
@@ -179,6 +188,14 @@ const userController = {
                 return res.status(404).json({ message: "Event not found" });
             }
 
+            const user = await UserProfile.findById(userId);
+
+            console.log("user:", user);
+
+            if (!user) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+
             // Check if the user already exists in the listusers array
             const existingUser = event.listusers.user.find(user => user.userid === userId);
 
@@ -189,6 +206,7 @@ const userController = {
             // Add the user to the listusers array
             event.listusers.user.push({
                 userid: userId,
+                username: user.fullName,
                 bloodgroup: bloodGroup,
                 status_user: "0",
                 dateregister: dateRegister,
@@ -197,21 +215,13 @@ const userController = {
             console.log('Updated Event (before saving):', event);
 
             // Update the listusers count directly in the database
-            event.listusers.count = event.listusers.user.length;
+            event.listusers.count++;
 
             // Save the updated event
             const updatedEvent = await event.save();
 
             console.log('Updated Event (after saving):', updatedEvent);
 
-
-            const user = await UserProfile.findById(userId);
-
-            console.log("user:", user);
-
-            if (!user) {
-                return res.status(404).json({ message: "Event not found" });
-            }
 
             user.history.push({
                 id_event: eventId,
@@ -269,6 +279,38 @@ const userController = {
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Lỗi server" });
+        }
+    },
+    filterEvent: async (req, res) => {
+        try {
+            const { date_start, date_end, hospitalName } = req.body;
+
+            // Lấy tất cả sự kiện có status = "1"
+            let allEvent = await Event.find({ status: "1" });
+
+            // Sử dụng hàm filter để áp dụng các điều kiện tìm kiếm
+            allEvent = allEvent.filter(event => {
+                // Kiểm tra date_start và date_end nếu được cung cấp
+                if (date_start && date_end) {
+                    const eventDate = new Date(event.date_end);
+                    const eventDate1 = new Date(event.date_start);
+                    return eventDate >= new Date(date_start) 
+                }
+
+                // Kiểm tra hospital_id nếu hospitalName được cung cấp và không phải là "all"
+                if (hospitalName && hospitalName.toLowerCase() !== "all") {
+                    const hospital = HospitalProfile.findOne({ hospitalName });
+                    return hospital && event.hospital_id.toString() === hospital._id.toString();
+                }
+
+                return true; // Trả về true để bao gồm sự kiện trong kết quả lọc
+            });
+
+            const eventCount = allEvent.length;
+            return res.status(200).json({ count: eventCount, allEvent });
+        } catch (error) {
+            console.error("Error filtering events:", error);
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 

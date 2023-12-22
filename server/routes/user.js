@@ -17,5 +17,6 @@ router.get('/gethospital/:id', authMiddleware.isUser, userController.getHospital
 router.get('/getfour', hospitalController.getFourHospital);
 router.get('/hospital/:id', userController.getHospitalById);
 router.put('/event/updateRegisterDate', authMiddleware.isUser, userController.updateDateRegister);
-
+router.post('/event/filter', userController.filterEvent);
+router.get('/allhospital', userController.getAllHospital);
 module.exports = router;

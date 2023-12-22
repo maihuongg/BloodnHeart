@@ -50,6 +50,10 @@ const eventSchema = new mongoose.Schema(
                     type: String,
                     require: true,
                 },
+                username: {
+                    type: String,
+                    require: true,
+                },
                 bloodgroup: {
                     type: String,
                     require: true,

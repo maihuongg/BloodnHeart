@@ -130,8 +130,8 @@ function Dashboard() {
                               </h2>
                             </div>
                             <div className="ml-2">
-                              <h4 className="location font-weight-normal">Bangalore</h4>
-                              <h6 className="font-weight-normal">India</h6>
+                              <h4 className="location font-weight-normal">Tp.HCM</h4>
+                              <h6 className="font-weight-normal">Việt Nam</h6>
                             </div>
                           </div>
                         </div>
@@ -155,7 +155,7 @@ function Dashboard() {
                         <div className="card card-dark-blue">
                           <div className="card-body">
                             <p className="mb-4">Sự kiện</p>
-                            <p className="fs-30 mb-2">61344</p>
+                            <p className="fs-30 mb-2">18</p>
                             {/* <p>22.00% (30 days)</p> */}
                           </div>
                         </div>
@@ -166,7 +166,7 @@ function Dashboard() {
                         <div className="card card-light-blue">
                           <div className="card-body">
                             <p className="mb-4">Số bệnh viện hợp tác</p>
-                            <p className="fs-30 mb-2">34040</p>
+                            <p className="fs-30 mb-2">8</p>
                             {/* <p>2.00% (30 days)</p> */}
                           </div>
                         </div>
@@ -174,8 +174,8 @@ function Dashboard() {
                       <div className="col-md-6 stretch-card transparent">
                         <div className="card card-light-danger">
                           <div className="card-body">
-                            <p className="mb-4">Lượt truy cập hôm nay</p>
-                            <p className="fs-30 mb-2">47033</p>
+                            <p className="mb-4">Số lượng đăng ký sự kiện</p>
+                            <p className="fs-30 mb-2">25</p>
                             {/* <p>0.22% (30 days)</p> */}
                           </div>
                         </div>

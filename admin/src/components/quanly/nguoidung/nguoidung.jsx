@@ -277,8 +277,8 @@ function NguoiDung() {
                                                         <i className="mdi mdi-magnify"></i> Search</button>
                                                     <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
                                                         <i className="mdi mdi-file-import"></i> Import</button>
-                                                    <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                        <i className="mdi mdi-export"></i> Export</button>
+                                                    {/* <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
+                                                        <i className="mdi mdi-export"></i> Export</button> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -344,7 +344,7 @@ function NguoiDung() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-control-label" >Email address</label>
+                                    <label className="form-control-label" >Email</label>
                                     <input
                                         type="email"
                                         className="form-control"
@@ -353,20 +353,20 @@ function NguoiDung() {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-control-label" >Password</label>
+                                    <label className="form-control-label" >Mật khẩu</label>
                                     <input
                                         type="password"
                                         className="form-control"
-                                        placeholder="Password"
+                                        placeholder="Mật khẩu"
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label for="exampleSelectGender">Confirm Password</label>
+                                    <label for="exampleSelectGender">Nhập lại mật khẩu</label>
                                     <input
                                         type="password"
                                         className="form-control"
-                                        placeholder="Password"
+                                        placeholder="Mật khẩu"
                                         onChange={(e) => setRepassword(e.target.value)} />
                                 </div>
 
@@ -389,8 +389,8 @@ function NguoiDung() {
 
                                 </div>
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-primary">Submit</button>
-                                    <button type="button" className="btn btn-light" data-dismiss="modal" onClick={handleCloseModal}>Cancel</button>
+                                    <button type="submit" className="btn btn-primary">Thêm</button>
+                                    <button type="button" className="btn btn-light" data-dismiss="modal" onClick={handleCloseModal}>Hủy</button>
                                 </div>
                             </form>
 

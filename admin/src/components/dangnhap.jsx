@@ -130,8 +130,8 @@ function Dangnhap() {
                                     <div className="brand-logo">
                                         <img src="../../images/heart-rate.svg" alt="logo" />
                                     </div>
-                                    <h4>Hello! let's get started</h4>
-                                    <h6 className="font-weight-light">Sign in to continue.</h6>
+                                    <h4>Xin Chào!</h4>
+                                    <h6 className="font-weight-light">Đăng nhập để tiếp tục</h6>
                                     <form className="pt-3" onSubmit={handleLogin}>
                                         <div className="form-group">
                                             <input
@@ -147,7 +147,7 @@ function Dangnhap() {
                                                 type="password"
                                                 className="form-control form-control-lg"
                                                 id="exampleInputPassword1"
-                                                placeholder="Password"
+                                                placeholder="Mật khẩu"
                                                 onChange={(e) => setPassword(e.target.value)}
                                             />
                                         </div>
@@ -165,7 +165,7 @@ function Dangnhap() {
                                                 className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
                                                 type="submit"
                                             >
-                                                SIGN IN
+                                                ĐĂNG NHẬP
                                             </button>
                                         </div>
                                         <div className="my-2 d-flex justify-content-between align-items-center">
@@ -176,7 +176,7 @@ function Dangnhap() {
                                                 </label>
                                             </div> */}
                                             <a href="#" className="auth-link text-black align-items-center">
-                                                Forgot password?
+                                                Quên mật khẩu?
                                             </a>
                                         </div>
                                         {/* <div className="mb-2">

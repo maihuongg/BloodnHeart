@@ -21,6 +21,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import Button from "react-bootstrap/Button";
 import moment from "moment";
 function Sukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -30,6 +31,11 @@ function Sukien() {
     const navigate = useNavigate();
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
     const allEvent = dataEvent.allEvent;
+    const [date_start, setDate_start] = useState("");
+    const [date_end, setDate_end] = useState("");
+    const [hospitalName, setHospitalName] = useState("all");
+    const [dataHospital, setDataHospital] = useState([]);
+
 
     useEffect(() => {
         const handleEvent = async () => {
@@ -55,6 +61,27 @@ function Sukien() {
             }
         }
         handleEvent();
+        const AllHospital = async () => {
+            try {
+                const response1 = await fetch("http://localhost:8000/v1/user/allhospital", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response1.ok) {
+                    console.log("Error fetching data");
+                }
+                else {
+                    const data1 = await response1.json();
+                    setDataHospital(data1);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        AllHospital();
     }, [dispatch]);
 
     const handleLogout = async (e) => {
@@ -91,7 +118,7 @@ function Sukien() {
                         token: `Bearer ${accessToken}`
                     }
                 });
-                if(!response1.ok) {
+                if (!response1.ok) {
                     dispatch(eventProfileFailed());
                 } else {
                     const data1 = await response1.json();
@@ -110,7 +137,7 @@ function Sukien() {
                         token: `Bearer ${accessToken}`
                     }
                 });
-                if(!response2.ok) {
+                if (!response2.ok) {
                     dispatch(hospitalFailed());
                 } else {
                     const data2 = await response2.json();
@@ -125,6 +152,36 @@ function Sukien() {
             navigate("/dangnhap");
         }
 
+    }
+
+    const handlefilter = async () => {
+        const filter = {
+            date_start: date_start,
+            date_end: date_end,
+            hospitalName: hospitalName
+        }
+        dispatch(allEventStart());
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/event/filter", {
+                method: 'POST',
+                body: JSON.stringify(filter),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                dispatch(allEventFailed());
+            }
+            else {
+                const data = await response.json();
+                dispatch(allEventSuccess(data));
+                navigate("/sukien");
+            }
+        } catch (error) {
+            dispatch(allEventFailed());
+            console.error("Error fetching data:", error);
+        }
     }
 
     return (
@@ -255,20 +312,59 @@ function Sukien() {
                         <h1 className="mb-4">Danh Sách các sự kiện</h1>
                     </div>
                     <div className="row">
-                        <div className="col-12 text-center mb-2">
-                            <ul className="list-inline mb-4" id="portfolio-flters">
-                                <li className="btn btn-outline-primary m-1 active" data-filter="*">
-                                    Tất cả
-                                </li>
-                                <li className="btn btn-outline-primary m-1" data-filter=".first">
-                                    Đang diễn ra
-                                </li>
-                                <li className="btn btn-outline-primary m-1" data-filter=".second">
-                                    Sắp diễn ra
-                                </li>
-                            </ul>
+                        <div className="col-lg-2"></div>
+                        <div className="col-lg-8">
+                            <div className="infor_box">
+                                <div className="d-flex flex-column text-left mb-3" style={{ margin: "0px 0px 0px" }}>
+                                    <p className="section-title pr-5" style={{ margin: "8px 0px 4px 0px" }}>
+                                        <span className="pr-2">Bộ lọc</span>
+                                    </p>
+                                </div>
+                                <div className="row">
+                                    <div className="col-lg-6">
+                                        <label className="form-control-label label">Từ ngày:</label>
+                                        <input
+                                            type="date"
+                                            className="form-control border-1"
+                                            placeholder="VD: 01/01/2000"
+                                            required="required"
+                                            onChange={(e) => setDate_start(e.target.value)}
+                                        />
+                                    </div>
+                                    <br />
+                                    <div className="col-lg-6">
+                                        <label className="form-control-label label">Đến ngày:</label>
+                                        <input
+                                            type="date"
+                                            className="form-control border-1"
+                                            placeholder="VD: 01/01/2000"
+                                            required="required"
+                                            onChange={(e) => setDate_end(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <br/>
+                                <div className="row">
+                                    <div className="col-lg-6 break">
+                                        <label className="form-control-label label">Bệnh viện:</label>
+                                        <select className="form-control" defaultValue="all" onChange={(e) => setHospitalName(e.target.value)}>
+                                            <option value="" disabled selected>Chọn bệnh viện</option>
+                                            <option value="all">Tất cả</option>
+                                            {dataHospital.map(hospital => (
+                                                <option value={hospital.hospitalName}>{hospital.hospitalName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-lg-6 ">
+                                        <br/>
+                                        <Button className="nav-item nav-link float-right" onClick={handlefilter}>Lọc</Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div className="col-lg-2"></div>
                     </div>
+                    <br/>
                     <div className="row">
                         {allEvent.map(event => (
                             <div className="col-lg-4 mb-5">
@@ -306,7 +402,7 @@ function Sukien() {
                                             Đã đủ số lượng
                                         </button>
                                     ) : (
-                                        <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e)=> handleRegisterEvent(e, event._id, event.hospital_id)}>
+                                        <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e) => handleRegisterEvent(e, event._id, event.hospital_id)}>
                                             Đăng ký
                                         </a>
                                     )}

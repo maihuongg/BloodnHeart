@@ -21,36 +21,6 @@ function Footer() {
                             Mỗi lần hiến máu, bạn không chỉ cứu sống một người, mà còn trao đi sự hi vọng và tình yêu thương. 
                             Một giọt máu hiến tặng, một cuộc đời được cứu. Hãy chung tay cứu người, chia sẻ yêu thương.
                         </p>
-                        <div className="d-flex justify-content-start mt-4">
-                            <a
-                                className="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
-                                style={{ width: 38, height: 38 }}
-                                href="#"
-                            >
-                                <i className="fab fa-twitter" />
-                            </a>
-                            <a
-                                className="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
-                                style={{ width: 38, height: 38 }}
-                                href="#"
-                            >
-                                <i className="fab fa-facebook-f" />
-                            </a>
-                            <a
-                                className="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
-                                style={{ width: 38, height: 38 }}
-                                href="#"
-                            >
-                                <i className="fab fa-linkedin-in" />
-                            </a>
-                            <a
-                                className="btn btn-outline-primary rounded-circle text-center mr-2 px-0"
-                                style={{ width: 38, height: 38 }}
-                                href="#"
-                            >
-                                <i className="fab fa-instagram" />
-                            </a>
-                        </div>
                     </div>
                     <div className="col-lg-4 col-md-6 mb-5">
                         <h3 className="text-primary mb-4">Liên Lạc</h3>

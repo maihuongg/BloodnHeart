@@ -348,27 +348,27 @@ function SuKien() {
 
 
                         {/* quản lý người dùng  */}
-                        <div class="row">
-                            <div class="col-lg-12 grid-margin stretch-card">
+                        <div className="row">
+                            <div className="col-lg-12 grid-margin stretch-card">
 
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h3 class="card-title">Quản lý sự kiện </h3>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control"
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h3 className="card-title">Quản lý sự kiện </h3>
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input type="text" className="form-control"
                                                     placeholder="Vui lòng nhập tên sự kiện"
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)} />
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                <div className="input-group-append">
+                                                    <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
                                                         type="button"
                                                         onClick={() => fetchDataSearcg(searchQuery)}>
-                                                        <i class="mdi mdi-magnify"></i> Search</button>
-                                                    <button class="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i class="mdi mdi-file-import"></i> Import</button>
-                                                    <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                        <i class="mdi mdi-export"></i> Export</button>
+                                                        <i className="mdi mdi-magnify"></i> Search</button>
+                                                    <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
+                                                        <i className="mdi mdi-file-import"></i> Import</button>
+                                                    {/* <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
+                                                        <i class="mdi mdi-export"></i> Export</button> */}
                                                 </div>
 
                                             </div>
@@ -376,11 +376,11 @@ function SuKien() {
 
                                         </div>
 
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-append">
-                                                    <Button class="btn btn-sm btn-outline-primary btn-icon-prepend" type="button" onClick={handleShowModal}>
-                                                        <i class="mdi mdi-note-plus"></i> Thêm sự kiện
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <div className="input-group-append">
+                                                    <Button className="btn btn-sm btn-outline-primary btn-icon-prepend" type="button" onClick={handleShowModal}>
+                                                        <i className="mdi mdi-note-plus"></i> Thêm sự kiện
                                                     </Button>
 
                                                     <Modal show={showModal} onHide={handleCloseModal}>
@@ -462,7 +462,7 @@ function SuKien() {
                                                                 </div>
                                                                 <div>
                                                                     <Button variant="primary" type="submit" className="float-right">
-                                                                        Lưu Lại
+                                                                        Thêm
                                                                     </Button>
                                                                     <Button variant="secondary" className="float-right btnclose" onClick={handleCloseModal}>
                                                                         Hủy
@@ -475,7 +475,7 @@ function SuKien() {
 
                                                 </div>
                                             </div></div>
-                                        <p class="card-description"></p>
+                                        <p className="card-description"></p>
                                         <Table
                                             dataSource={data}
                                             columns={columns}

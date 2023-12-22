@@ -181,8 +181,8 @@ function BenhVien() {
                                                             <i class="mdi mdi-magnify"></i> Search</button>
                                                         <button class="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
                                                             <i class="mdi mdi-file-import"></i> Import</button>
-                                                        <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                            <i class="mdi mdi-export"></i> Export</button>
+                                                        {/* <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
+                                                            <i class="mdi mdi-export"></i> Export</button> */}
                                                     </div>
                                                 </div>
                                             </div>
