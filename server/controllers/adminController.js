@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/email')
 const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary');
+const moment = require('moment');
 
 const Validate = require('validator');
 const Account = require('../models/accountModel')
@@ -62,18 +63,55 @@ const adminController = {
     deleteAccountbyId: async (req, res) => {
         try {
             const accountId = req.params.id;
-            console.log(accountId)
-            const user = await Account.findByIdAndDelete({ _id: accountId });
-            if (!user) {
-                return res.status(404).json({ message: "Không tim thấy tài khoản" });
-            }
-            return res.status(200).json({ message: "Thanh cong !." });
 
+            // Find user account
+            const user = await Account.findById(accountId);
+            if (!user) {
+                return res.status(404).json({ message: "Không tìm thấy tài khoản" });
+            }
+
+            // Find user profile
+            const userProfile = await UserProfile.findOne({ account_id: accountId });
+            if (!userProfile) {
+                return res.status(404).json({ message: "Không tìm thấy hồ sơ người dùng" });
+            }
+
+            const proid = userProfile._id.toString(); // Convert ObjectId to String
+            const events = await Event.find({ 'listusers.user.userid': proid });
+
+            // Update events to remove user registration and decrease count by 1
+            const promises = events.map(async (event) => {
+                const userRegistrationIndex = event.listusers.user.findIndex(u => u.userid === proid);
+
+                if (userRegistrationIndex !== -1) {
+                    // Decrease the count by 1
+                    event.listusers.count -= 1;
+
+                    // Remove user from the listusers.user array
+                    event.listusers.user.splice(userRegistrationIndex, 1);
+
+                    // Save the updated event
+                    await event.save();
+                }
+            });
+
+            await Promise.all(promises);
+
+            // Delete user profile
+            await UserProfile.findOneAndDelete({ account_id: accountId });
+
+            // Delete user account
+            await Account.findByIdAndDelete(accountId);
+
+            return res.status(200).json({ message: "Thành công!" });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ error: "Internal Server Error" });
+            return res.status(500).json({ error: "Lỗi " });
         }
     },
+
+
+
     getInfoByAccountId: async (req, res) => {
         try {
             const accountId = req.params.id;
@@ -260,6 +298,7 @@ const adminController = {
     updateHospitalImage: async (req, res) => {
         try {
             const id = req.params.id;
+            console.log("hospital id:", id)
 
             const base64Image = req.body.images;
             //cloudinary
@@ -328,7 +367,7 @@ const adminController = {
             const { keyword } = req.query;
             const findHospital = await HospitalProfile.find({
                 $or: [
-                    
+
                     { hospitalName: new RegExp(keyword, 'i') }
                 ],
                 account_id: { $exists: true, $ne: null }
@@ -345,7 +384,7 @@ const adminController = {
             const { keyword } = req.query;
             const findHospital = await Event.find({
                 $or: [
-                    
+
                     { eventName: new RegExp(keyword, 'i') }
                 ],
             });
@@ -354,5 +393,290 @@ const adminController = {
             return res.status(500).json(error);
         }
     },
+    updateAdminImage: async (req, res) => {
+        try {
+            //update theo account_id trong adminprofile
+            const id = req.params.id;
+            console.log("admin id:", id)
+
+            const base64Image = req.body.images;
+            //cloudinary
+            const result = await cloudinary.v2.uploader.upload(req.body.images, {
+                folder: 'profile',
+                width: 200,
+                crop: "scale"
+            })
+            console.log('url', result.secure_url);
+            const imageurl = result.secure_url;
+            // update
+            const adminProfile = await AdminProfile.findOneAndUpdate(
+                { account_id: id },
+                { $set: { images: imageurl } },
+                { new: true }
+            );
+            console.log('adminProfile', adminProfile);
+
+            if (!adminProfile) {
+                return res.status(404).json({ message: 'Admin profile not found' });
+            }
+
+            return res.status(200).json(adminProfile);
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
+    },
+    hospitalUpdateHospitalImage: async (req, res) => {
+        try {
+            const id = req.params.id;
+            console.log("hospital id:", id)
+
+            const base64Image = req.body.images;
+            //cloudinary
+            const result = await cloudinary.v2.uploader.upload(req.body.images, {
+                folder: 'profile',
+                width: 200,
+                crop: "scale"
+            })
+            console.log('url', result.secure_url);
+            const imageurl = result.secure_url;
+            // update
+            const hospitalprofiles = await HospitalProfile.findOneAndUpdate(
+                { account_id: id },
+                { $set: { images: imageurl } },
+                { new: true }
+            );
+
+            if (!hospitalprofiles) {
+                return res.status(404).json({ message: 'User profile not found' });
+            }
+
+            return res.status(200).json(hospitalprofiles);
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
+    },
+    updateAdminInfo: async (req, res) => {
+        try {
+            const accountId = req.params.id;
+            const { adminName, gender, birthDay, phone, address } = req.body;
+
+            const adminProfile = await AdminProfile.findOneAndUpdate(
+                { account_id: accountId },
+                { $set: { adminName, gender, birthDay, phone, address } },
+                { new: true }
+            );
+
+            if (!adminProfile) {
+                return res.status(404).json({ message: 'adminProfile not found' });
+            }
+
+            return res.status(200).json(adminProfile);
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
+    },
+    hospitalUpdateHospitalInfo: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const { hospitalName, leaderName, phone, address } = req.body;
+            console.log(req.body);
+
+            const hospitalProfile = await HospitalProfile.findOneAndUpdate(
+                { account_id: id },
+                { $set: { hospitalName, leaderName, phone, address } },
+                { new: true }
+            );
+
+            if (!hospitalProfile) {
+                return res.status(404).json({ message: 'User profile not found' });
+            }
+
+            return res.status(200).json(hospitalProfile);
+        } catch (error) {
+            return res.status(500).json({ error });
+        }
+    },
+    //add hospital
+    addNewHospital: async (req, res) => {
+        try {
+            //async function
+            console.log(req.body);
+            const validationResult = await validateAddNewHospital(req.body);
+            console.log(validationResult);
+            const defaultHospitalPassword = "BnH@hospital";
+            //validate đúng thì tạo user mới
+            if (validationResult.isValid) {
+                //bcrypt
+                const salt = await bcrypt.genSalt(10);
+                const hashed = await bcrypt.hash(defaultHospitalPassword, salt);
+
+                console.log('cccd:', req.body.cccd);
+                console.log('email:', req.body.email);
+                const newAccount = new Account({
+                    cccd: req.body.cccd,
+                    email: req.body.email,
+                    password: hashed,
+                    isHospital: true,
+                });
+                const account = await newAccount.save();
+                const account_id = account.id;
+                console.log("new hospital - account_id", account_id);
+                const newHospitalProfile = new HospitalProfile({
+                    account_id: account_id,
+                    cccd: req.body.cccd,
+                    leaderName: req.body.leaderName,
+                    hospitalName: req.body.hospitalName,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                    address: req.body.address,
+                });
+                const hospitalProfile = await newHospitalProfile.save();
+                console.log(hospitalProfile)
+                return res.status(200).json(account);
+            } else {
+                return res.status(400).json({ message: validationResult.message });
+            }
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+
+    // statistics
+    accountPieStatistic: async (req, res) => {
+        try {
+            const totalUsers = await Account.countDocuments();
+            const totalAdmins = await Account.countDocuments({ isAdmin: true });
+            const totalHospitals = await Account.countDocuments({ isHospital: true });
+
+            res.status(200).json({
+                totalUsers,
+                totalAdmins,
+                totalHospitals,
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    eventStatistic: async (req, res) => {
+        try {
+            const currentDate = moment().toISOString();
+
+            const upcomingEvents = await Event.find({ date_start: { $gte: currentDate } });
+            const ongoingEvents = await Event.find({
+                date_start: { $lte: currentDate },
+                date_end: { $gte: currentDate },
+            });
+            const finishedEvents = await Event.find({ date_end: { $lt: currentDate } });
+
+            const eventStatistics = {
+                upcoming: upcomingEvents.length,
+                ongoing: ongoingEvents.length,
+                finished: finishedEvents.length,
+            };
+
+            res.json(eventStatistics);
+        } catch (error) {
+            console.error('Error fetching event statistics:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getHospitalProfileStatistics: async (req, res) => {
+        try {
+            const approvedHospitals = await HospitalProfile.find({ account_id: { $exists: true } });
+            const notApprovedHospitals = await HospitalProfile.find({ account_id: { $exists: false } });
+    
+            const approvedCount = approvedHospitals.length;
+            const notApprovedCount = notApprovedHospitals.length;
+    
+            return res.status(200).json({
+                approvedCount,
+                notApprovedCount,
+            });
+        } catch (error) {
+            console.error('Error getting hospital profile statistics:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    getAccountThreeDay:async(req,res)=>{
+        try {
+            const currentDate = new Date();
+            
+            // Get the start of today
+            const startOfToday = new Date(currentDate);
+            startOfToday.setHours(0, 0, 0, 0);
+        
+            // Get the start of yesterday
+            const startOfYesterday = new Date(currentDate);
+            startOfYesterday.setDate(currentDate.getDate() - 1);
+            startOfYesterday.setHours(0, 0, 0, 0);
+        
+            // Get the start of the day before yesterday
+            const startOfDayBeforeYesterday = new Date(currentDate);
+            startOfDayBeforeYesterday.setDate(currentDate.getDate() - 2);
+            startOfDayBeforeYesterday.setHours(0, 0, 0, 0);
+        
+            const todayRegistrations = await Account.find({
+              createdAt: { $gte: startOfToday, $lt: currentDate },
+            });
+        
+            const yesterdayRegistrations = await Account.find({
+              createdAt: { $gte: startOfYesterday, $lt: startOfToday },
+            });
+        
+            const dayBeforeYesterdayRegistrations = await Account.find({
+              createdAt: { $gte: startOfDayBeforeYesterday, $lt: startOfYesterday },
+            });
+        
+            const result = {
+              today: todayRegistrations.length,
+              yesterday: yesterdayRegistrations.length,
+              dayBeforeYesterday: dayBeforeYesterdayRegistrations.length,
+            };
+        
+            return res.status(200).json(result);
+          } catch (error) {
+            return res.status(500).json(error);
+          }
+    }
+    
+    
+}
+async function validateAddNewHospital(body) {
+    const { cccd, email, hospitalName, leaderName, phone, address } = body;
+    try {
+        // tồn tại username
+        const existingCCCD = await Account.findOne({ cccd });
+        if (existingCCCD) {
+            return { message: 'Mã đã tồn tại' };
+        }
+        //tồn tại email
+        const existingEmail = await Account.findOne({ email });
+        if (existingEmail) {
+            return { message: 'Email đã tồn tại' };
+        }
+
+        // Continue with other validations
+        if (Validate.isEmpty(cccd) ||
+            Validate.isEmpty(email) ||
+            Validate.isEmpty(hospitalName) ||
+            Validate.isEmpty(leaderName) ||
+            Validate.isEmpty(phone) ||
+            Validate.isEmpty(address)) {
+            return { message: 'Vui lòng điền vào các mục còn trống' };
+        }
+
+        if (!Validate.isNumeric(cccd)) {
+            return { message: 'Mã phải là số' };
+        }
+
+        if (!Validate.isEmail(email)) {
+            return { message: 'Email không đúng định dạng' };
+        }
+
+        return { isValid: true };
+    } catch (error) {
+        throw error;
+    }
 }
 module.exports = adminController;

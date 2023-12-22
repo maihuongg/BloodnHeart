@@ -29,8 +29,24 @@ router.get('/hospital', authMiddleware.isAdmin,adminController.getAllHospital)
 router.get('/hospital/:id', authMiddleware.isAdmin,adminController.getHospitalProfileByAccountId)
 router.put('/hospital/update-image/:id', authMiddleware.isAdmin,adminController.updateHospitalImage)
 router.put('/hospital/update-info/:id', authMiddleware.isAdmin,adminController.updateHospitalInfo)
+router.post('/hospital/add', authMiddleware.isAdmin,adminController.addNewHospital)
 //search 
 router.get('/search/account',adminController.searchAccount);
 router.get('/search/hospital',adminController.searchHospital);
 router.get('/search/event',adminController.searchEvent);
+
+//admin profile
+router.put('/profile-update-image/:id',adminController.updateAdminImage);
+router.put('/profile-update-info/:id', adminController.updateAdminInfo);
+//bệnh viện cập nhạt profile
+router.put('/hospital-update-image/:id', adminController.hospitalUpdateHospitalImage);
+router.put('/hospital-update-info/:id',adminController.hospitalUpdateHospitalInfo)
+
+
+//statistic
+//account
+router.get('/statistic/account', adminController.accountPieStatistic);
+router.get('/statistic/event', adminController.eventStatistic);
+router.get('/statistic/hospital', adminController.getHospitalProfileStatistics);
+router.get('/statistic/account-register', adminController.getAccountThreeDay);
 module.exports = router;

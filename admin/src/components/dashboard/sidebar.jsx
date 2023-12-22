@@ -5,7 +5,16 @@ import {
   logOutSuccess,
   logOutFailed
 } from "../../redux/authSlice";
-
+import { 
+  adminprofileFailed, 
+  adminprofileStart, 
+  adminprofileSuccess 
+} from "../../redux/adminSlice";
+import { 
+  hospitalprofileStart,
+  hospitalprofileSuccess,
+  hospitalrofileFailed
+} from "../../redux/hospitalSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +38,8 @@ export default function Sidebar() {
             dispatch(logOutFailed());
         } else {
             dispatch(logOutSuccess());
+            dispatch(adminprofileSuccess());
+            hospitalprofileSuccess();
             navigate("/");
         }
     } catch (error) {
@@ -351,7 +362,7 @@ export default function Sidebar() {
             <a
               className="nav-link"
 
-              href=""
+              href="/thong-ke"
               aria-expanded="false"
               aria-controls="charts"
             >
@@ -379,7 +390,7 @@ export default function Sidebar() {
               <ul className="nav flex-column sub-menu">
                 <li className="nav-item">
                   {" "}
-                  <a className="nav-link" href="pages/samples/login.html">
+                  <a className="nav-link" href="/me">
                     {" "}
                     Chỉnh sửa thông tin{" "}
                   </a>

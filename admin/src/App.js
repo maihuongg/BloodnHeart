@@ -10,6 +10,8 @@ import ChiTietSuKien from './components/quanly/sukien/chitietsukien';
 import HopTac from './components/hoptac/hoptac';
 import BenhVien from './components/quanly/benhvien/benhvien';
 import ChinhSuaBenhVien from './components/quanly/benhvien/chinhsuabenhvien';
+import ChinhSuaCaNhan from './components/danhchoban/chinhsuacanhan';
+import ThongKe from './components/thongke/thongke';
 function App() {
   return (
     <Router> 
@@ -24,6 +26,8 @@ function App() {
         <Route path="/hop-tac" Component={HopTac} />
         <Route path="/benh-vien" Component={BenhVien} />
         <Route path="/benh-vien/chinh-sua/:id" Component={ChinhSuaBenhVien} />
+        <Route path="/me" Component={ChinhSuaCaNhan} />
+        <Route path="/thong-ke" Component={ThongKe} />
       </Routes>
     </Router>
   );
