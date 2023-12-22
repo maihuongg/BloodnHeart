@@ -284,28 +284,32 @@ const userController = {
     filterEvent: async (req, res) => {
         try {
             const { date_start, date_end, hospitalName } = req.body;
-
+    
             // Lấy tất cả sự kiện có status = "1"
             let allEvent = await Event.find({ status: "1" });
-
+    
             // Sử dụng hàm filter để áp dụng các điều kiện tìm kiếm
-            allEvent = allEvent.filter(event => {
+            allEvent = allEvent.filter(async (event) => {
+                let passFilter = true;
+    
                 // Kiểm tra date_start và date_end nếu được cung cấp
-                if (date_start && date_end) {
+                if (date_start !== "" && date_end !== "") {
                     const eventDate = new Date(event.date_end);
                     const eventDate1 = new Date(event.date_start);
-                    return eventDate >= new Date(date_start) 
+                    passFilter = passFilter && (eventDate >= new Date(date_start));
                 }
-
+    
                 // Kiểm tra hospital_id nếu hospitalName được cung cấp và không phải là "all"
                 if (hospitalName && hospitalName.toLowerCase() !== "all") {
-                    const hospital = HospitalProfile.findOne({ hospitalName });
-                    return hospital && event.hospital_id.toString() === hospital._id.toString();
+                    const hospital = await HospitalProfile.findOne({ hospitalName });
+    
+                    // Additional checks to prevent accessing properties on undefined values
+                    passFilter = passFilter && hospital && event.hospital_id && hospital._id && (event.hospital_id.toString() === hospital._id.toString());
                 }
-
-                return true; // Trả về true để bao gồm sự kiện trong kết quả lọc
+    
+                return passFilter; // Trả về true để bao gồm sự kiện trong kết quả lọc
             });
-
+    
             const eventCount = allEvent.length;
             return res.status(200).json({ count: eventCount, allEvent });
         } catch (error) {
@@ -313,6 +317,7 @@ const userController = {
             res.status(500).json({ message: "Internal Server Error" });
         }
     }
+    
 
 };
 

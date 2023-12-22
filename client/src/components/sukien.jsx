@@ -31,8 +31,8 @@ function Sukien() {
     const navigate = useNavigate();
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
     const allEvent = dataEvent.allEvent;
-    const [date_start, setDate_start] = useState("");
-    const [date_end, setDate_end] = useState("");
+    const [date_start, setDate_start] = useState(null)
+    const [date_end, setDate_end] = useState(null)
     const [hospitalName, setHospitalName] = useState("all");
     const [dataHospital, setDataHospital] = useState([]);
 
