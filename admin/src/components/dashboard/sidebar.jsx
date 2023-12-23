@@ -397,7 +397,7 @@ export default function Sidebar() {
                 </li>
                 <li className="nav-item">
                   {" "}
-                  <a className="nav-link" href="pages/samples/register.html">
+                  <a className="nav-link" href="/mat-khau">
                     {" "}
                     Đổi mật khẩu{" "}
                   </a>

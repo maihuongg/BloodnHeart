@@ -163,10 +163,36 @@ const authController = {
         } catch (error) {
             return res.status(500).json(error);
         }
+    },
+    changePassword: async (req, res) => {
+        try {
+            const { newPassword, confirmPassword } = req.body;
+
+            if (newPassword != confirmPassword) {
+                return res.status(500).json({ message: "Không khớp mật khẩu" })
+            }
+            else {
+                const userId = req.params.id;
+                const salt = await bcrypt.genSalt(10);
+                const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+                const updatedUser = await Account.findOneAndUpdate(
+                    { _id: userId },
+                    { $set: { password: hashedNewPassword } },
+                    { new: true }
+                );
+                if (!updatedUser) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                return res.status(200).json({ message: 'Password updated successfully' });
+            }
+        } catch (error) {
+            console.error('Error updating password:', error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
 
-//hàm validate Register
+
 
 async function validateRegister(body) {
     const { cccd, password, email } = body;
