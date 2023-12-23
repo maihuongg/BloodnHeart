@@ -12,6 +12,7 @@ import BenhVien from './components/quanly/benhvien/benhvien';
 import ChinhSuaBenhVien from './components/quanly/benhvien/chinhsuabenhvien';
 import ChinhSuaCaNhan from './components/danhchoban/chinhsuacanhan';
 import ThongKe from './components/thongke/thongke';
+import DoiMatKhau from './components/danhchoban/doimatkhau';
 function App() {
   return (
     <Router> 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/benh-vien/chinh-sua/:id" Component={ChinhSuaBenhVien} />
         <Route path="/me" Component={ChinhSuaCaNhan} />
         <Route path="/thong-ke" Component={ThongKe} />
+        <Route path="/mat-khau" Component={DoiMatKhau} />
       </Routes>
     </Router>
   );
