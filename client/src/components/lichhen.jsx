@@ -134,6 +134,33 @@ function LichHen() {
         }
     }
 
+    const handleDelete = async (id) => {
+        const deleteRegister = {
+            eventId: id,
+            userId: userPro._id,
+        }
+        try {
+            const response1 = await fetch("http://localhost:8000/v1/user/event/deleteRegister", {
+                method: 'DELETE',
+                body: JSON.stringify(deleteRegister),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+            if (!response1.ok) {
+                const err = await response1.json();
+                showNotificationErr(err.message);
+            } else {
+                const data1 = await response1.json();
+                showNotification(data1.message);
+                window.location.reload();
+            }
+        } catch (error) {
+            showNotificationErr("Cập nhật thất bại!");
+        }
+    }
+
     const handleLogout = async (e) => {
         e.preventDefault();
         dispatch(logOutStart());
@@ -161,6 +188,38 @@ function LichHen() {
             title: "Tên sự kiện",
             dataIndex: "eventName",
             key: "eventName",
+            render: (text, record) => {
+                const handleStatus = async () => {
+                    try {
+                        const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + record.id_event, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                token: `Bearer ${accessToken}`
+                            }
+                        });
+                        if (!response1.ok) {
+                            console.log("fail");
+                        } else {
+                            const data = await response1.json();
+                            const status = data.status;
+                            if (status === "0") {
+                                return 0;
+                            } else {
+                                return 1;
+                            }
+                        }
+                    } catch (error) {
+                        console.log("fail");
+                    }
+                }
+                const statusevent = handleStatus();
+                if (statusevent === 0) {
+                    return <span style={{ color: 'red' }}>{record.eventName} (Đã đóng)</span>;
+                } else {
+                    return <span>{record.eventName}</span>;
+                }
+            }
         },
         {
             title: "Địa chỉ",
@@ -171,9 +230,15 @@ function LichHen() {
             title: "Ngày đăng ký đi hiến máu",
             dataIndex: "date",
             key: "date",
-            render: (text, record) => (
-                moment(text).format('DD-MM-YYYY')
-            ),
+            render: (text, record) => {
+                const currentDate = new Date();
+                const dateRe = new Date(record.date);
+                if (dateRe < currentDate) {
+                    handleDelete(record.id_event);
+                } else {
+                    return moment(text).format('DD-MM-YYYY');
+                }
+            },
         },
         {
             title: "Action",
@@ -188,7 +253,7 @@ function LichHen() {
                     <i
                         className="fas fa-trash-alt"
                         style={{ fontSize: '15px', padding: '5px' }}
-
+                        onClick={() => handleDelete(record.id_event)}
                     ></i>
                 </div>
             )
@@ -319,6 +384,7 @@ function LichHen() {
                     <div className="text-center pb-2">
                         <h1 className="mb-4">Lịch hẹn của bạn</h1>
                     </div>
+                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic", color: "red" }}>Lưu ý: Nếu bạn hiến máu trễ hơn ngày trên lịch hẹn thì sẽ tự động cập nhập hủy đăng ký và xóa khỏi lịch hẹn. </p>
                     <div class="card">
                         <div class="card-body">
                             {userEventFilter.length > 0 ? (
@@ -346,7 +412,7 @@ function LichHen() {
                                 <div>
                                     <label>Chọn Ngày:</label>
                                 </div>
-                                <br/>
+                                <br />
                                 <input
                                     type="date"
                                     className="form-control border-1"

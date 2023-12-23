@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const UserProfile = require('../models/userProfileModel');
 const jwt = require('jsonwebtoken')
 const sendMail = require('../utils/email')
@@ -5,6 +6,7 @@ const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
 const Event = require('../models/eventModel')
+const moment = require('moment');
 const HospitalProfile = require('../models/hospitalProfileModel')
 
 
@@ -106,8 +108,12 @@ const userController = {
 
     getAllEventByUser: async (req, res) => {
         try {
+            const currentDate = moment(); // Ngày hiện tại
+            await Event.updateMany({ date_end: { $lt: currentDate }, status: "1" }, { $set: { status: "0" } });
+
             const allEvent = await Event.find({ status: "1" });
             const eventCount = allEvent.length;
+
             return res.status(200).json({ count: eventCount, allEvent });
         } catch (error) {
             return res.status(500).json(error);
@@ -281,43 +287,124 @@ const userController = {
             return res.status(500).json({ message: "Lỗi server" });
         }
     },
+
+    DeleteRegister: async (req, res) => {
+        try {
+            const { eventId, userId } = req.body;
+            // Tìm sự kiện có eventId và người dùng có userId trong danh sách
+            const event = await Event.findOne({
+                _id: eventId
+            });
+
+            if (!event) {
+                return res.status(404).json({ message: "Sự kiện hoặc người dùng không tồn tại" });
+            }
+            // Xóa người dùng trong sự kiện
+            event.listusers.user.pull({ userid: userId });
+            event.listusers.count--;
+            await event.save();
+
+            // Tìm người dùng có userId và sự kiện có eventId trong lịch sử sự kiện
+            const userProfile = await UserProfile.findOne({
+                _id: userId
+            });
+
+            if (!userProfile) {
+                return res.status(404).json({ message: "Người dùng hoặc sự kiện không tồn tại trong lịch sử" });
+            }
+
+            // xóa sự kiện trong người dùng
+            userProfile.history.pull({ id_event: eventId });
+
+            // Lưu thông tin người dùng đã cập nhật
+            await userProfile.save();
+
+            return res.status(200).json({ message: "Xóa đăng ký thành công" });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Lỗi server" });
+        }
+    },
+
     filterEvent: async (req, res) => {
         try {
-            const { date_start, date_end, hospitalName } = req.body;
-    
+            const { date_start, date_end } = req.body;
+
             // Lấy tất cả sự kiện có status = "1"
             let allEvent = await Event.find({ status: "1" });
-    
+
             // Sử dụng hàm filter để áp dụng các điều kiện tìm kiếm
-            allEvent = allEvent.filter(async (event) => {
-                let passFilter = true;
-    
+            allEvent = allEvent.filter(event => {
                 // Kiểm tra date_start và date_end nếu được cung cấp
-                if (date_start !== "" && date_end !== "") {
+                if (date_start && date_end) {
                     const eventDate = new Date(event.date_end);
                     const eventDate1 = new Date(event.date_start);
-                    passFilter = passFilter && (eventDate >= new Date(date_start));
+                    return !(eventDate < new Date(date_start) || eventDate1 > new Date(date_end));
                 }
-    
-                // Kiểm tra hospital_id nếu hospitalName được cung cấp và không phải là "all"
-                if (hospitalName && hospitalName.toLowerCase() !== "all") {
-                    const hospital = await HospitalProfile.findOne({ hospitalName });
-    
-                    // Additional checks to prevent accessing properties on undefined values
-                    passFilter = passFilter && hospital && event.hospital_id && hospital._id && (event.hospital_id.toString() === hospital._id.toString());
-                }
-    
-                return passFilter; // Trả về true để bao gồm sự kiện trong kết quả lọc
+
+                return true; // Trả về true để bao gồm sự kiện trong kết quả lọc nếu không có điều kiện
             });
-    
             const eventCount = allEvent.length;
             return res.status(200).json({ count: eventCount, allEvent });
         } catch (error) {
             console.error("Error filtering events:", error);
             res.status(500).json({ message: "Internal Server Error" });
         }
+    },
+    searchEvent: async (req, res) => {
+        try {
+            const { keyword } = req.query;
+            const findHospital = await Event.find({
+                $or: [
+
+                    { eventName: new RegExp(keyword, 'i') }
+                ],
+            });
+            return res.status(200).json(findHospital);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    bestEvent: async (req, res) => {
+        try {
+            const event = await Event.findOne().sort({ 'listusers.count': -1 }).limit(1);
+
+            if (!event) {
+                return res.status(404).json({ message: 'Không tìm thấy sự kiện.' });
+            }
+
+            return res.json(event);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    updatepassword: async (req, res) => {
+        try {
+            const { password, newpassword, account_id } = req.body;
+
+            const salt = await bcrypt.genSalt(10);
+            const hashed = await bcrypt.hash(newpassword, salt);
+            console.log("newpassword", hashed);
+
+            const account = await Account.findOne({ _id: account_id })
+            if (!account) {
+                return res.status(404).json({ message: "Tài khoản không tồn tại" });
+            }
+            const validPassword = await bcrypt.compare(
+                password, account.password
+            );
+            if (!validPassword) {
+                //sai password
+                return res.status(404).json({ message: "Sai mật khẩu" });
+            }
+
+            account.password = hashed;
+            await account.save();
+            return res.status(200).json({ message: "Đổi mật khẩu thành công!" });
+        } catch (error) {
+            return res.status(500).json(error);
+        }
     }
-    
 
 };
 

@@ -30,11 +30,10 @@ function Sukien() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const dataEvent = useSelector((state) => state.user.allevent.getEvent);
-    const allEvent = dataEvent.allEvent;
+    const [allEvent, setAllEvent] = useState(dataEvent.allEvent);
     const [date_start, setDate_start] = useState(null)
     const [date_end, setDate_end] = useState(null)
-    const [hospitalName, setHospitalName] = useState("all");
-    const [dataHospital, setDataHospital] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
 
     useEffect(() => {
@@ -61,27 +60,6 @@ function Sukien() {
             }
         }
         handleEvent();
-        const AllHospital = async () => {
-            try {
-                const response1 = await fetch("http://localhost:8000/v1/user/allhospital", {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response1.ok) {
-                    console.log("Error fetching data");
-                }
-                else {
-                    const data1 = await response1.json();
-                    setDataHospital(data1);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-        AllHospital();
     }, [dispatch]);
 
     const handleLogout = async (e) => {
@@ -157,10 +135,8 @@ function Sukien() {
     const handlefilter = async () => {
         const filter = {
             date_start: date_start,
-            date_end: date_end,
-            hospitalName: hospitalName
+            date_end: date_end
         }
-        dispatch(allEventStart());
         try {
             const response = await fetch("http://localhost:8000/v1/user/event/filter", {
                 method: 'POST',
@@ -171,18 +147,37 @@ function Sukien() {
             });
 
             if (!response.ok) {
-                dispatch(allEventFailed());
+                console.log("Filter data fail");
             }
             else {
                 const data = await response.json();
-                dispatch(allEventSuccess(data));
-                navigate("/sukien");
+                setAllEvent(data.allEvent)
             }
         } catch (error) {
-            dispatch(allEventFailed());
             console.error("Error fetching data:", error);
         }
     }
+
+    const fetchDataSearcg = async (keyword) => {
+        try {
+            const response2 = await fetch(`http://localhost:8000/v1/user/search/event?keyword=${keyword}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response2.ok) {
+                const data2 = await response2.json();
+                //data gồm count và allAccount
+                // console.log(data2.allAccount)
+                setAllEvent(data2);
+            }
+            else return 0;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     return (
         <>
@@ -321,7 +316,7 @@ function Sukien() {
                                     </p>
                                 </div>
                                 <div className="row">
-                                    <div className="col-lg-6">
+                                    <div className="col-lg-5">
                                         <label className="form-control-label label">Từ ngày:</label>
                                         <input
                                             type="date"
@@ -332,7 +327,7 @@ function Sukien() {
                                         />
                                     </div>
                                     <br />
-                                    <div className="col-lg-6">
+                                    <div className="col-lg-5">
                                         <label className="form-control-label label">Đến ngày:</label>
                                         <input
                                             type="date"
@@ -342,34 +337,40 @@ function Sukien() {
                                             onChange={(e) => setDate_end(e.target.value)}
                                         />
                                     </div>
-                                </div>
-                                <br/>
-                                <div className="row">
-                                    <div className="col-lg-6 break">
-                                        <label className="form-control-label label">Bệnh viện:</label>
-                                        <select className="form-control" defaultValue="all" onChange={(e) => setHospitalName(e.target.value)}>
-                                            <option value="" disabled selected>Chọn bệnh viện</option>
-                                            <option value="all">Tất cả</option>
-                                            {dataHospital.map(hospital => (
-                                                <option value={hospital.hospitalName}>{hospital.hospitalName}</option>
-                                            ))}
-                                        </select>
+                                    <div className="col-lg-2">
+                                        <br />
+                                        <Button className="nav-item nav-link w-100" onClick={handlefilter}>Lọc</Button>
                                     </div>
-                                    <div className="col-lg-6 ">
-                                        <br/>
-                                        <Button className="nav-item nav-link float-right" onClick={handlefilter}>Lọc</Button>
+                                </div>
+                                <hr />
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <div className="input-group">
+                                            <input type="text" className="form-control"
+                                                placeholder="Vui lòng nhập tên sự kiện"
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                            />
+                                            <div className="input-group-append">
+                                                <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                    type="button"
+                                                    onClick={() => fetchDataSearcg(searchQuery)}>
+                                                    <i className="fa fa-search"></i></button>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-2"></div>
                     </div>
-                    <br/>
+                    <br />
                     <div className="row">
                         {allEvent.map(event => (
                             <div className="col-lg-4 mb-5">
                                 <div className="card border-0 bg-light shadow-sm pb-2">
-                                    <img className="card-img-top mb-2" src={event.images} />
+                                    <img className="card-img-top img-sukien mb-2" src={event.images} />
                                     <div className="card-body text-center">
                                         <h4 className="card-title">{event.eventName}</h4>
                                         <p className="card-text">
@@ -413,88 +414,7 @@ function Sukien() {
                 </div>
             </div>
             {/* Class End */}
-            {/* Registration Start */}
-            <div className="container-fluid py-5">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-7 mb-5 mb-lg-0">
-                            <p className="section-title pr-5">
-                                <span className="pr-2">Book A Seat</span>
-                            </p>
-                            <h1 className="mb-4">Book A Seat For Your Kid</h1>
-                            <p>
-                                Invidunt lorem justo sanctus clita. Erat lorem labore ea, justo
-                                dolor lorem ipsum ut sed eos, ipsum et dolor kasd sit ea justo. Erat
-                                justo sed sed diam. Ea et erat ut sed diam sea ipsum est dolor
-                            </p>
-                            <ul className="list-inline m-0">
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Labore eos amet dolor amet diam
-                                </li>
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Etsea et sit dolor amet ipsum
-                                </li>
-                                <li className="py-2">
-                                    <i className="fa fa-check text-success mr-3" />
-                                    Diam dolor diam elitripsum vero.
-                                </li>
-                            </ul>
-                            <a href="" className="btn btn-primary mt-4 py-2 px-4">
-                                Book Now
-                            </a>
-                        </div>
-                        <div className="col-lg-5">
-                            <div className="card border-0">
-                                <div className="card-header bg-secondary text-center p-4">
-                                    <h1 className="text-white m-0">Book A Seat</h1>
-                                </div>
-                                <div className="card-body rounded-bottom bg-primary p-5">
-                                    <form>
-                                        <div className="form-group">
-                                            <input
-                                                type="text"
-                                                className="form-control border-0 p-4"
-                                                placeholder="Your Name"
-                                                required="required"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <input
-                                                type="email"
-                                                className="form-control border-0 p-4"
-                                                placeholder="Your Email"
-                                                required="required"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <select
-                                                className="custom-select border-0 px-4"
-                                                style={{ height: 47 }}
-                                            >
-                                                <option selected="">Select A Class</option>
-                                                <option value={1}>Class 1</option>
-                                                <option value={2}>Class 1</option>
-                                                <option value={3}>Class 1</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <button
-                                                className="btn btn-secondary btn-block border-0 py-3"
-                                                type="submit"
-                                            >
-                                                Book Now
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Registration End */}
+            
         </>
 
     );

@@ -19,4 +19,8 @@ router.get('/hospital/:id', userController.getHospitalById);
 router.put('/event/updateRegisterDate', authMiddleware.isUser, userController.updateDateRegister);
 router.post('/event/filter', userController.filterEvent);
 router.get('/allhospital', userController.getAllHospital);
+router.get('/search/event', userController.searchEvent);
+router.get('/bestevent', userController.bestEvent);
+router.delete('/event/deleteRegister', authMiddleware.isUser, userController.DeleteRegister);
+router.put('/updatePassword', authMiddleware.isUser, userController.updatepassword);
 module.exports = router;

@@ -10178,3 +10178,8 @@ section {
   width: 40px;
   height: 40px;
 }
+.img-sukien {
+  max-height: 300px; 
+  width: 100%; 
+  object-fit: cover; 
+}

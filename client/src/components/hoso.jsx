@@ -16,6 +16,8 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Hoso() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -39,10 +41,13 @@ function Hoso() {
     const handleClose2 = () => setShow2(false);
     const handleShow2 = () => setShow2(true);
 
+    const [show3, setShow3] = useState(false);
+
+    const handleClose3 = () => setShow3(false);
+    const handleShow3 = () => setShow3(true);
 
     const [fullName, setfullName] = useState(userPro?.fullName);
     const [birthDay, setbirthDay] = useState(moment(userPro?.birthDay).format('DD-MM-YYYY'));
-    console.log('bday:', moment(userPro?.birthDay).format('DD-MM-YYYY'))
 
     const [gender, setGender] = useState(userPro?.gender);
     const [bloodgroup, setbloodGroup] = useState(userPro?.bloodgroup);
@@ -51,7 +56,23 @@ function Hoso() {
     const [email, setEmail] = useState(userPro?.email);
     const [images, setImages] = useState('');
     const [imagesdefault, setImagesdefault] = useState(userPro?.images);
-    console.log(userPro?.images);
+
+    const [password, setPassword] = useState("");
+    const [newpassword, setNewPassword] = useState("");
+
+    const showNotification = (message) => {
+        toast.success(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
+
+    const showNotificationErr = (message) => {
+        toast.error(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
 
     useEffect(() => {
         const handleProfile = async () => {
@@ -98,14 +119,16 @@ function Hoso() {
 
             if (!response.ok) {
                 dispatch(userprofileFailed());
+                showNotificationErr("Cập nhật thất bại!");
             } else {
                 const data = await response.json();
                 dispatch(userprofileSuccess(data));
+                showNotification("Cập nhật thành công!");
                 navigate("/hoso")
-                console.log(data);
             }
         } catch (error) {
             dispatch(userprofileFailed());
+            showNotificationErr("Cập nhật thất bại!");
         }
     }
 
@@ -129,14 +152,16 @@ function Hoso() {
 
             if (!response.ok) {
                 dispatch(userprofileFailed());
+                showNotificationErr("Cập nhật thất bại!");
             } else {
                 const data = await response.json();
                 dispatch(userprofileSuccess(data));
+                showNotification("Cập nhật thành công!");
                 navigate("/hoso")
-                console.log(data);
             }
         } catch (error) {
             dispatch(userprofileFailed());
+            showNotificationErr("Cập nhật thất bại!");
         }
     }
 
@@ -153,12 +178,15 @@ function Hoso() {
             });
             if (!res.ok) {
                 dispatch(logOutFailed());
+                //showNotificationErr("Đăng xuất thất bại!");
             } else {
                 dispatch(logOutSuccess());
+                //showNotification("Đăng xuất thành công!");
                 navigate("/");
             }
         } catch (error) {
             dispatch(logOutFailed());
+            //showNotificationErr("Đăng xuất thất bại!");
         }
     }
 
@@ -182,14 +210,44 @@ function Hoso() {
 
             if (!response.ok) {
                 dispatch(userprofileFailed());
+                showNotificationErr("Cập nhật thất bại!");
             } else {
                 const data = await response.json();
                 dispatch(userprofileSuccess(data));
+                showNotification("Cập nhật thành công!");
                 navigate("/hoso");
-                console.log(data);
             }
         } catch (error) {
             dispatch(userprofileFailed());
+            showNotificationErr("Cập nhật thất bại!");
+        }
+    }
+
+    const handleUpdatePassword = async (e) => {
+        e.preventDefault();
+        const updatePassword = {
+            password: password,
+            newpassword: newpassword,
+            account_id: userPro.account_id,
+        };
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/updatePassword", {
+                method: 'PUT',
+                body: JSON.stringify(updatePassword),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                showNotificationErr("Đổi mật khẩu thất bại!");
+            } else {
+                showNotification("Đổi mật khẩu thành công!");
+                navigate("/hoso")
+            }
+        } catch (error) {
+            showNotificationErr("Đổi mật khẩu thất bại!");
         }
     }
 
@@ -382,6 +440,54 @@ function Hoso() {
                                     style={{ width: 200 }}
                                 />
                                 <h3 className="text-secondary mb-3">{userPro?.fullName}</h3>
+                            </div>
+                            <div>
+                                <Button className="nav-item nav-link float-center" style={{ width: "100%" }} onClick={handleShow3}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 
+                                        1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4
+                                        1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5
+                                        0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0
+                                        0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                    </svg>
+                                    &nbsp;
+                                    Đổi mật khẩu
+                                </Button>
+                                <Modal show={show3} onHide={handleClose3}>
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Đổi mật khẩu</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <form onSubmit={handleUpdatePassword}>
+                                            <div className="form-group">
+                                                <label className="form-control-label label">Mật khẩu cũ</label>
+                                                <input 
+                                                    type="password"
+                                                    className="form-control border-1"
+                                                    required="required"
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label className="form-control-label label">Mật khẩu mới</label>
+                                                <input
+                                                    type="password"
+                                                    className="form-control border-1"
+                                                    required="required"
+                                                    onChange={(e) => setNewPassword(e.target.value)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <Button variant="primary" type="submit" className="float-right" onClick={handleClose3}>
+                                                    Lưu Lại
+                                                </Button>
+                                                <Button variant="secondary" className="float-right btnclose" onClick={handleClose3}>
+                                                    Hủy
+                                                </Button>
+                                            </div>
+                                        </form>
+                                    </Modal.Body>
+                                </Modal>
                             </div>
                         </div>
                     </div>
@@ -637,6 +743,8 @@ function Hoso() {
                 </div>
             </div>
             {/* Detail End */}
+            <ToastContainer>
+            </ToastContainer>
         </>
 
     )

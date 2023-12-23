@@ -26,7 +26,6 @@ function DangkySukien() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [show1, setShow1] = useState(false);
 
     const showNotification = (message) => {
         toast.success(message, {
@@ -50,27 +49,39 @@ function DangkySukien() {
             bloodGroup: userProfile.bloodgroup,
             dateRegister: dateRegister,
         };
-        try {
-            const response = await fetch("http://localhost:8000/v1/user/event/register", {
-                method: 'POST',
-                body: JSON.stringify(register),
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
+        if (userProfile.fullName === null
+            || userProfile.gender === null
+            || userProfile.birthDay === null
+            || userProfile.phone === null
+            || userProfile.address === null
+            || userProfile.bloodgroup === null) {
+            showNotificationErr("Cần cập nhập hồ sơ đầy đủ!");
+        } else {
+            try {
+                const response = await fetch("http://localhost:8000/v1/user/event/register", {
+                    method: 'POST',
+                    body: JSON.stringify(register),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    setShow(false);
+                    showNotificationErr(err.message);
+                    //setMsgErr(err.message);
+                } else {
+                    setShow(false);
+                    showNotification("Đăng ký thành công!");
+                    //setSuccessMsg("Đăng ký sự kiện thành công!");
                 }
-            });
-            if (!response.ok) {
-                const err = await response.json();
-                showNotificationErr(err.message);
-                //setMsgErr(err.message);
-            } else {
-                showNotification("Đăng ký thành công!");
-                //setSuccessMsg("Đăng ký sự kiện thành công!");
+            } catch (error) {
+                showNotificationErr("Đăng ký thất bại!");
+                //setMsgErr("Xác nhận không thành công!");
             }
-        } catch (error) {
-            showNotificationErr("Đăng ký thất bại!");
-            //setMsgErr("Xác nhận không thành công!");
         }
+
     }
 
     const handleLogout = async (e) => {
@@ -419,7 +430,7 @@ function DangkySukien() {
                                             <p style={{ margin: "0px 0px 0px" }}>{moment(dateRegister).format('DD-MM-YYYY')}</p>
                                         </div>
                                     </div>
-                                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic" }}>Lưu ý: Thông tin cá nhân và liên lạc được lấy từ hồ sơ, nên kiểm tra kỹ và cập nhật tại hồ sơ trước khi đăng ký.</p>
+                                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic", color: "red" }}>Lưu ý: Thông tin cá nhân và liên lạc được lấy từ hồ sơ, nên kiểm tra kỹ và cập nhật tại hồ sơ trước khi đăng ký.</p>
                                 </div>
 
                                 <br />

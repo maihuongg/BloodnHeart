@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 import {
     allEventStart,
     allEventSuccess,
     allEventFailed
 } from "../redux/userSlice";
 import {
+    eventProfileStart,
+    eventProfileSuccess,
+    eventProfileFailed,
     hospitalStart,
     hospitalSuccess,
     hospitalFailed
@@ -25,6 +29,7 @@ function Trangchu() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [data, setdata] = useState([]);
+    const [dataBestEvent, setDataBestEvent] = useState([]);
 
     useEffect(() => {
         const handleHospital = async () => {
@@ -72,7 +77,28 @@ function Trangchu() {
                 console.error("Error fetching data:", error);
             }
         }
-        handleEvent()
+        handleEvent();
+        const handleBestEvent = async () => {
+            try {
+                const response2 = await fetch("http://localhost:8000/v1/user/bestevent", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response2.ok) {
+                    console.log("Get Best Event Fail.")
+                }
+                else {
+                    const bestEvent = await response2.json();
+                    setDataBestEvent(bestEvent);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        handleBestEvent();
     }, [dispatch]);
 
     const handleHospitalDetail = async (e, hospitalId) => {
@@ -118,6 +144,54 @@ function Trangchu() {
         } catch (error) {
             dispatch(logOutFailed());
         }
+    }
+
+    const handleRegisterEvent = async (e, eventId, hospitalId) => {
+        e.preventDefault();
+        if (user) {
+            dispatch(eventProfileStart());
+            try {
+                const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + eventId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if (!response1.ok) {
+                    dispatch(eventProfileFailed());
+                } else {
+                    const data1 = await response1.json();
+                    dispatch(eventProfileSuccess(data1));
+                }
+            } catch (error) {
+                dispatch(eventProfileFailed());
+            }
+
+            dispatch(hospitalStart());
+            try {
+                const response2 = await fetch("http://localhost:8000/v1/user/gethospital/" + hospitalId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if (!response2.ok) {
+                    dispatch(hospitalFailed());
+                } else {
+                    const data2 = await response2.json();
+                    dispatch(hospitalSuccess(data2));
+                }
+            } catch (error) {
+                dispatch(hospitalFailed());
+            }
+
+            navigate("/dangky-sukien");
+        } else {
+            navigate("/dangnhap");
+        }
+
     }
 
     return (
@@ -404,125 +478,50 @@ function Trangchu() {
             <div className="container-fluid py-5">
                 <div className="container">
                     <div className="row align-items-center">
-                        <div className="col-lg-5">
+                        <div className="col-lg-1"></div>
+                        <div className="col-lg-4">
                             <img
-                                className="img-fluid rounded mb-5 mb-lg-0"
-                                src="img/about-1.jpg"
-                                alt=""
+                                className="img-fluid rounded mb-5 mb-lg-0 img-sukien"
+                                src={dataBestEvent.images}
                             />
                         </div>
-                        <div className="col-lg-7">
+                        <div className="col-lg-6">
                             <p className="section-title pr-5">
-                                <span className="pr-2">Nổi Bật</span>
+                                <span className="pr-2">Sự kiện hiến máu nổi bật</span>
                             </p>
-                            <h1 className="mb-4">Sự kiện hiến máu nổi bật nhất</h1>
+                            <h1 className="mb-4">{dataBestEvent.eventName}</h1>
                             <p>
-                                Địa Chỉ
+                                Địa chỉ: {dataBestEvent.address}
                             </p>
+                            <p>
+                                Ngày bắt đầu: {moment(dataBestEvent.date_start).format('DD-MM-YYYY')}
+                            </p>
+                            <p>
+                                Ngày kết thúc: {moment(dataBestEvent.date_end).format('DD-MM-YYYY')}
+                            </p>
+                            {dataBestEvent.listusers?.count !== undefined && (
+                                <div>
+                                    Số lượng đăng ký: {dataBestEvent.listusers.count}/{dataBestEvent.amount}
+                                </div>
+                            )}
+                            <br />
+                            {dataBestEvent.listusers?.count !== undefined && dataBestEvent.listusers.count === dataBestEvent.amount ? (
+                                <button className="btn btn-primary px-4 mx-auto mb-4" disabled>
+                                    Đã đủ số lượng
+                                </button>
+                            ) : (
+                                <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e) => handleRegisterEvent(e, dataBestEvent._id, dataBestEvent.hospital_id)}>
+                                    Đăng ký
+                                </a>
+                            )}
 
-                            <a href="" className="btn btn-primary mt-2 py-2 px-4">
-                                Learn More
-                            </a>
                         </div>
+                        <div className="col-lg-1"></div>
                     </div>
                 </div>
             </div>
             {/* About End */}
-            {/* Blog Start */}
-            <div className="container-fluid pt-5">
-                <div className="container">
-                    <div className="text-center pb-2">
-                        <p className="section-title px-5">
-                            <span className="px-2">Latest Blog</span>
-                        </p>
-                        <h1 className="mb-4">Latest Articles From Blog</h1>
-                    </div>
-                    <div className="row pb-3">
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-1.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-2.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 mb-4">
-                            <div className="card border-0 shadow-sm mb-2">
-                                <img className="card-img-top mb-2" src="img/blog-3.jpg" alt="" />
-                                <div className="card-body bg-light text-center p-4">
-                                    <h4 className="">Diam amet eos at no eos</h4>
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <small className="mr-3">
-                                            <i className="fa fa-user text-primary" /> Admin
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-folder text-primary" /> Web Design
-                                        </small>
-                                        <small className="mr-3">
-                                            <i className="fa fa-comments text-primary" /> 15
-                                        </small>
-                                    </div>
-                                    <p>
-                                        Sed kasd sea sed at elitr sed ipsum justo, sit nonumy diam
-                                        eirmod, duo et sed sit eirmod kasd clita tempor dolor stet
-                                        lorem. Tempor ipsum justo amet stet...
-                                    </p>
-                                    <a href="" className="btn btn-primary px-4 mx-auto my-2">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Blog End */}
+
             {/* Team Start */}
             <div className="container-fluid pt-5">
                 <div className="container">

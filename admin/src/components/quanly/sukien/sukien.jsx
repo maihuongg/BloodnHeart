@@ -281,21 +281,6 @@ function SuKien() {
         });
     };
 
-    const onChange = e => {
-        const file = e.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64Image = reader.result;
-                setImages(base64Image);
-                setImagesdefault(base64Image);
-                console.log('imageform', base64Image);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    }
 
     const handleAddEvent = async (e) => {
         e.preventDefault();
