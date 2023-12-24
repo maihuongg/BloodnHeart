@@ -48,5 +48,5 @@ router.put('/hospital-update-info/:id',adminController.hospitalUpdateHospitalInf
 router.get('/statistic/account', adminController.accountPieStatistic);
 router.get('/statistic/event', adminController.eventStatistic);
 router.get('/statistic/hospital', adminController.getHospitalProfileStatistics);
-router.get('/statistic/account-register', adminController.getAccountThreeDay);
+router.get('/statistic/account-register', adminController.getAccountFiveDays);
 module.exports = router;

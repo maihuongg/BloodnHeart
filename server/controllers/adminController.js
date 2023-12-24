@@ -585,10 +585,10 @@ const adminController = {
         try {
             const approvedHospitals = await HospitalProfile.find({ account_id: { $exists: true } });
             const notApprovedHospitals = await HospitalProfile.find({ account_id: { $exists: false } });
-    
+
             const approvedCount = approvedHospitals.length;
             const notApprovedCount = notApprovedHospitals.length;
-    
+
             return res.status(200).json({
                 approvedCount,
                 notApprovedCount,
@@ -598,49 +598,136 @@ const adminController = {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-    getAccountThreeDay:async(req,res)=>{
+    // getAccountThreeDay: async (req, res) => {
+    //     try {
+    //         const currentDate = new Date();
+
+    //         // Get the start of today
+    //         const startOfToday = new Date(currentDate);
+    //         startOfToday.setHours(0, 0, 0, 0);
+
+    //         // Get the start of yesterday
+    //         const startOfYesterday = new Date(currentDate);
+    //         startOfYesterday.setDate(currentDate.getDate() - 1);
+    //         startOfYesterday.setHours(0, 0, 0, 0);
+
+    //         // Get the start of the day before yesterday
+    //         const startOfDayBeforeYesterday = new Date(currentDate);
+    //         startOfDayBeforeYesterday.setDate(currentDate.getDate() - 2);
+    //         startOfDayBeforeYesterday.setHours(0, 0, 0, 0);
+
+    //         const todayRegistrations = await Account.find({
+    //             createdAt: { $gte: startOfToday, $lt: new Date() },
+    //         });
+
+    //         const yesterdayRegistrations = await Account.find({
+    //             createdAt: { $gte: startOfYesterday, $lt: startOfToday },
+    //         });
+
+    //         const dayBeforeYesterdayRegistrations = await Account.find({
+    //             createdAt: { $gte: startOfDayBeforeYesterday, $lt: startOfYesterday },
+    //         });
+
+    //         const result = {
+    //             today: todayRegistrations.length,
+    //             yesterday: yesterdayRegistrations.length,
+    //             dayBeforeYesterday: dayBeforeYesterdayRegistrations.length,
+    //         };
+
+    //         return res.status(200).json(result);
+    //     } catch (error) {
+    //         return res.status(500).json(error);
+    //     }
+    // }
+    getAccountFiveDays: async (req, res) => {
         try {
             const currentDate = new Date();
-            
+    
             // Get the start of today
             const startOfToday = new Date(currentDate);
             startOfToday.setHours(0, 0, 0, 0);
-        
+    
             // Get the start of yesterday
             const startOfYesterday = new Date(currentDate);
             startOfYesterday.setDate(currentDate.getDate() - 1);
             startOfYesterday.setHours(0, 0, 0, 0);
-        
+    
             // Get the start of the day before yesterday
             const startOfDayBeforeYesterday = new Date(currentDate);
             startOfDayBeforeYesterday.setDate(currentDate.getDate() - 2);
             startOfDayBeforeYesterday.setHours(0, 0, 0, 0);
-        
+    
+            // Get the start of 3 days ago
+            const startOfThreeDaysAgo = new Date(currentDate);
+            startOfThreeDaysAgo.setDate(currentDate.getDate() - 3);
+            startOfThreeDaysAgo.setHours(0, 0, 0, 0);
+    
+            // Get the start of 4 days ago
+            const startOfFourDaysAgo = new Date(currentDate);
+            startOfFourDaysAgo.setDate(currentDate.getDate() - 4);
+            startOfFourDaysAgo.setHours(0, 0, 0, 0);
+    
             const todayRegistrations = await Account.find({
-              createdAt: { $gte: startOfToday, $lt: currentDate },
+                createdAt: { $gte: startOfToday, $lt: new Date() },
             });
-        
+    
             const yesterdayRegistrations = await Account.find({
-              createdAt: { $gte: startOfYesterday, $lt: startOfToday },
+                createdAt: { $gte: startOfYesterday, $lt: startOfToday },
             });
-        
+    
             const dayBeforeYesterdayRegistrations = await Account.find({
-              createdAt: { $gte: startOfDayBeforeYesterday, $lt: startOfYesterday },
+                createdAt: { $gte: startOfDayBeforeYesterday, $lt: startOfYesterday },
             });
-        
+    
+            const threeDaysAgoRegistrations = await Account.find({
+                createdAt: { $gte: startOfThreeDaysAgo, $lt: startOfDayBeforeYesterday },
+            });
+    
+            const fourDaysAgoRegistrations = await Account.find({
+                createdAt: { $gte: startOfFourDaysAgo, $lt: startOfThreeDaysAgo },
+            });
+    
             const result = {
-              today: todayRegistrations.length,
-              yesterday: yesterdayRegistrations.length,
-              dayBeforeYesterday: dayBeforeYesterdayRegistrations.length,
+                today: {
+                    // total: todayRegistrations.length,
+                    isAdmin: todayRegistrations.filter(account => account.isAdmin).length,
+                    isHospital: todayRegistrations.filter(account => account.isHospital).length,
+                    user: todayRegistrations.filter(account => !account.isAdmin && !account.isHospital).length,
+                },
+                yesterday: {
+                    // total: yesterdayRegistrations.length,
+                    isAdmin: yesterdayRegistrations.filter(account => account.isAdmin).length,
+                    isHospital: yesterdayRegistrations.filter(account => account.isHospital).length,
+                    user: yesterdayRegistrations.filter(account => !account.isAdmin && !account.isHospital).length,
+                },
+                dayBeforeYesterday: {
+                    // total: dayBeforeYesterdayRegistrations.length,
+                    isAdmin: dayBeforeYesterdayRegistrations.filter(account => account.isAdmin).length,
+                    isHospital: dayBeforeYesterdayRegistrations.filter(account => account.isHospital).length,
+                    user: dayBeforeYesterdayRegistrations.filter(account => !account.isAdmin && !account.isHospital).length,
+                },
+                threeDaysAgo: {
+                    // total: threeDaysAgoRegistrations.length,
+                    isAdmin: threeDaysAgoRegistrations.filter(account => account.isAdmin).length,
+                    isHospital: threeDaysAgoRegistrations.filter(account => account.isHospital).length,
+                    user: threeDaysAgoRegistrations.filter(account => !account.isAdmin && !account.isHospital).length,
+                },
+                fourDaysAgo: {
+                    // total: fourDaysAgoRegistrations.length,
+                    isAdmin: fourDaysAgoRegistrations.filter(account => account.isAdmin).length,
+                    isHospital: fourDaysAgoRegistrations.filter(account => account.isHospital).length,
+                    user: fourDaysAgoRegistrations.filter(account => !account.isAdmin && !account.isHospital).length,
+                },
             };
-        
+    
             return res.status(200).json(result);
-          } catch (error) {
+        } catch (error) {
             return res.status(500).json(error);
-          }
+        }
     }
     
-    
+
+
 }
 async function validateAddNewHospital(body) {
     const { cccd, email, hospitalName, leaderName, phone, address } = body;

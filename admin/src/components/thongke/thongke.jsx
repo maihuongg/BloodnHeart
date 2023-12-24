@@ -171,44 +171,113 @@ function ThongKe() {
         }
     }, [hospitalStatistics]);
 
+    // useEffect(() => {
+    //     if (accountbyDate) {
+    //         const { dayBeforeYesterday, today, yesterday } = accountbyDate;
+    //         const registrationCounts = [dayBeforeYesterday, yesterday, today];
+
+    //         // Check if the lineChartCanvas element exists
+    //         const lineChartCanvas = document.getElementById('lineChart');
+
+    //         // Check if the lineChartCanvas is not null before creating the chart
+    //         if (lineChartCanvas) {
+    //             new Chart(lineChartCanvas, {
+    //                 type: 'line',
+    //                 data: {
+    //                     labels: ['Day before yesterday', 'Yesterday', 'Today'],
+    //                     datasets: [{
+    //                         label: 'Number of Registrations',
+    //                         data: registrationCounts,
+    //                         borderColor: 'rgb(255, 99, 132)',
+    //                         borderWidth: 2,
+    //                         pointRadius: 5,
+    //                         fill: false,
+    //                     }],
+    //                 },
+    //                 options: {
+    //                     scales: {
+    //                         y: {
+    //                             beginAtZero: true,
+    //                             ticks: {
+    //                                 stepSize: 1,
+    //                             },
+    //                         },
+    //                     },
+    //                 },
+    //             });
+    //         }
+    //     }
+    // }, [accountbyDate]);
+
     useEffect(() => {
         if (accountbyDate) {
-            console.log('accountDate', accountbyDate);
-
-            const { dayBeforeYesterday, today, yesterday } = accountbyDate;
-            console.log(dayBeforeYesterday, today, yesterday);
-
-            const registrationCounts = [dayBeforeYesterday.length, today.length, yesterday.length];
             const lineChartCanvas = document.getElementById('lineChart');
-            new Chart(lineChartCanvas, {
-                type: 'line',
-                data: {
-                    labels: ['Day before yesterday', 'Yesterday', 'Today'],
-                    datasets: [{
-                        label: 'Number of Registrations',
-                        data: registrationCounts,
-                        borderColor: 'rgb(255, 99, 132)',
-                        borderWidth: 2,
-                        pointRadius: 5,
-                        fill: false,
-                    }],
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1, // Adjust the stepSize as needed
+    
+            if (lineChartCanvas) {
+                new Chart(lineChartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['Four Days Ago', 'Three Days Ago', 'Day Before Yesterday', 'Yesterday', 'Today'],
+                        datasets: [
+                            {
+                                label: 'isAdmin',
+                                data: [
+                                    accountbyDate.fourDaysAgo.isAdmin,
+                                    accountbyDate.threeDaysAgo.isAdmin,
+                                    accountbyDate.dayBeforeYesterday.isAdmin,
+                                    accountbyDate.yesterday.isAdmin,
+                                    accountbyDate.today.isAdmin,
+                                ],
+                                borderColor: 'rgb(255, 99, 132)',
+                                borderWidth: 2,
+                                pointRadius: 5,
+                                fill: false,
+                            },
+                            {
+                                label: 'isHospital',
+                                data: [
+                                    accountbyDate.fourDaysAgo.isHospital,
+                                    accountbyDate.threeDaysAgo.isHospital,
+                                    accountbyDate.dayBeforeYesterday.isHospital,
+                                    accountbyDate.yesterday.isHospital,
+                                    accountbyDate.today.isHospital,
+                                ],
+                                borderColor: 'rgb(75, 192, 192)',
+                                borderWidth: 2,
+                                pointRadius: 5,
+                                fill: false,
+                            },
+                            {
+                                label: 'user',
+                                data: [
+                                    accountbyDate.fourDaysAgo.user,
+                                    accountbyDate.threeDaysAgo.user,
+                                    accountbyDate.dayBeforeYesterday.user,
+                                    accountbyDate.yesterday.user,
+                                    accountbyDate.today.user,
+                                ],
+                                borderColor: 'rgb(54, 162, 235)',
+                                borderWidth: 2,
+                                pointRadius: 5,
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                },
                             },
                         },
                     },
-                },
-            });
+                });
+            }
         }
     }, [accountbyDate]);
-
-
-
+    
     return (
         <div className="container-scroller">
             <Navbar />
