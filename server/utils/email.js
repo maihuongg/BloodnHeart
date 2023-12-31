@@ -6,7 +6,7 @@ const mailjet = Mailjet.apiConnect(
     process.env.MJ_APIKEY_PRIVATE,
 );
 
-const sendMail = async (user, resetLink) => {
+const sendMail = async (user, password) => {
     try {
         const request = await mailjet
             .post('send', { version: 'v3.1' })
@@ -19,18 +19,19 @@ const sendMail = async (user, resetLink) => {
                         },
                         To: [
                             {
-                                Email: user.email,
-                                Name: user.fullName
+                                Email: user.email
+                               
                             }
                         ],
-                        Subject: "[BloodnHeart] THAY ĐỔI MẬT KHẨU ",
+                        Subject: "[BloodnHeart] Xác nhận hợp tác dự án ",
                         HTMLPart: 
                         `
-                        <p>Chào bạn,</p>
+                        <p>Chào quý đối tác,</p>
 
-                        <p>Cảm ơn bạn đã liên hệ với chúng tôi. Để đảm bảo an toàn và bảo mật tài khoản của bạn, chúng tôi đã nhận được yêu cầu thay đổi mật khẩu.</p>
+                        <p>Cảm ơn bạn đã liên hệ với chúng tôi.</p>
+                        <p>Dưới đây là link dùng để thay đổi mật khẩu của bạn </p>
                         
-                        <p>Dưới đây là đường dẫn để thay đổi mật khẩu của bạn: <a href="${resetLink}">${resetLink}</a></p>
+                        <p> Mật khẩu: ${password} </p>
                         
                         <p>Vui lòng nhấp vào đường dẫn trên để tiếp tục quá trình thay đổi mật khẩu của bạn. Nếu bạn không thực hiện yêu cầu này, vui lòng liên hệ ngay lập tức với bộ phận hỗ trợ của chúng tôi.</p>
                         
@@ -43,7 +44,7 @@ const sendMail = async (user, resetLink) => {
                 ]
             });
 
-        console.log("Email sent successfully");
+        console.log("Email sent to Hospital successfully");
         return request;
     } catch (error) {
         console.log("Email not sent!");

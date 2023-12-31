@@ -79,7 +79,7 @@ function ChinhSuaNguoiDung() {
                     console.log(data);
                     setCCCd(data.cccd);
                     setFullName(data.fullName);
-                    setBirthDay(moment(data.birthDay).format('DD-MM-YYYY'));
+                    setBirthDay(moment(data.birthDay).format('MM-DD-YYYY'));
                     setGender(data.gender);
                     setBloodGroup(data.bloodGroup);
                     setAddress(data.address);
@@ -282,7 +282,7 @@ function ChinhSuaNguoiDung() {
                                                     <input
                                                         type="date"
                                                         className="form-control"
-                                                        value={birthDay}
+                                                        value={moment(birthDay).format('YYYY-MM-DD')}
                                                         onChange={(e) => setBirthDay(e.target.value)}
                                                     />
                                                 </div>

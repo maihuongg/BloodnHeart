@@ -1,14 +1,16 @@
 const bcrypt = require('bcrypt');
 const UserProfile = require('../models/userProfileModel');
 const jwt = require('jsonwebtoken')
-const sendMail = require('../utils/email')
+// const sendMail = require('../utils/email.js')
 const Validate = require('validator');
 const Account = require('../models/accountModel')
 const cloudinary = require('cloudinary');
 const Event = require('../models/eventModel')
 const moment = require('moment');
 const HospitalProfile = require('../models/hospitalProfileModel')
-
+const Mailjet = require('node-mailjet');
+// const userController = require('../controllers/userController');
+require('dotenv').config();
 
 const userController = {
     getUserById: async (req, res) => {
@@ -85,13 +87,17 @@ const userController = {
         try {
             const { cccd, email } = req.body;
             const user = await UserProfile.findOne({ cccd, email });
+            console.log(user)
             if (user) {
                 const token = jwt.sign({ cccd, email }, process.env.JWT_SECRET, { expiresIn: '30m' });
+                console.log("token", token)
                 // Tạo URL đến trang đổi mật khẩu trong email
                 const resetPasswordURL = `http://localhost:3000/reset-password?token=${token}`;
                 // Send reset password email
+                console.log('resee ur',resetPasswordURL)
                 const emailResponse = await sendMail(user, resetPasswordURL);
                 console.log('Email response:', emailResponse);
+    
                 return res.status(200).json({
                     token,
                     message: 'Chúng tôi đã gửi một hộp thư thay đổi mật khẩu đến địa chỉ email mà bạn đã đăng ký. Vui lòng kiểm tra hộp thư của bạn và làm theo hướng dẫn để hoàn tất quá trình thay đổi mật khẩu. '
@@ -100,9 +106,14 @@ const userController = {
             }
             else return res.status(500).json({ message: " Không tìm thấy thông tin nào phù hợp" });
 
+       
         } catch (error) {
-            return res.status(500).json({ error });
+            console.error('Error sending email:', error.message);
+            console.error('Stack trace:', error.stack);
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
+        
+        
     },
 
 
@@ -446,5 +457,55 @@ async function validateHospital(body) {
         throw error;
     }
 }
+const mailjet = Mailjet.apiConnect(
+    process.env.MJ_APIKEY_PUBLIC,
+    process.env.MJ_APIKEY_PRIVATE,
+);
 
+const sendMail = async (user, password) => {
+    try {
+        const request = await mailjet
+            .post('send', { version: 'v3.1' })
+            .request({
+                Messages: [
+                    {
+                        From: {
+                            Email: "maihuongdang76@gmail.com",
+                            Name: "BloodnHeart"
+                        },
+                        To: [
+                            {
+                                Email: user.email
+                               
+                            }
+                        ],
+                        Subject: "[BloodnHeart] Xác nhận hợp tác dự án ",
+                        HTMLPart: 
+                        `
+                        <p>Chào quý đối tác,</p>
+
+                        <p>Cảm ơn bạn đã liên hệ với chúng tôi.</p>
+                        <p>Dưới đây là link dùng để thay đổi mật khẩu của bạn </p>
+                        
+                        <p> Mật khẩu: ${password} </p>
+                        
+                        <p>Vui lòng nhấp vào đường dẫn trên để tiếp tục quá trình thay đổi mật khẩu của bạn. Nếu bạn không thực hiện yêu cầu này, vui lòng liên hệ ngay lập tức với bộ phận hỗ trợ của chúng tôi.</p>
+                        
+                        <p>Chúng tôi luôn ở đây để hỗ trợ bạn. Xin cảm ơn!</p>
+                        
+                        <p>Trân trọng,</p>
+                        <p>BloodnHeart Team.</p>
+                        `
+                    }
+                ]
+            });
+
+        console.log("Email sent successfully");
+        return request;
+    } catch (error) {
+        console.log("Email not sent!");
+        console.error(error);
+        return error;
+    }
+};
 module.exports = userController;

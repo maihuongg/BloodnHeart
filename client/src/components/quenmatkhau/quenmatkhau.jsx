@@ -16,6 +16,7 @@ function QuenMatKhau() {
             cccd: cccd,
             email: email
         };
+        console.log('request :', requestForgot)
         try {
             const response = await fetch('http://localhost:8000/v1/user/forgot-password', {
                 method: 'POST',
@@ -27,6 +28,7 @@ function QuenMatKhau() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.log("data: ", errorData)
                 setMsgErr(errorData.message);
 
             } else {

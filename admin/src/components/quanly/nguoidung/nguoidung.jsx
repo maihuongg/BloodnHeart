@@ -140,6 +140,7 @@ function NguoiDung() {
         } catch (error) {
             console.error("Error fetching data:", error);
         }
+        fetchData();
     }
     const columns = [
         {

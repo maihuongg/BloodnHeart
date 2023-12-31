@@ -59,6 +59,30 @@ function BenhVien() {
             setLoading(false);
         }
     };
+    const fetchData = async () => {
+        try {
+            const response2 = await fetch('http://localhost:8000/v1/admin/hospital', {
+                method: 'GET',
+                headers: {
+
+                    token: `Bearer ${accessToken}`
+                }
+            });
+
+            if (response2.ok) {
+                const data2 = await response2.json();
+                //data gồm count và allAccount
+                console.log(data2.allHospital)
+                setData(data2.allHospital);
+            }
+            else return 0;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         // Function to fetch data from the API
         const fetchData = async () => {
@@ -87,6 +111,11 @@ function BenhVien() {
 
         fetchData();
     }, []);
+    useEffect(() => {
+        if (!showModal) {
+            fetchData();
+        }
+    }, [showModal]);
     const handleGetInfoHospital = async (id) => {
         dispatch(hospitalprofileStart());
         try {
@@ -172,6 +201,7 @@ function BenhVien() {
             navigate("/benh-vien");
         });
     };
+    
     const handleAddHospital = async (e) => {
         e.preventDefault();
 

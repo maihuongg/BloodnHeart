@@ -138,7 +138,7 @@ function ThongKe() {
                 data: {
                     labels: ['Sắp diễn ra', 'Đang diễn ra', 'Đã kết thúc'],
                     datasets: [{
-                        label: 'Event Counts',
+                        label: 'Số lượng',
                         data: [eventStatistics.upcoming, eventStatistics.ongoing, eventStatistics.finished],
                         backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
                         borderWidth: 5,
@@ -217,7 +217,7 @@ function ThongKe() {
                 new Chart(lineChartCanvas, {
                     type: 'line',
                     data: {
-                        labels: ['Four Days Ago', 'Three Days Ago', 'Day Before Yesterday', 'Yesterday', 'Today'],
+                        labels: ['4 ngày trước', '3 ngày trước', '2 ngày trước', '3 ngày trước', 'Hôm nay'],
                         datasets: [
                             {
                                 label: 'isAdmin',
@@ -234,7 +234,7 @@ function ThongKe() {
                                 fill: false,
                             },
                             {
-                                label: 'isHospital',
+                                label: 'Bệnh viện',
                                 data: [
                                     accountbyDate.fourDaysAgo.isHospital,
                                     accountbyDate.threeDaysAgo.isHospital,
@@ -248,7 +248,7 @@ function ThongKe() {
                                 fill: false,
                             },
                             {
-                                label: 'user',
+                                label: 'Người dùng',
                                 data: [
                                     accountbyDate.fourDaysAgo.user,
                                     accountbyDate.threeDaysAgo.user,
@@ -317,7 +317,7 @@ function ThongKe() {
                             <div className="col-lg-6 ">
                                 <div className="card">
                                     <div className="card-body">
-                                        <h4 className="card-title">Thống kê số lượng đăng ký</h4>
+                                        <h4 className="card-title">Thống kê số lượng đăng ký tài khoản mới</h4>
                                         <canvas id="lineChart" ></canvas>
                                     </div>
                                 </div>
