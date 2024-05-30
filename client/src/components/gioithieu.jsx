@@ -158,9 +158,52 @@ function Gioithieu() {
                     </div>
                 </div>
             </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <div className="card shadow-sm">
+                            <div className="card-body">
+                                <h1 className="card-title text-center">BloodnHeart - Hiến Máu vì Cộng Đồng</h1>
+                                <p className="card-text" style={{ fontSize: '22px' }}>
+                                    BloodnHeart là dự án nhằm khuyến khích và tổ chức các hoạt động hiến máu cứu người và hỗ trợ cộng đồng. Mục tiêu của chúng tôi là nâng cao nhận thức về tầm quan trọng của việc hiến máu và giúp mọi người hiến máu thường xuyên dễ dàng hơn.                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row text-center my-4">
+                    <div className="col">
+                        <h1>Thành viên sáng lập</h1>
+                    </div>
+                </div>
+                <div className="row text-center">
+                    <div className="col-md-6 mb-4">
+                        <div className="card shadow-sm">
+                            <div className="card-body">
+                                <img src="img/female1.png" alt="Đặng Mai Hương" className="img-fluid rounded-circle mb-3" style={{ width: '150px', height: '150px' }} />
+                                <h2 className="card-title">Đặng Mai Hương</h2>
+                                <h4 className="card-text">Student Id: 20110099</h4>
+                                Email: 20110099@student.hcmute.edu.vn<br />
+                                Phone: +1234567890
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 mb-4">
+                        <div className="card shadow-sm">
+                            <div className="card-body">
+                                <img src="img\female2.png" alt="Nguyễn Thị Thu Hằng" className="img-fluid rounded-circle mb-3" style={{ width: '150px', height: '150px' }} />
+                                <h2 className="card-title">Nguyễn Thị Thu Hằng</h2>
+                                <h4 className="card-text">Student Id: 20110473</h4>
+                                Email: 20110473@student.hcmute.edu.vn <br />
+                                Phone: +1234567890
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/* Header End */}
             {/* About Start */}
-            <div className="container-fluid py-5">
+            {/* <div className="container-fluid py-5">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-5">
@@ -207,10 +250,10 @@ function Gioithieu() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             {/* About End */}
             {/* Facilities Start */}
-            <div className="container-fluid pt-5">
+            {/* <div className="container-fluid pt-5">
                 <div className="container pb-3">
                     <div className="row">
                         <div className="col-lg-4 col-md-6 pb-1">
@@ -305,10 +348,10 @@ function Gioithieu() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             {/* Facilities Start */}
             {/* Team Start */}
-            <div className="container-fluid pt-5">
+            {/* <div className="container-fluid pt-5">
                 <div className="container">
                     <div className="text-center pb-2">
                         <p className="section-title px-5">
@@ -451,7 +494,7 @@ function Gioithieu() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             {/* Team End */}
         </>
 
