@@ -70,7 +70,8 @@ function Lienhe() {
             console.log('Response Status:', response.status);
 
             if (!response.ok) {
-                setMsgErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+                const data = await response.json();
+                setMsgErr(data.message);
             } else {
                 const data = await response.json();
                 console.log(data);

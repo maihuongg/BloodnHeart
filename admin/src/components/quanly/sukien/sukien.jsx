@@ -22,6 +22,7 @@ function SuKien() {
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const hospitalProfile = useSelector((state) => state.hospital.profile.gethospital);
     const hospitalId = hospitalProfile?._id;
+    console.log("id", hospitalId);
     const accessToken = currentAdmin?.accessToken;
     const isAdmin = currentAdmin?.isAdmin;
     const isHospital = currentAdmin?.isHospital;
@@ -87,6 +88,7 @@ function SuKien() {
 
                             if (response2.ok) {
                                 const data2 = await response2.json();
+                                console.log("data ok", data2)
                                 //data gồm count và allAccount
                                 setData(data2.allEvent);
                             }
@@ -130,6 +132,20 @@ function SuKien() {
     };
     const showNotification = (message) => {
         toast.info(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
+
+    const showNotificationSuc = (message) => {
+        toast.success(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
+
+    const showNotificationErr = (message) => {
+        toast.error(message, {
             position: toast.POSITION.TOP_RIGHT
             // position: toast.POSITION.BOTTOM_CENTER,
         });
@@ -230,16 +246,19 @@ function SuKien() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                showNotificationErr(errorData.message);
                 console.log(errorData.message);
             }
             else {
                 const data = await response.json();
                 console.log("data", data);
                 console.log("Đóng thành công!");
+                showNotificationSuc("Đóng sự kiện thành công!");
                 window.location.reload();
             }
         } catch (error) {
             console.error("Error fetching data:", error);
+            showNotificationErr("Lỗi", error);
         }
     }
 
@@ -310,10 +329,10 @@ function SuKien() {
                     setSuccessMsg(null);
                 } else {
                     const data = await response.json();
-                    setSuccessMsg("Thêm thành công ! ");
+                    showNotificationSuc("Thêm sự kiện thành công!");
                     setMsgErr(null);
                     console.log('dataEvent', data);
-
+                    handleCloseModal();
                 }
             } catch (error) {
                 setMsgErr("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
@@ -364,7 +383,7 @@ function SuKien() {
                                         <div className="form-group">
                                             <div className="input-group">
                                                 <div className="input-group-append">
-                                                    <Button className="btn btn-sm btn-outline-primary btn-icon-prepend" type="button" onClick={handleShowModal}>
+                                                    <Button className="btn btn-sm btn-outline-primary btn-icon-prepend text-white" type="button" onClick={handleShowModal}>
                                                         <i className="mdi mdi-note-plus"></i> Thêm sự kiện
                                                     </Button>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,9 +23,9 @@ function DangkySukien() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
+    const [min, setMin] = useState("");
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+
 
     const showNotification = (message) => {
         toast.success(message, {
@@ -41,6 +41,49 @@ function DangkySukien() {
         });
     };
 
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const minDate = new Date(eventDetail.date_start);
+        if (currentDate < minDate) {
+            setMin(new Date(eventDetail.date_start).toISOString().split('T')[0]);
+        } else {
+            setMin(new Date().toISOString().split('T')[0]);
+        }
+        console.log("date", min);
+    }, [setMin]);
+
+    const handleClose = () => setShow(false);
+    const handleShow = async () => {
+
+        const checkdate = {
+            userId: userProfile._id,
+            date: dateRegister,
+        };
+        try {
+            const response = await fetch("http://localhost:8000/v1/user/event/checkdate", {
+                method: 'POST',
+                body: JSON.stringify(checkdate),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+            if (!response.ok) {
+                showNotificationErr("Thất bại!");
+            } else {
+                const data = await response.json();
+                const result = data.result;
+                if (result === 0) {
+                    showNotificationErr('Bạn không thể đăng ký vì chưa đủ tối thiểu 90 ngày so với ngày hiến máu gần nhất.')
+                } else {
+                    setShow(true);
+                }
+            }
+        } catch (error) {
+            showNotificationErr('Đã xảy ra lỗi không mong muốn.');
+        }
+    }
     const handleRegisterEvent = async (e) => {
         e.preventDefault();
         const register = {
@@ -313,7 +356,7 @@ function DangkySukien() {
                                     className="form-control border-1"
                                     placeholder="VD: 01/01/2000"
                                     required="required"
-                                    min={(new Date(eventDetail.date_start)).toISOString().split('T')[0]}
+                                    min={min}
                                     max={(new Date(eventDetail.date_end)).toISOString().split('T')[0]}
                                     style={{ width: 500 }}
                                     onChange={(e) => setDateRegister(e.target.value)}

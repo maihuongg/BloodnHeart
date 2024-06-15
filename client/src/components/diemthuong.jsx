@@ -4,27 +4,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Table } from "antd";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import moment from "moment";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import {
     userprofileStart,
     userprofileSuccess,
     userprofileFailed,
 } from "../redux/userSlice";
 import {
-    eventProfileStart,
-    eventProfileSuccess,
-    eventProfileFailed,
-} from "../redux/eventSlice";
-import {
     logOutStart,
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
-function LichHen() {
+function DiemThuong() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
     const accessToken = user?.accessToken;
@@ -32,13 +23,8 @@ function LichHen() {
     const navigate = useNavigate();
     const userPro = useSelector((state) => state.user.profile.getUser);
     const currentDate = new Date();
-    const [dateRegister, setDateRegister] = useState("");
-    const [datemin, setDatemin] = useState("");
-    const [datemax, setDatemax] = useState("");
-    const [eventId, setEventId] = useState("");
-    const userEventFilter = userPro.history.filter(event => event.status_user === "0");
-    const [show, setShow] = useState(false);
-
+    console.log(currentDate);
+    const userEventFilter = userPro.history.filter(event => event.status_user === "1");
 
     useEffect(() => {
         const handleProfile = async () => {
@@ -64,103 +50,6 @@ function LichHen() {
         handleProfile();
     }, [dispatch]);
 
-    const showNotification = (message) => {
-        toast.success(message, {
-            position: toast.POSITION.TOP_RIGHT
-            // position: toast.POSITION.BOTTOM_CENTER,
-        });
-    };
-
-    const showNotificationErr = (message) => {
-        toast.error(message, {
-            position: toast.POSITION.TOP_RIGHT
-            // position: toast.POSITION.BOTTOM_CENTER,
-        });
-    };
-
-
-    const handleClose = () => setShow(false);
-
-    const handleShow = async (eventid) => {
-        try {
-            const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + eventid, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
-                }
-            });
-            if (!response1.ok) {
-                console.log("fail");
-            } else {
-                const data = await response1.json();
-                setEventId(data._id);
-                setDatemin((new Date(data.date_start)).toISOString().split('T')[0]);
-                setDatemax((new Date(data.date_end)).toISOString().split('T')[0]);
-                setShow(true);
-            }
-        } catch (error) {
-            console.log("fail");
-        }
-
-    }
-
-    const handleUpdate = async () => {
-        const update = {
-            eventId: eventId,
-            userId: userPro._id,
-            date: dateRegister,
-        }
-        try {
-            const response1 = await fetch("http://localhost:8000/v1/user/event/updateRegisterDate", {
-                method: 'PUT',
-                body: JSON.stringify(update),
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
-                }
-            });
-            if (!response1.ok) {
-                const err = await response1.json();
-                showNotificationErr(err.message);
-            } else {
-                const data1 = await response1.json();
-                showNotification(data1.message);
-                setShow(false);
-                window.location.reload();
-            }
-        } catch (error) {
-            showNotificationErr("Cập nhật thất bại!");
-        }
-    }
-
-    const handleDelete = async (id) => {
-        const deleteRegister = {
-            eventId: id,
-            userId: userPro._id,
-        }
-        try {
-            const response1 = await fetch("http://localhost:8000/v1/user/event/deleteRegister", {
-                method: 'DELETE',
-                body: JSON.stringify(deleteRegister),
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
-                }
-            });
-            if (!response1.ok) {
-                const err = await response1.json();
-                showNotificationErr(err.message);
-            } else {
-                const data1 = await response1.json();
-                showNotification(data1.message);
-                window.location.reload();
-            }
-        } catch (error) {
-            showNotificationErr("Cập nhật thất bại!");
-        }
-    }
-
     const handleLogout = async (e) => {
         e.preventDefault();
         dispatch(logOutStart());
@@ -183,53 +72,12 @@ function LichHen() {
         }
     }
 
-
-
     const columns = [
         {
             title: "Tên sự kiện",
             dataIndex: "eventName",
             key: "eventName",
         },
-        // {
-        //     title: "Tình trạng",
-        //     dataIndex: "status",
-        //     key: "status",
-        //     render: (text, record) => {
-        //         const handleStatus = async () => {
-        //             try {
-        //                 const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + record.id_event, {
-        //                     method: 'GET',
-        //                     headers: {
-        //                         'Content-Type': 'application/json',
-        //                         token: `Bearer ${accessToken}`
-        //                     }
-        //                 });
-        //                 if (!response1.ok) {
-        //                     console.log("fail");
-        //                 } else {
-        //                     const data = await response1.json();
-        //                     const status = data.status;
-        //                     console.log(status);
-        //                     if (status === "0") {
-        //                         return <span style={{ color: "red" }}>Đã đóng</span>;
-        //                     } else {
-        //                         return <span>Đang Hoạt Động</span>;
-        //                     }
-        //                 }
-        //             } catch (error) {
-        //                 console.log("fail");
-        //             }
-        //         }
-        //         handleStatus();
-        //         // const statusevent = handleStatus();
-        //         // console.log("sa",statusevent);
-        //         // if (statusevent === true) {
-        //         //     return <span style={{ color: 'red' }}>(Đã đóng)</span>;
-        //         // }
-        //         // return <span>Đang Hoạt Động</span>;
-        //     }
-        // },
         {
             title: "Địa chỉ",
             dataIndex: "address_event",
@@ -239,34 +87,10 @@ function LichHen() {
             title: "Ngày đăng ký đi hiến máu",
             dataIndex: "date",
             key: "date",
-            render: (text, record) => {
-                const currentDate = new Date();
-                const dateRe = new Date(record.date);
-                if (dateRe < currentDate) {
-                    handleDelete(record.id_event);
-                } else {
-                    return moment(text).format('DD-MM-YYYY');
-                }
-            },
-        },
-        {
-            title: "Action",
-            key: "action",
             render: (text, record) => (
-                <div className="d-flex gap-3">
-                    <i
-                        className="fas fa-pencil-alt"
-                        style={{ fontSize: '15px', padding: '5px' }}
-                        onClick={() => handleShow(record.id_event)}
-                    ></i>
-                    <i
-                        className="fas fa-trash-alt"
-                        style={{ fontSize: '15px', padding: '5px' }}
-                        onClick={() => handleDelete(record.id_event)}
-                    ></i>
-                </div>
-            )
-        }
+                moment(text).format('DD-MM-YYYY')
+            ),
+        },
     ]
 
     return (
@@ -374,7 +198,7 @@ function LichHen() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">LỊCH HẸN</h3>
+                    <h3 className="display-3 font-weight-bold text-white">LỊCH SỬ HIẾN MÁU</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
                             <a className="text-white" href="/">
@@ -382,7 +206,7 @@ function LichHen() {
                             </a>
                         </p>
                         <p className="m-0 px-2">/</p>
-                        <p className="m-0">Lịch hẹn</p>
+                        <p className="m-0">Điểm thưởng</p>
                     </div>
                 </div>
             </div>
@@ -391,9 +215,8 @@ function LichHen() {
             <div className="container-fluid pt-5 pb-3">
                 <div className="container">
                     <div className="text-center pb-2">
-                        <h1 className="mb-4">Lịch hẹn của bạn</h1>
+                        <h1 className="mb-4">Các lưu ý về điểm thưởng</h1>
                     </div>
-                    <p style={{ margin: "0px 0px 0px", fontStyle: "italic", color: "red" }}>Lưu ý: Nếu bạn hiến máu trễ hơn ngày trên lịch hẹn thì sẽ tự động cập nhập hủy đăng ký và xóa khỏi lịch hẹn. </p>
                     <div class="card">
                         <div class="card-body">
                             {userEventFilter.length > 0 ? (
@@ -403,53 +226,15 @@ function LichHen() {
                                     rowKey="_id"
                                 />
                             ) : (
-                                <p className="text-center">Bạn không có lịch hẹn</p>
+                                <p className="text-center">Bạn không có lịch sử hiến máu</p>
                             )}
                         </div>
                     </div>
                 </div>
             </div>
             {/* Lịch hẹn End */}
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Cập nhật ngày</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <div>
-                                    <label>Chọn Ngày:</label>
-                                </div>
-                                <br />
-                                <input
-                                    type="date"
-                                    className="form-control border-1"
-                                    placeholder="VD: 01/01/2000"
-                                    required="required"
-                                    min={datemin}
-                                    max={datemax}
-                                    style={{ width: 300 }}
-                                    onChange={(e) => setDateRegister(e.target.value)}
-                                />
-                            </div>
-                            <br />
-                            <div>
-                                <Button variant="primary" type="submit" className="float-right" onClick={handleUpdate}>
-                                    Cập nhật
-                                </Button>
-                                <Button variant="secondary" className="float-right btnclose" onClick={handleClose}>
-                                    Hủy
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal>
-            <ToastContainer>
-            </ToastContainer>
         </>
 
     );
 }
-export default LichHen;
+export default DiemThuong;
