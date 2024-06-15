@@ -8,6 +8,8 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Lienhe() {
 
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -23,6 +25,20 @@ function Lienhe() {
     const [cccd, setCccd] = useState("");
     const [address, setAddress] = useState("");
     const [hospitalName, setHospitalName] = useState("")
+
+    const showNotification = (message) => {
+        toast.success(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
+
+    const showNotificationErr = (message) => {
+        toast.error(message, {
+            position: toast.POSITION.TOP_RIGHT
+            // position: toast.POSITION.BOTTOM_CENTER,
+        });
+    };
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -71,16 +87,16 @@ function Lienhe() {
 
             if (!response.ok) {
                 const data = await response.json();
-                setMsgErr(data.message);
+                showNotificationErr(data.message);
             } else {
                 const data = await response.json();
                 console.log(data);
-                setMsgSucess(
+                showNotification(
                     'Bạn đã gửi yêu cầu thành công. Chúng tôi sẽ sớm liên lạc với bạn trong vòng 2-3 ngày làm việc!'
                 );
             }
         } catch (error) {
-            setMsgErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+            showNotificationErr('Đã xảy ra lỗi. Vui lòng thử lại sau!');
             console.log('error: ', error);
         }
     };
@@ -352,23 +368,7 @@ function Lienhe() {
                                         />
                                         <div className="invalid-feedback">Please enter the hospital address.</div>
                                     </div>
-                                    <div className="mb-3">
-                                        {/* Error Message */}
-                                        {msgSucess && (
-                                            <div className="alert alert-success" role="alert">
-                                                {msgSucess}
-                                            </div>
-                                        )}
-                                    </div>
-                                    {/* msgErr */}
-                                    <div className="mb-3">
-                                        {/* Error Message */}
-                                        {msgErr && (
-                                            <div className="alert alert-danger" role="alert">
-                                                {msgErr}
-                                            </div>
-                                        )}
-                                    </div>
+                                    
                                     <div>
                                         <button
                                             className="btn btn-primary py-2 px-4"
@@ -387,7 +387,8 @@ function Lienhe() {
 
                 </div>
             </div>
-
+            <ToastContainer>
+            </ToastContainer>
             {/* Contact End */}
         </>
 
