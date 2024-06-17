@@ -143,11 +143,14 @@ function LichSuHienMau() {
                                             <Link to="/hoso" className="dropdown-item">
                                                 Thông tin cá nhân
                                             </Link>
-                                            <Link to="/lichhen" className="dropdown-item active">
+                                            <Link to="/lichhen" className="dropdown-item">
                                                 Lịch hẹn của bạn
                                             </Link>
-                                            <Link to="/lichsu" className="dropdown-item">
+                                            <Link to="/lichsu" className="dropdown-item active">
                                                 Lịch sử hiến máu
+                                            </Link>
+                                            <Link to="/diemthuong" className="dropdown-item">
+                                                Điểm thưởng
                                             </Link>
                                         </div>
                                     </div>
@@ -168,7 +171,7 @@ function LichSuHienMau() {
                                     <Link to="/" className="nav-item nav-link">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link active">
+                                    <Link to="/sukien" className="nav-item nav-link">
                                         Sự kiện
                                     </Link>
 
@@ -201,9 +204,9 @@ function LichSuHienMau() {
                     <h3 className="display-3 font-weight-bold text-white">LỊCH SỬ HIẾN MÁU</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
-                            <a className="text-white" href="/">
+                            <Link to="/" className="text-white">
                                 Trang chủ
-                            </a>
+                            </Link>
                         </p>
                         <p className="m-0 px-2">/</p>
                         <p className="m-0">Lịch sử hiến máu</p>

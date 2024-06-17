@@ -158,6 +158,9 @@ function Lienhe() {
                                                 <Link to="/lichsu" className="dropdown-item">
                                                     Lịch sử hiến máu
                                                 </Link>
+                                                <Link to="/diemthuong" className="dropdown-item">
+                                                Điểm thưởng
+                                            </Link>
                                             </div>
                                         </div>
                                         <Link to="/gioithieu" className="nav-item nav-link">
@@ -211,9 +214,9 @@ function Lienhe() {
                     <h3 className="display-3 font-weight-bold text-white">HỢP TÁC</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
-                            <a className="text-white" href="">
+                            <Link to="/" className="text-white">
                                 Trang chủ
-                            </a>
+                            </Link>
                         </p>
                         <p className="m-0 px-2">/</p>
                         <p className="m-0">Hợp tác</p>
@@ -250,7 +253,7 @@ function Lienhe() {
                                         Dự án hiến máu nhân đạo của chúng tôi được tạo ra với mục tiêu chính là
                                         xây dựng một nguồn cung máu ổn định, đáp ứng nhu cầu y tế cộng đồng và
                                         giúp cải thiện tình hình sức khỏe của những người cần máu khẩn cấp.
-                                        Tăng cường tuyên truyền về hoạt động hiến máu cứu người. 
+                                        Tăng cường tuyên truyền về hoạt động hiến máu cứu người.
                                     </p>
                                 </div>
                             </div>
@@ -368,7 +371,7 @@ function Lienhe() {
                                         />
                                         <div className="invalid-feedback">Please enter the hospital address.</div>
                                     </div>
-                                    
+
                                     <div>
                                         <button
                                             className="btn btn-primary py-2 px-4"

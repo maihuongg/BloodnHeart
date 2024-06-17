@@ -323,6 +323,9 @@ function Hoso() {
                                                 <Link to="/lichsu" className="dropdown-item">
                                                     Lịch sử hiến máu
                                                 </Link>
+                                                <Link to="/diemthuong" className="dropdown-item">
+                                                    Điểm thưởng
+                                                </Link>
                                             </div>
                                         </div>
                                         <Link to="/gioithieu" className="nav-item nav-link">
@@ -374,6 +377,15 @@ function Hoso() {
                     style={{ minHeight: 400 }}
                 >
                     <h4 className="display-4 font-weight-bold text-white">THÔNG TIN CÁ NHÂN</h4>
+                    <div className="d-inline-flex text-white">
+                        <p className="m-0">
+                            <Link to="/" className="text-white">
+                                Trang chủ
+                            </Link>
+                        </p>
+                        <p className="m-0 px-2">/</p>
+                        <p className="m-0">Thông tin cá nhân</p>
+                    </div>
                 </div>
             </div>
             {/* Header End */}
@@ -461,7 +473,7 @@ function Hoso() {
                                         <form onSubmit={handleUpdatePassword}>
                                             <div className="form-group">
                                                 <label className="form-control-label label">Mật khẩu cũ</label>
-                                                <input 
+                                                <input
                                                     type="password"
                                                     className="form-control border-1"
                                                     required="required"

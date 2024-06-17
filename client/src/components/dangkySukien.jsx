@@ -24,6 +24,7 @@ function DangkySukien() {
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const [min, setMin] = useState("");
+    const [amount_blood, setAmountblood] = useState(350);
 
 
 
@@ -91,6 +92,7 @@ function DangkySukien() {
             userId: userProfile._id,
             bloodGroup: userProfile.bloodgroup,
             dateRegister: dateRegister,
+            amount_blood: amount_blood,
         };
         if (userProfile.fullName === null
             || userProfile.gender === null
@@ -206,6 +208,9 @@ function DangkySukien() {
                                                 </Link>
                                                 <Link to="/lichsu" className="dropdown-item">
                                                     Lịch sử hiến máu
+                                                </Link>
+                                                <Link to="/diemthuong" className="dropdown-item">
+                                                    Điểm thưởng
                                                 </Link>
                                             </div>
                                         </div>
@@ -343,7 +348,7 @@ function DangkySukien() {
                         </div>
                         <div className="d-flex flex-column text-left mb-3" style={{ margin: "0px 0px 0px" }}>
                             <p className="section-title pr-5" style={{ margin: "8px 0px 4px 0px" }}>
-                                <span className="pr-2">Đăng ký ngày tham gia sự kiện</span>
+                                <span className="pr-2">Đăng ký tham gia sự kiện</span>
                             </p>
                         </div>
                         <div className="infor_box">
@@ -361,6 +366,15 @@ function DangkySukien() {
                                     style={{ width: 500 }}
                                     onChange={(e) => setDateRegister(e.target.value)}
                                 />
+                            </div>
+                            <div className="row padding">
+                                <div className="col-lg-4">
+                                    <label>Chọn lượng máu:</label>
+                                </div>
+                                <select name="amount_blood" required defaultValue={amount_blood} onChange={(e) => setAmountblood(e.target.value)}>
+                                    <option value={350}>350 ml</option>
+                                    <option value={250}>250 ml</option>
+                                </select>
                             </div>
                         </div>
                         <br />
@@ -471,6 +485,16 @@ function DangkySukien() {
                                         </div>
                                         <div className="col-lg-7 break">
                                             <p style={{ margin: "0px 0px 0px" }}>{moment(dateRegister).format('DD-MM-YYYY')}</p>
+                                        </div>
+                                    </div>
+                                    <div className="row padding">
+                                        <div className="col-lg-5">
+                                            <li>
+                                                Lượng máu đăng ký hiến:
+                                            </li>
+                                        </div>
+                                        <div className="col-lg-7 break">
+                                            <p style={{ margin: "0px 0px 0px" }}>{amount_blood} ml</p>
                                         </div>
                                     </div>
                                     <p style={{ margin: "0px 0px 0px", fontStyle: "italic", color: "red" }}>Lưu ý: Thông tin cá nhân và liên lạc được lấy từ hồ sơ, nên kiểm tra kỹ và cập nhật tại hồ sơ trước khi đăng ký.</p>

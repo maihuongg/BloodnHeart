@@ -15,6 +15,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+
 function DiemThuong() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -22,9 +23,6 @@ function DiemThuong() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userPro = useSelector((state) => state.user.profile.getUser);
-    const currentDate = new Date();
-    console.log(currentDate);
-    const userEventFilter = userPro.history.filter(event => event.status_user === "1");
 
     useEffect(() => {
         const handleProfile = async () => {
@@ -74,24 +72,34 @@ function DiemThuong() {
 
     const columns = [
         {
-            title: "Tên sự kiện",
-            dataIndex: "eventName",
-            key: "eventName",
+            title: "Điểm thưởng",
+            dataIndex: "points",
+            key: "points",
         },
         {
-            title: "Địa chỉ",
-            dataIndex: "address_event",
-            key: "address_event",
+            title: "Phần quà tương ứng",
+            dataIndex: "reward",
+            key: "reward",
+        },
+    ];
+
+    const dataSource = [
+        {
+            key: '1',
+            points: 2,
+            reward: '200000 VNĐ',
         },
         {
-            title: "Ngày đăng ký đi hiến máu",
-            dataIndex: "date",
-            key: "date",
-            render: (text, record) => (
-                moment(text).format('DD-MM-YYYY')
-            ),
+            key: '2',
+            points: 3,
+            reward: '250000 VNĐ',
         },
-    ]
+        {
+            key: '3',
+            points: 4,
+            reward: '300000 VNĐ',
+        },
+    ];
 
     return (
         <>
@@ -103,7 +111,7 @@ function DiemThuong() {
                         className="navbar-brand font-weight-bold text-secondary"
                         style={{ fontSize: 50 }}
                     >
-                        <img src="img/logo.png"></img>
+                        <img src="img/logo.png" alt="logo"></img>
                         <span className="text-primary" style={{ fontSize: 40 }}> BloodnHeart</span>
                     </a>
                     <button
@@ -143,11 +151,14 @@ function DiemThuong() {
                                             <Link to="/hoso" className="dropdown-item">
                                                 Thông tin cá nhân
                                             </Link>
-                                            <Link to="/lichhen" className="dropdown-item active">
+                                            <Link to="/lichhen" className="dropdown-item">
                                                 Lịch hẹn của bạn
                                             </Link>
                                             <Link to="/lichsu" className="dropdown-item">
                                                 Lịch sử hiến máu
+                                            </Link>
+                                            <Link to="/diemthuong" className="dropdown-item active">
+                                                Điểm thưởng
                                             </Link>
                                         </div>
                                     </div>
@@ -168,7 +179,7 @@ function DiemThuong() {
                                     <Link to="/" className="nav-item nav-link">
                                         Trang chủ
                                     </Link>
-                                    <Link to="/sukien" className="nav-item nav-link active">
+                                    <Link to="/sukien" className="nav-item nav-link">
                                         Sự kiện
                                     </Link>
 
@@ -198,12 +209,12 @@ function DiemThuong() {
                     className="d-flex flex-column align-items-center justify-content-center"
                     style={{ minHeight: 400 }}
                 >
-                    <h3 className="display-3 font-weight-bold text-white">LỊCH SỬ HIẾN MÁU</h3>
+                    <h3 className="display-3 font-weight-bold text-white">ĐIỂM THƯỞNG</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
-                            <a className="text-white" href="/">
+                            <Link to="/" className="text-white">
                                 Trang chủ
-                            </a>
+                            </Link>
                         </p>
                         <p className="m-0 px-2">/</p>
                         <p className="m-0">Điểm thưởng</p>
@@ -211,30 +222,45 @@ function DiemThuong() {
                 </div>
             </div>
             {/* Header End */}
-            {/* Lịch hẹn Start */}
+            {/* Điểm thưởng Start */}
             <div className="container-fluid pt-5 pb-3">
                 <div className="container">
                     <div className="text-center pb-2">
-                        <h1 className="mb-4">Các lưu ý về điểm thưởng</h1>
+                        <h1 className="mb-4">Điểm thưởng hiện tại: {userPro?.reward || 0}</h1>
                     </div>
-                    <div class="card">
-                        <div class="card-body">
-                            {userEventFilter.length > 0 ? (
-                                <Table
-                                    dataSource={userEventFilter}
-                                    columns={columns}
-                                    rowKey="_id"
-                                />
-                            ) : (
-                                <p className="text-center">Bạn không có lịch sử hiến máu</p>
-                            )}
+                    <div className="text-center pb-2">
+                        <h1 className="mb-4">Các lưu ý về điểm thưởng</h1>
+                        <div className="text-left pb-2">
+                            <ul className="list-group">
+                                <li className="list-group-item">Lưu ý 1: Đăng ký sự kiện để nhận điểm thưởng. Mỗi lần đăng ký sẽ được 1 điểm thưởng.</li>
+                                <li className="list-group-item">Lưu ý 2: Điểm thưởng sẽ được làm mới theo chu kỳ 1 năm, bắt đầu mỗi chu kỳ là ngày 1/1 hàng năm.</li>
+                                <li className="list-group-item">Lưu ý 3: Đạt được các mốc điểm cố định sẽ được phần quà tương ứng.</li>
+                                <li className="list-group-item">Lưu ý 4: Nếu hủy lịch hẹn thì điểm thưởng được cộng khi đăng ký sự kiện đó sẽ trừ đi.</li>
+                                <li className="list-group-item">Lưu ý 5: Quà tặng sẽ được tặng khi đến cơ sở hiến máu.</li>
+                                <li className="list-group-item">Lưu ý 6: Lưu ý đây là quà tặng khi tích lũy điểm thưởng trên hệ thống nên sẽ được tách biệt
+                                    với các quà tặng khác khi đi hiến máu tại các cơ sở bệnh viện khác nhau,
+                                    người dùng tránh nhầm lẫn và chú ý để nhận đầy đủ các phần quà khi đi hiến máu.</li>
+                                <li className="list-group-item">Lưu ý 7: Vui lòng liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về điểm thưởng.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="text-center pb-2">
+                        <h1 className="mb-4">Bảng quy đổi điểm thưởng</h1>
+                    </div>
+                    <div className="card">
+                        <div className="card-body">
+                            <Table
+                                dataSource={dataSource}
+                                columns={columns}
+                                rowKey="key"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Lịch hẹn End */}
+            {/* Điểm thưởng End */}
         </>
-
     );
 }
+
 export default DiemThuong;

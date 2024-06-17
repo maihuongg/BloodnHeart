@@ -279,6 +279,9 @@ function Trangchu() {
                                             <Link to="/lichsu" className="dropdown-item">
                                                 Lịch sử hiến máu
                                             </Link>
+                                            <Link to="/diemthuong" className="dropdown-item">
+                                                Điểm thưởng
+                                            </Link>
                                         </div>
                                     </div>
                                     <Link to="/gioithieu" className="nav-item nav-link">

@@ -22,6 +22,7 @@ import DangkySukien from './components/dangkySukien';
 import ChitietBenhvien from './components/chitietbenhvien';
 import LichHen from './components/lichhen';
 import LichSuHienMau from './components/lichsuhienmau';
+import DiemThuong from './components/diemthuong';
 function App() {
   return (
     <Router>
@@ -42,6 +43,7 @@ function App() {
         <Route path="/chitietbenhvien" Component= {ChitietBenhvien} />
         <Route path="/lichhen" Component= {LichHen} />
         <Route path="/lichsu" Component= {LichSuHienMau} />
+        <Route path="/diemthuong" Component={DiemThuong} />
 
         <Route path="/" Component= {Trangchu} /> {/* Example of the Home route */}
       </Routes>

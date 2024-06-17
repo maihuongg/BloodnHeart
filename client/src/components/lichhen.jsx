@@ -325,6 +325,9 @@ function LichHen() {
                                             <Link to="/lichsu" className="dropdown-item">
                                                 Lịch sử hiến máu
                                             </Link>
+                                            <Link to="/diemthuong" className="dropdown-item">
+                                                Điểm thưởng
+                                            </Link>
                                         </div>
                                     </div>
                                     <Link to="/gioithieu" className="nav-item nav-link">
@@ -377,9 +380,9 @@ function LichHen() {
                     <h3 className="display-3 font-weight-bold text-white">LỊCH HẸN</h3>
                     <div className="d-inline-flex text-white">
                         <p className="m-0">
-                            <a className="text-white" href="/">
+                            <Link to="/" className="text-white">
                                 Trang chủ
-                            </a>
+                            </Link>
                         </p>
                         <p className="m-0 px-2">/</p>
                         <p className="m-0">Lịch hẹn</p>
