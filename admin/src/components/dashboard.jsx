@@ -32,6 +32,25 @@ async function totalUser(accessToken) {
 
   }
 }
+async function totalEvents(){
+  try {
+    const responseTotalEvent = await fetch("http://localhost:8000/v1/admin/totalEvent", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (responseTotalEvent.ok) {
+      const dataTotalEvent = await responseTotalEvent.json();
+      console.log('dataTotalEvent: ', dataTotalEvent)
+      return dataTotalEvent.totalEvent;
+    }
+    else return 0;
+  } catch (error) {
+    
+  }
+}
 
 function Dashboard() {
   const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
@@ -45,27 +64,38 @@ function Dashboard() {
   const [name, setName] = useState(null);
   const [currentTime, setCurrentTime] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
   const [userTotal, setUserTotal] = useState(null);
+  const [eventTotal, setEventTotal] = useState(null);
 
   useEffect(() => {
- 
-      const fetchTotalUser = async () => {
-        try {
-          const userTotal = await totalUser(accessToken);
-          // console.log("totalUser:", userTotal);
-          setUserTotal(userTotal);
-        } catch (error) {
-          console.error("Error fetching totalUser:", error);
-        }
-      };
-    
-      fetchTotalUser();
+
+    const fetchTotalUser = async () => {
+      try {
+        const userTotal = await totalUser(accessToken);
+        // console.log("totalUser:", userTotal);
+        setUserTotal(userTotal);
+      } catch (error) {
+        console.error("Error fetching totalUser:", error);
+      }
+    };
+    const fetchTotalEvent = async () => {
+      try {
+        const eventTotal = await totalEvents();
+        // console.log("totalUser:", userTotal);
+        setEventTotal(eventTotal);
+      } catch (error) {
+        console.error("Error fetching eventTotal:", error);
+      }
+    };
+
+    fetchTotalUser();
+    fetchTotalEvent();
     const intervalId = setInterval(() => {
       setCurrentTime(moment().format('DD-MM-YYYY HH:mm:ss'));
     }, 1000);
     // Clear the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-  
+
   useEffect(() => {
     if (isAdmin) {
       setAdminOrHospital(isAdmin);
@@ -76,7 +106,7 @@ function Dashboard() {
     }
   }, [isAdmin, isHospital, adminProfile, hospitalProfile]);
 
-  
+
   return (
     <div className="container-scroller">
       {isAdminOrHospital ? (
@@ -126,7 +156,7 @@ function Dashboard() {
                             <div>
                               <h2 className="mb-0 font-weight-normal">
                                 <i className="icon-sun mr-2" />
-                              
+
                               </h2>
                             </div>
                             <div className="ml-2">
@@ -155,7 +185,7 @@ function Dashboard() {
                         <div className="card card-dark-blue">
                           <div className="card-body">
                             <p className="mb-4">Sự kiện</p>
-                            <p className="fs-30 mb-2">18</p>
+                            <p className="fs-30 mb-2">{eventTotal !== null ? eventTotal : 'Loading...'}</p>
                             {/* <p>22.00% (30 days)</p> */}
                           </div>
                         </div>
@@ -183,7 +213,7 @@ function Dashboard() {
                     </div>
                   </div>
                 </div>
-              
+
               </div>
             </div>
           </div>
