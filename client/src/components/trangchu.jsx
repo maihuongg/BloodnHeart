@@ -22,6 +22,8 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import { GoogleMap, LoadScript, Marker, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import LeafletMap from "./leafmap";
 function Trangchu() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -92,6 +94,7 @@ function Trangchu() {
                 }
                 else {
                     const bestEvent = await response2.json();
+                    console.log("BestEvent: ", bestEvent)
                     setDataBestEvent(bestEvent);
                 }
             } catch (error) {
@@ -193,6 +196,30 @@ function Trangchu() {
         }
 
     }
+    //MAP
+    const [showMap, setShowMap] = useState(false);
+    const [eventLocation, setEventLocation] = useState(null);
+
+    const handleDirections = async (e) => {
+        e.preventDefault();
+        if (!eventLocation) {
+            const location = await getCoordinates(dataBestEvent.address);
+            setEventLocation(location);
+        }
+        setShowMap(true);
+    };
+    async function getCoordinates(address) {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        const data = await response.json();
+        if (data.length > 0) {
+            return {
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon)
+            };
+        }
+        return null;
+    }
+
 
     return (
         <>
@@ -485,11 +512,12 @@ function Trangchu() {
                                 src={dataBestEvent.images}
                             />
                         </div>
-                        <div className="col-lg-6">
-                            <p className="section-title pr-5">
+
+                        {/* <div className="col-lg-6">
+                            <p className="section-title pr-5 no-wrap">
                                 <span className="pr-2">Sự kiện hiến máu nổi bật</span>
                             </p>
-                            <h1 className="mb-4">{dataBestEvent.eventName}</h1>
+                            <h2 className="mb-4 no-wrap">{dataBestEvent.eventName}</h2>
                             <p>
                                 Địa chỉ: {dataBestEvent.address}
                             </p>
@@ -510,16 +538,63 @@ function Trangchu() {
                                     Đã đủ số lượng
                                 </button>
                             ) : (
-                                <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e) => handleRegisterEvent(e, dataBestEvent._id, dataBestEvent.hospital_id)}>
-                                    Đăng ký
-                                </a>
+                                <div>
+                                    <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e) => handleRegisterEvent(e, dataBestEvent._id, dataBestEvent.hospital_id)}>
+                                        Đăng ký
+                                    </a>
+                                    <a href="" className="btn btn-secondary px-4 ml-2 mb-4"
+                                        onClick={handleDirections}> Xem đường đi </a>
+                                </div>
                             )}
+                            <div>
+                                {showMap && (
+                                    <LeafletMap eventLocation={eventLocation} />
+                                )}
+                            </div>
 
+                        </div> */}
+
+                        <div className="col-lg-6">
+                            <p className="section-title pr-5 no-wrap">
+                                <span className="pr-2">Sự kiện hiến máu nổi bật</span>
+                            </p>
+                            <h2 className="mb-2 no-wrap">{dataBestEvent.eventName}</h2>
+                            <p>Địa chỉ: {dataBestEvent.address}</p>
+                            <p>Ngày bắt đầu: {moment(dataBestEvent.date_start).format('DD-MM-YYYY')}</p>
+                            <p>Ngày kết thúc: {moment(dataBestEvent.date_end).format('DD-MM-YYYY')}</p>
+                            {dataBestEvent.listusers?.count !== undefined && (
+                                <div>
+                                    Số lượng đăng ký: {dataBestEvent.listusers.count}/{dataBestEvent.amount}
+                                </div>
+                            )}
+                            <br />
+                            {dataBestEvent.listusers?.count !== undefined && dataBestEvent.listusers.count === dataBestEvent.amount ? (
+                                <button className="btn btn-primary px-4 mx-auto mb-4" disabled>
+                                    Đã đủ số lượng
+                                </button>
+                            ) : (
+                                <div>
+                                    <a href="" className="btn btn-primary px-4 mx-auto mb-4" onClick={(e) => handleRegisterEvent(e, dataBestEvent._id, dataBestEvent.hospital_id)}>
+                                        Đăng ký
+                                    </a>
+                                    <a href="" className="btn btn-secondary px-4 ml-2 mb-4" onClick={handleDirections}>
+                                        Xem đường đi
+                                    </a>
+                                </div>
+                            )}
                         </div>
+
+                        {showMap && eventLocation && (
+                            <div className="row map-container mt-4">
+                                <LeafletMap eventLocation={{ ...eventLocation, address: dataBestEvent.address }} />
+                            </div>
+                        )}
+
+
                         <div className="col-lg-1"></div>
                     </div>
                 </div>
-            </div>
+            </div >
             {/* About End */}
 
             {/* Team Start */}

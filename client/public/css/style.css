@@ -56,6 +56,16 @@ html {
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
 }
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 
+.map-container {
+  margin-top: 20px; /* Adjust as needed */
+  width: 100%;
+  height: 400px; /* Adjust as needed */
+}
 
 body {
   margin: 0;
