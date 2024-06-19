@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Table } from "antd";
 import moment from "moment";
 import {
     userprofileStart,
@@ -15,6 +14,9 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import { toPng } from 'html-to-image';
+import { Table, Button, Modal } from "antd";
+
 function LichSuHienMau() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -22,6 +24,7 @@ function LichSuHienMau() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userPro = useSelector((state) => state.user.profile.getUser);
+    console.log('userPro: ',userPro)
     const currentDate = new Date();
     console.log(currentDate);
     const userEventFilter = userPro.history.filter(event => event.status_user === "1");
@@ -76,22 +79,86 @@ function LichSuHienMau() {
         {
             title: "Tên sự kiện",
             dataIndex: "eventName",
+            className: "no-wrap",
             key: "eventName",
         },
         {
             title: "Địa chỉ",
             dataIndex: "address_event",
+            width: 400,
             key: "address_event",
         },
         {
-            title: "Ngày đăng ký đi hiến máu",
+            title: "Lượng máu",
+            dataIndex: "amount_blood",
+            width: 125,
+            key: "amount_blood",
+            render: (amount) => `${amount}ml`, // Add 'ml' to the amount
+        },
+        {
+            title: "Ngày hiến máu",
             dataIndex: "date",
+            className: "no-wrap",
             key: "date",
             render: (text, record) => (
                 moment(text).format('DD-MM-YYYY')
             ),
         },
+        {
+            title: "Hành động",
+            key: "action",
+            render: (text, record) => (
+                <a className="text-blue text-bold" onClick={() => handleViewCertificate(record)}>Xem e-Certificate</a>
+            ),
+        },
     ]
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedRecord, setSelectedRecord] = useState(null);
+    const certificateCanvasRef = useRef();
+    const handleViewCertificate = (record) => {
+        setSelectedRecord(record);
+        console.log('selectedRecord', record);
+        setIsModalVisible(true);
+        setTimeout(() => drawCertificate(record), 100);  // Ensure canvas is rendered before drawing
+    };
+    
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setSelectedRecord(null);
+    };
+
+    const drawCertificate = (record) => {
+        const canvas = certificateCanvasRef.current;
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.src = "/img/certificate.png";  // Update this path to your actual template file
+    
+        img.onload = () => {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    
+            ctx.font = "bold 24px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText(`${userPro.fullName}`, 350, 250);
+            
+            // Vẽ các dòng văn bản khác từ record
+            ctx.font = "20px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText(`Ông/bà: `, 250, 250);
+            ctx.fillText(`Đã tham gia "${record.eventName}"`, 180, 300);
+            ctx.fillText(`Ngày hiến máu: ${ moment(record.date).format('DD-MM-YYYY')} `, 180, 350);
+            ctx.fillText(`Lượng máu đã hiến: ${record.amount_blood} ml.`, 500, 350);
+        };
+    };
+    
+
+    const handleDownloadImage = () => {
+        const canvas = certificateCanvasRef.current;
+        const link = document.createElement('a');
+        link.download = 'e-certificate.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    };
 
     return (
         <>
@@ -215,26 +282,48 @@ function LichSuHienMau() {
             </div>
             {/* Header End */}
             {/* Lịch hẹn Start */}
-            <div className="container-fluid pt-5 pb-3">
-                <div className="container">
-                    <div className="text-center pb-2">
-                        <h1 className="mb-4">Lịch sử hiến máu của bạn</h1>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            {userEventFilter.length > 0 ? (
-                                <Table
-                                    dataSource={userEventFilter}
-                                    columns={columns}
-                                    rowKey="_id"
-                                />
-                            ) : (
-                                <p className="text-center">Bạn không có lịch sử hiến máu</p>
-                            )}
-                        </div>
-                    </div>
+            {/* <div className="container-fluid pt-5 pb-3"> */}
+            <div className="container">
+                <div className="text-center pb-2">
+                    <h1 className="mb-4">Lịch sử hiến máu của bạn</h1>
                 </div>
+                <div class="flex">
+                    {userEventFilter.length > 0 ? (
+                        <Table
+
+                            dataSource={userEventFilter}
+                            columns={columns}
+                            rowKey="_id"
+                        />
+                    ) : (
+                        <p className="text-center">Bạn không có lịch sử hiến máu</p>
+                    )}
+                </div>
+
             </div>
+            <Modal
+                title="e-Certificate"
+                visible={isModalVisible}
+                onCancel={handleCancel}
+                width={950}
+                height={700}
+                footer={null}
+            >
+                {selectedRecord && (
+                    <div>
+                        <canvas
+                            ref={certificateCanvasRef}
+                            width={900}
+                            height={540}
+                            style={{ border: "1px solid #000" }}
+                        ></canvas>
+                    </div>
+                )}
+                <Button type="primary" onClick={handleDownloadImage}>
+                    Download e-Certificate
+                </Button>
+            </Modal>
+            {/* </div> */}
             {/* Lịch hẹn End */}
         </>
 
