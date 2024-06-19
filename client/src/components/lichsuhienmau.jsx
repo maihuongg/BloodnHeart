@@ -105,6 +105,25 @@ function LichSuHienMau() {
             ),
         },
         {
+            title: "Giờ Check-in",
+            dataIndex: "checkin_time",
+            className: "no-wrap",
+            key: "checkin_time",
+            render: (text, record) => (
+                moment(text).utcOffset(7).format('HH:mm DD/MM/YYYY')
+            ),
+        },
+        {
+            title: "Giờ check-out",
+            dataIndex: "checkout_time",
+            className: "no-wrap",
+            key: "checkout_time",
+            render: (text, record) => (
+                moment(text).utcOffset(7).format('HH:mm DD/MM/YYYY')
+            ),
+        },
+
+        {
             title: "Hành động",
             key: "action",
             render: (text, record) => (
