@@ -39,10 +39,40 @@ function ChiTietSuKien() {
     const [email, setemail] = useState("");
     const [address_user, setaddressuser] = useState("");
     const [bloodgroup, setbloodgroup] = useState("");
+    const [reward, setReward] = useState(0);
     const [show, setShow] = useState(false);
-
+    const [show1, setShow1] = useState(false);
+    const [userid, setUserid] = useState("");
+    const [status, setStatus] = useState("-1");
     const handleClose = () => setShow(false);
+    const handleClose1 = () => setShow1(false);
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
+        if(refresh){
+            const fetchData = async () => {
+                dispatch(eventdetailStart());
+                try {
+                    const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+    
+                    if (!response.ok) {
+                        dispatch(eventdetailFailed());
+                    }
+                    else {
+                        const data = await response.json();
+                        dispatch(eventdetailSuccess(data));
+                    }
+                } catch (error) {
+                    dispatch(eventdetailFailed());
+                    console.error("Error fetching data:", error);
+                }
+            };
+            fetchData();
+        }
         const fetchData = async () => {
             dispatch(eventdetailStart());
             try {
@@ -66,7 +96,7 @@ function ChiTietSuKien() {
             }
         };
         fetchData();
-    }, [id, dispatch]);
+    }, [id, dispatch, refresh]);
 
     const showNotification = (message) => {
         toast.success(message, {
@@ -111,13 +141,17 @@ function ChiTietSuKien() {
             render: (text, record) => {
                 const status = record.status_user;
 
-                if (status === "0") {
+                if (status === "-1") {
                     return <span style={{ color: 'red' }}>Chưa hiến</span>;
                 } else {
-                    if (status === "1") {
-                        return <span style={{ color: 'blue' }}>Đã hiến</span>;
+                    if (status === "0") {
+                        return <span style={{ color: 'blue' }}>Đang chờ hiến</span>;
                     } else {
-                        return <span>Không xác định</span>;
+                        if (status === "1") {
+                            return <span style={{ color: 'blue' }}>Đã hiến</span>;
+                        } else {
+                            return <span>Không xác định</span>;
+                        }
                     }
                 }
             }
@@ -128,12 +162,12 @@ function ChiTietSuKien() {
             render: (text, record) => {
                 const status = record.status_user;
                 if (status === "1") {
-                    return <span style={{ color: 'blue' }}>Đã cập nhập</span>;
+                    return <span style={{ color: 'blue' }}>Hiến thành công</span>;
                 } else {
-                    if (status === "0") {
+                    if (status === "-1" || status === "0") {
                         return (
                             <Button className="btn btn-sm btn-outline-primary btn-icon-prepend text-white"
-                                onClick={() => handleUpdate(record.userid)}>Cập nhật</Button>
+                                onClick={() => handleOpenModal(record.userid)}>Cập nhật</Button>
                         )
                     } else {
                         return <span>Không xác định</span>;
@@ -183,6 +217,7 @@ function ChiTietSuKien() {
                 setemail(data.user.email);
                 setaddressuser(data.user.address);
                 setbloodgroup(data.user.bloodgroup);
+                setReward(data.user.reward);
                 setShow(true);
             }
         } catch (error) {
@@ -224,14 +259,21 @@ function ChiTietSuKien() {
         else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
     }
 
-    const handleUpdate = async (userId) => {
+    const handleOpenModal = (userId) => {
+        setUserid(userId);
+        setRefresh(false);
+        setShow1(true);
+    }
+
+    const handleUpdate = async () => {
         const update = {
             eventId: id,
-            userId: userId,
+            userId: userid,
+            status: status,
         }
         if (isHospital) {
             try {
-                const response1 = await fetch("http://localhost:8000/v1/hospital/update-status", {
+                const response1 = await fetch("http://localhost:8000/v1/hospital/update-status1", {
                     method: 'PUT',
                     body: JSON.stringify(update),
                     headers: {
@@ -241,17 +283,15 @@ function ChiTietSuKien() {
                 });
                 if (!response1.ok) {
                     const err = await response1.json();
-                    dispatch(eventdetailFailed());
                     showNotificationErr(err.message);
                 } else {
                     const data1 = await response1.json();
-                    dispatch(eventdetailSuccess(data1.event));
                     showNotification(data1.message);
-                    //window.location.reload();
-                    navigate(`/su-kien/chi-tiet/${id}`);
+                    setShow1(false);
+                    setRefresh(true);
                 }
             } catch (error) {
-                dispatch(eventdetailFailed());
+
                 showNotificationErr("Cập nhật thất bại!");
             }
         } else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
@@ -515,6 +555,16 @@ function ChiTietSuKien() {
                                                     <p style={{ margin: "0px 0px 0px" }}>{phone}</p>
                                                 </div>
                                             </div>
+                                            <div className="row padding">
+                                                <div className="col-lg-5">
+                                                    <li>
+                                                        Điểm thưởng:
+                                                    </li>
+                                                </div>
+                                                <div className="col-lg-7 break">
+                                                    <p style={{ margin: "0px 0px 0px" }}>{reward}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -522,6 +572,36 @@ function ChiTietSuKien() {
                                     <div>
                                         <Button variant="secondary" className="float-right" onClick={handleClose}>
                                             Quay lại
+                                        </Button>
+                                    </div>
+                                </Modal.Body>
+                            </Modal>
+                            <Modal show={show1} onHide={handleClose1}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Cập nhật trạng thái người dùng</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <div className="card" style={{ height: "100%" }}>
+                                        <div className="card-body">
+                                            <div className="row padding">
+                                                <div className="col-lg-4">
+                                                    <label>Chọn trạng thái:</label>
+                                                </div>
+                                                <select name="status" required defaultValue={status} onChange={(e) => setStatus(e.target.value)}>
+                                                    <option value="-1">Chưa hiến</option>
+                                                    <option value="0">Đang chờ hiến</option>
+                                                    <option value="1">Đã hiến</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div>
+                                        <Button variant="primary" type="button" className="float-right" onClick={handleUpdate}>
+                                            Cập nhật
+                                        </Button>
+                                        <Button variant="secondary" className="float-right btnclose" onClick={handleClose1}>
+                                            Hủy
                                         </Button>
                                     </div>
                                 </Modal.Body>

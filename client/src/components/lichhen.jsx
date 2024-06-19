@@ -36,11 +36,35 @@ function LichHen() {
     const [datemin, setDatemin] = useState("");
     const [datemax, setDatemax] = useState("");
     const [eventId, setEventId] = useState("");
-    const userEventFilter = userPro.history.filter(event => event.status_user === "0");
+    const userEventFilter = userPro.history.filter(event => event.status_user === "-1");
     const [show, setShow] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
 
     useEffect(() => {
+        if (refresh) {
+            const handleProfile = async () => {
+                dispatch(userprofileStart());
+                try {
+                    const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            token: `Bearer ${accessToken}`
+                        }
+                    });
+                    if (!response1.ok) {
+                        dispatch(userprofileFailed());
+                    } else {
+                        const data1 = await response1.json();
+                        dispatch(userprofileSuccess(data1));
+                    }
+                } catch (error) {
+                    dispatch(userprofileFailed());
+                }
+            }
+            handleProfile();
+        }
         const handleProfile = async () => {
             dispatch(userprofileStart());
             try {
@@ -62,7 +86,7 @@ function LichHen() {
             }
         }
         handleProfile();
-    }, [dispatch]);
+    }, [dispatch, refresh]);
 
     const showNotification = (message) => {
         toast.success(message, {
@@ -127,7 +151,7 @@ function LichHen() {
                 const data1 = await response1.json();
                 showNotification(data1.message);
                 setShow(false);
-                window.location.reload();
+                setRefresh(true);
             }
         } catch (error) {
             showNotificationErr("Cập nhật thất bại!");
@@ -154,7 +178,8 @@ function LichHen() {
             } else {
                 const data1 = await response1.json();
                 showNotification(data1.message);
-                window.location.reload();
+                //window.location.reload();
+                setRefresh(true);
             }
         } catch (error) {
             showNotificationErr("Cập nhật thất bại!");
