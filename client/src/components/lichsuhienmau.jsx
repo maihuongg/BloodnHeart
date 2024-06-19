@@ -101,7 +101,7 @@ function LichSuHienMau() {
             className: "no-wrap",
             key: "date",
             render: (text, record) => (
-                moment(text).format('DD-MM-YYYY')
+                moment(text).format('DD/MM/YYYY')
             ),
         },
         {
