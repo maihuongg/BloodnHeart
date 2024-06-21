@@ -15,7 +15,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Chart from 'chart.js/auto';
-
+import * as XLSX from 'xlsx';
 function ChiTietSuKien() {
     const chartRef = useRef(null);
 
@@ -387,7 +387,21 @@ function ChiTietSuKien() {
     const handleGoBack = () => {
         navigate("/su-kien");
     };
+    const handleExport = () => {
+        const wb = XLSX.utils.book_new();
+        const exportData = data.map(item => ({
+            'Tên người đăng ký': item.username,
+            'Ngày đdăng ký hiến máu': item.dateregister,
+            'Nhóm máu': item.bloodgroup,
+            'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ hiến' : 'Chưa hiến',
+            'Số lượng máu (ml)': item.amount_blood,
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký')
 
+        // Tạo file Excel và tải xuống
+        XLSX.writeFile(wb, 'danhsachdangky.xlsx');
+    };
     return (
         <>
             <div className="container-scroller">
@@ -547,8 +561,8 @@ function ChiTietSuKien() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
                                         <h3>Thống kê chi tiết lượng máu</h3>
 
                                         <div className="row justify-content-center">
@@ -570,8 +584,15 @@ function ChiTietSuKien() {
                             <div className="col-lg-12">
                                 <div className="card" style={{ height: "100%" }}>
                                     <div className="card-body">
-                                        <br /> <h3>Danh sách người đăng ký sự kiện</h3>
-                                        <br />
+                                        <div className="row align-items-center mx-auto">
+                                            <h3>Danh sách người đăng ký sự kiện</h3>
+                                            <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
+                                                <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                Export to Excel
+                                            </button>
+                                        </div>
+                                        <br/>
+
                                         <Table
                                             dataSource={data}
                                             columns={columns}
