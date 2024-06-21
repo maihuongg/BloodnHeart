@@ -391,16 +391,16 @@ function ChiTietSuKien() {
         const wb = XLSX.utils.book_new();
         const exportData = data.map(item => ({
             'Tên người đăng ký': item.username,
-            'Ngày đdăng ký hiến máu': item.dateregister,
+            'Ngày đăng ký hiến máu': item.dateregister,
             'Nhóm máu': item.bloodgroup,
-            'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ hiến' : 'Chưa hiến',
+            'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
             'Số lượng máu (ml)': item.amount_blood,
         }));
         const ws = XLSX.utils.json_to_sheet(exportData);
         XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký')
 
         // Tạo file Excel và tải xuống
-        XLSX.writeFile(wb, 'danhsachdangky.xlsx');
+        XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
     };
     return (
         <>
