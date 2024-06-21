@@ -13,6 +13,11 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import {
+    hospitalStart,
+    hospitalSuccess,
+    hospitalFailed
+} from "../redux/eventSlice";
 function DangkySukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const accessToken = user?.accessToken
@@ -127,6 +132,28 @@ function DangkySukien() {
             }
         }
 
+    }
+
+    const handleHospitalDetail = async (e, hospitalId) => {
+        e.preventDefault();
+        dispatch(hospitalStart());
+        try {
+            const response2 = await fetch("http://localhost:8000/v1/user/hospital/" + hospitalId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response2.ok) {
+                dispatch(hospitalFailed());
+            } else {
+                const data2 = await response2.json();
+                dispatch(hospitalSuccess(data2));
+                navigate("/chitietbenhvien")
+            }
+        } catch (error) {
+            dispatch(hospitalFailed());
+        }
     }
 
     const handleLogout = async (e) => {
@@ -299,7 +326,7 @@ function DangkySukien() {
                                     <a
                                         className="btn text-center mr-2 px-0"
                                         style={{ width: 25, height: 25 }}
-                                        href="/chitietbenhvien"
+                                        href="#" onClick={(e) => handleHospitalDetail(e, hospitalDetail._id)}
                                     >
                                         <i className="fas fa-eye" />
                                     </a>
