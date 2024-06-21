@@ -22107,6 +22107,10 @@ code {
   background: #F3797E;
   color: #ffffff;
 }
+.card.card-light-green {
+  background: #58d8a3;
+  color: #ffffff;
+}
 
 .card.card-light-danger:hover {
   background: #f59095;
