@@ -9,6 +9,8 @@ import Modal from "react-bootstrap/Modal";
 import isEmpty from "validator/lib/isEmpty";
 import { useNavigate } from 'react-router-dom';
 import moment from "moment";
+import * as XLSX from 'xlsx';
+
 import {
     hospitalprofileStart,
     hospitalprofileSuccess,
@@ -201,15 +203,15 @@ function BenhVien() {
             navigate("/benh-vien");
         });
     };
-    
+
     const handleAddHospital = async (e) => {
         e.preventDefault();
 
-        if (isEmpty(hospitalName) || isEmpty(leaderName) || isEmpty(cccd) || isEmpty(email)|| isEmpty(phone) || isEmpty(address)) {
+        if (isEmpty(hospitalName) || isEmpty(leaderName) || isEmpty(cccd) || isEmpty(email) || isEmpty(phone) || isEmpty(address)) {
             setMsgErr("Vui lòng điền các trường thông tin còn thiếu");
         } else {
             const newHospital = {
-               leaderName: leaderName,
+                leaderName: leaderName,
                 hospitalName: hospitalName,
                 address: address,
                 phone: phone,
@@ -243,6 +245,23 @@ function BenhVien() {
         }
 
     }
+    const handleExport = () => {
+        const wb = XLSX.utils.book_new();
+        const dataToExport = data.map(row => {
+            return {
+                "Tên bệnh viên": row.hospitalName,
+                "Tên người đứng đầu": row.leaderName,
+                "Email liên hệ": row.email,
+                "Số điện thoại/hotline": row.phone,
+                "Ngày tạo": moment(row.createdAt).format('DD-MM-YYYY')
+            };
+        });
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách bệnh viện')
+
+        // Tạo file Excel và tải xuống
+        XLSX.writeFile(wb, 'danhsachbenhvien.xlsx');
+    };
     return (
         <div className="container-scroller">
             <Navbar></Navbar>
@@ -269,10 +288,10 @@ function BenhVien() {
                                                             type="button"
                                                             onClick={() => fetchDataSearcg(searchQuery)}>
                                                             <i class="mdi mdi-magnify"></i> Search</button>
-                                                        <button class="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                            <i class="mdi mdi-file-import"></i> Import</button>
-                                                        {/* <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                            <i class="mdi mdi-export"></i> Export</button> */}
+                                                        <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
+                                                            <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                            Export to Excel
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

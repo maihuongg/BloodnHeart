@@ -17,7 +17,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
 function ChiTietSuKien() {
-    const chartRef = useRef(null);
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const accessToken = currentAdmin?.accessToken;
@@ -388,19 +387,23 @@ function ChiTietSuKien() {
         navigate("/su-kien");
     };
     const handleExport = () => {
-        const wb = XLSX.utils.book_new();
-        const exportData = data.map(item => ({
-            'Tên người đăng ký': item.username,
-            'Ngày đăng ký hiến máu': item.dateregister,
-            'Nhóm máu': item.bloodgroup,
-            'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
-            'Số lượng máu (ml)': item.amount_blood,
-        }));
-        const ws = XLSX.utils.json_to_sheet(exportData);
-        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký')
+        if (isHospital) {
+            const wb = XLSX.utils.book_new();
+            const exportData = data.map(item => ({
+                'Tên người đăng ký': item.username,
+                'Ngày đăng ký hiến máu': item.dateregister,
+                'Nhóm máu': item.bloodgroup,
+                'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
+                'Số lượng máu (ml)': item.amount_blood,
+            }));
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký sự kiện')
+    
+            // Tạo file Excel và tải xuống
+            XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
+        }
+        else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
 
-        // Tạo file Excel và tải xuống
-        XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
     };
     return (
         <>

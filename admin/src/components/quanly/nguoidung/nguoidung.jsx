@@ -10,12 +10,13 @@ import isEmpty from "validator/lib/isEmpty";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as XLSX from 'xlsx';
 
 function NguoiDung() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
-    
+
     const isAdmin = currentAdmin?.isAdmin;
     const isHospital = currentAdmin?.isHospital;
     const accessToken = currentAdmin?.accessToken;
@@ -248,7 +249,25 @@ function NguoiDung() {
             }
         }
     }
+    const handleExport = () => {
+        const wb = XLSX.utils.book_new();
+        const dataToExport = data.map(row => {
+            return {
+                "CCCD/CMND": row.cccd,
+                "Email": row.email,
+                "Vai trò": row.isAdmin ? "Admin" :
+                    row.isHospital ? "Bệnh viện" :
+                        "Người dùng",
 
+                "Ngày tạo": moment(row.createdAt).format('DD-MM-YYYY')
+            };
+        });
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách tài khoản')
+
+        // Tạo file Excel và tải xuống
+        XLSX.writeFile(wb, 'danhsachtaikhoan.xlsx');
+    };
     return (<>
         <div className="container-scroller">
             <Navbar></Navbar>
@@ -258,66 +277,66 @@ function NguoiDung() {
                     <div className="content-wrapper">
                         {/* quản lý người dùng  */}
                         {isAdmin ? (
-                        <div className="row">
-                            <div className="col-lg-12 grid-margin stretch-card">
+                            <div className="row">
+                                <div className="col-lg-12 grid-margin stretch-card">
 
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h3 className="card-title">Quản lý tài khoản </h3>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <input type="text"
-                                                    className="form-control"
-                                                    placeholder="Enter email for search"
-                                                    value={searchQuery}
-                                                    onChange={(e) => setSearchQuery(e.target.value)} />
-                                                <div className="input-group-append">
-                                                    <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
-                                                        type="button"
-                                                        onClick={() => fetchDataSearcg(searchQuery)}>
-                                                        <i className="mdi mdi-magnify"></i> Search</button>
-                                                    <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Import</button>
-                                                    {/* <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
-                                                        <i className="mdi mdi-export"></i> Export</button> */}
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h3 className="card-title">Quản lý tài khoản </h3>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <input type="text"
+                                                        className="form-control"
+                                                        placeholder="Enter email for search"
+                                                        value={searchQuery}
+                                                        onChange={(e) => setSearchQuery(e.target.value)} />
+                                                    <div className="input-group-append">
+                                                        <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                            type="button"
+                                                            onClick={() => fetchDataSearcg(searchQuery)}>
+                                                            <i className="mdi mdi-magnify"></i> Search</button>
+                                                        <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
+                                                            <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                            Export to Excel
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <div className="input-group-append">
-                                                    <button
-                                                        className="btn btn-sm btn-outline-primary btn-icon-prepend"
-                                                        onClick={handleShowModal}
-                                                        data-toggle="modal"
-                                                        data-target="#exampleModal"
-                                                    >
-                                                        <i className="mdi mdi-note-plus"></i> Thêm tài khoản
-                                                    </button>
-                                                </div>
-                                            </div></div>
-                                        <p className="card-description"></p>
-                                        <Table
-                                            dataSource={data}
-                                            columns={columns}
-                                            loading={loading}
-                                            rowKey="_id"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>)
-                        :(
-                            <div className="row">
-                                <div class="col-lg-12 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div className="card-body text-center">
-                                            <h3 class="card-title">Xin lỗi! Chức năng này chỉ dành cho Admin hệ thống</h3>
+                                            <div className="form-group">
+                                                <div className="input-group">
+                                                    <div className="input-group-append">
+                                                        <button
+                                                            className="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                            onClick={handleShowModal}
+                                                            data-toggle="modal"
+                                                            data-target="#exampleModal"
+                                                        >
+                                                            <i className="mdi mdi-note-plus"></i> Thêm tài khoản
+                                                        </button>
+                                                    </div>
+                                                </div></div>
+                                            <p className="card-description"></p>
+                                            <Table
+                                                dataSource={data}
+                                                columns={columns}
+                                                loading={loading}
+                                                rowKey="_id"
+                                            />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            </div>)
+                            : (
+                                <div className="row">
+                                    <div class="col-lg-12 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div className="card-body text-center">
+                                                <h3 class="card-title">Xin lỗi! Chức năng này chỉ dành cho Admin hệ thống</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                     </div>
                 </div>
             </div >
