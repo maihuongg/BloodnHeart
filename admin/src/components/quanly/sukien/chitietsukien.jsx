@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../dashboard/navbar";
 import Sidebar from "../../dashboard/sidebar";
@@ -14,7 +14,10 @@ import {
 } from "../../../redux/eventSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Chart from 'chart.js/auto';
+
 function ChiTietSuKien() {
+    const chartRef = useRef(null);
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const accessToken = currentAdmin?.accessToken;
@@ -23,6 +26,7 @@ function ChiTietSuKien() {
     const navigate = useNavigate();
     const event = useSelector((state) => state.event.eventdetail.getevent);
     const { id } = useParams();
+    // console.log("EventID: ", id);
     const data = event.listusers.user;
     const [images, setImages] = useState(event.images);
     const [eventName, setEventName] = useState(event.eventName);
@@ -47,57 +51,106 @@ function ChiTietSuKien() {
     const handleClose = () => setShow(false);
     const handleClose1 = () => setShow1(false);
     const [refresh, setRefresh] = useState(false);
+    const [dataEventStatistic, setDataEventStatistic] = useState(null);
+    const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
+
     useEffect(() => {
-        if(refresh){
-            const fetchData = async () => {
-                dispatch(eventdetailStart());
-                try {
-                    const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-    
-                    if (!response.ok) {
-                        dispatch(eventdetailFailed());
-                    }
-                    else {
-                        const data = await response.json();
-                        dispatch(eventdetailSuccess(data));
-                    }
-                } catch (error) {
-                    dispatch(eventdetailFailed());
-                    console.error("Error fetching data:", error);
-                }
-            };
-            fetchData();
-        }
         const fetchData = async () => {
             dispatch(eventdetailStart());
             try {
-                const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+                // Fetch event detail
+                const responseDetail = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-
-                if (!response.ok) {
+                if (!responseDetail.ok) {
                     dispatch(eventdetailFailed());
+                } else {
+                    const dataDetail = await responseDetail.json();
+                    dispatch(eventdetailSuccess(dataDetail));
                 }
-                else {
-                    const data = await response.json();
-                    dispatch(eventdetailSuccess(data));
+
+                // Fetch event statistics
+                const responseStatistic = await fetch(`http://localhost:8000/v1/admin/statistic/event/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!responseStatistic.ok) {
+                    console.log("fetchDataStatistic error");
+                } else {
+                    const dataEventStatistic = await responseStatistic.json();
+                    setDataEventStatistic(dataEventStatistic);
+                }
+
+                // Fetch event amount blood
+                const responseAmountBlood = await fetch(`http://localhost:8000/v1/admin/statistic/event/amountblood/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!responseAmountBlood.ok) {
+                    console.log("fetchDataAmountBlood error");
+                } else {
+                    const dataAmountBlood = await responseAmountBlood.json();
+                    setEventDetailAmountBlood(dataAmountBlood);
                 }
             } catch (error) {
                 dispatch(eventdetailFailed());
                 console.error("Error fetching data:", error);
             }
         };
-        fetchData();
-    }, [id, dispatch, refresh]);
 
+        fetchData();
+    }, [id, dispatch]);
+
+    // biểu đồ
+    useEffect(() => {
+        if (eventDetailAmountBlood) {
+            const data = [
+                eventDetailAmountBlood.detailAmountBlood['O'] ?? 0,
+                eventDetailAmountBlood.detailAmountBlood['A'] ?? 0,
+                eventDetailAmountBlood.detailAmountBlood['B'] ?? 0,
+                eventDetailAmountBlood.detailAmountBlood['AB'] ?? 0,
+                eventDetailAmountBlood.detailAmountBlood['Rh+'] ?? 0,
+                eventDetailAmountBlood.detailAmountBlood['Rh-'] ?? 0
+            ];
+            // console.log("DATA DỬA: ", data)
+            const labels = ['O', 'A', 'B', 'AB', 'Rh+', 'Rh-'];
+            // Vẽ biểu đồ
+            const barCtx = document.getElementById('barDetailBlood').getContext('2d');
+            const newChartInstance = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Lượng máu (ml)',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                        },
+                    },
+                    responsive: true,
+
+                },
+            });
+
+            // Cleanup function to destroy the chart when component unmounts or before creating a new one
+            return () => {
+                newChartInstance.destroy();
+            };
+        }
+    }, [eventDetailAmountBlood]);
     const showNotification = (message) => {
         toast.success(message, {
             position: toast.POSITION.TOP_RIGHT
@@ -178,8 +231,6 @@ function ChiTietSuKien() {
         }
 
     ]
-
-
 
     const onChange = e => {
         const file = e.target.files[0];
@@ -455,10 +506,71 @@ function ChiTietSuKien() {
                                 </div>
                             </div>
                             <br />
+                            {/* THỐNG KÊ TỪNG SỰ KIỆN */}
                             <div className="col-lg-12">
                                 <div className="card" style={{ height: "100%" }}>
                                     <div className="card-body">
-                                        <br /> <h4>Danh sách người đăng ký sự kiện</h4>
+                                        <br />
+                                        <h3>Thống kê về sự kiện</h3>
+                                        <br></br>
+                                        <div className="row">
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-green text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Tổng số người đăng ký</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.total ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-danger text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Chưa hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUser?.chuahien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đang chờ hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUser?.danghien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-dark-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đã hoàn thành hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUser?.daxong ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <br/>
+                                        <h3>Thống kê chi tiết lượng máu</h3>
+
+                                        <div className="row justify-content-center">
+                                            <div className="col-lg-8">
+                                                <div className="card" style={{ height: "100%" }}>
+                                                    <div className="card-body">
+                                                        <canvas id="barDetailBlood"></canvas>
+                                                        {/* <canvas ref={chartRef}></canvas> */}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div className="col-lg-12">
+                                <div className="card" style={{ height: "100%" }}>
+                                    <div className="card-body">
+                                        <br /> <h3>Danh sách người đăng ký sự kiện</h3>
                                         <br />
                                         <Table
                                             dataSource={data}
@@ -609,10 +721,111 @@ function ChiTietSuKien() {
                         </div>
                     </div>
                 </div >
-            </div>
+            </div >
             <ToastContainer></ToastContainer>
         </>
     )
 };
 
 export default ChiTietSuKien;
+
+// const [eventChuaHien, setEventChuaHien] = useState(null);
+// const [eventDangHien, setEventDangHien] = useState(null);
+// const [eventDaHien, setEventDaHien] = useState(null);
+// useEffect(() => {
+//     if (refresh) {
+//         const fetchData = async () => {
+//             dispatch(eventdetailStart());
+//             try {
+//                 const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+//                     method: 'GET',
+//                     headers: {
+//                         'Content-Type': 'application/json'
+//                     }
+//                 });
+
+//                 if (!response.ok) {
+//                     dispatch(eventdetailFailed());
+//                 }
+//                 else {
+//                     const data = await response.json();
+//                     dispatch(eventdetailSuccess(data));
+//                 }
+//             } catch (error) {
+//                 dispatch(eventdetailFailed());
+//                 console.error("Error fetching data:", error);
+//             }
+//         };
+//         fetchData();
+//     }
+//     const fetchData = async () => {
+//         dispatch(eventdetailStart());
+//         try {
+//             const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+//                 method: 'GET',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             if (!response.ok) {
+//                 dispatch(eventdetailFailed());
+//             }
+//             else {
+//                 const data = await response.json();
+//                 dispatch(eventdetailSuccess(data));
+//             }
+//         } catch (error) {
+//             dispatch(eventdetailFailed());
+//             console.error("Error fetching data:", error);
+//         }
+//     };
+//     fetchData();
+// }, [id, dispatch, refresh]);
+// useEffect(() => {
+//     const fetchDataStatistic = async () => {
+//         try {
+//             const response = await fetch(`http://localhost:8000/v1/admin/statistic/event/${id}`, {
+
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             if (!response.ok) {
+//                 console.log("fetchDataStatistic error")
+//             }
+
+//             const dataEventStatistic = await response.json();
+//             // console.log("dataEventStatistic : ", dataEventStatistic);
+//             setDataEventStatistic(dataEventStatistic);
+//             // setEventDetailAmountBlood(dataEventStatistic.detailAmountBlood);
+
+//         } catch (error) {
+//             dispatch(eventdetailFailed());
+//             console.error("Error fetching data:", error);
+//         }
+//     }
+//     const fetchDataAmountBlood = async () => {
+//         try {
+//             const responseBlood = await fetch(`http://localhost:8000/v1/admin/statistic/event/amountblood/${id}`, {
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             if (!responseBlood.ok) {
+//                 console.log("fetchDataStatistic error")
+//             }
+//             const dataAmountBlood = await responseBlood.json();
+//             // console.log("dataEventStatistic : ", dataAmountBlood);
+//             setEventDetailAmountBlood(dataAmountBlood);
+
+//         } catch (error) {
+//             dispatch(eventdetailFailed());
+//             console.error("Error fetching data:", error);
+//         }
+//     }
+//     fetchDataStatistic();
+//     fetchDataAmountBlood();
+// })
