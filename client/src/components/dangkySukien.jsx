@@ -18,6 +18,7 @@ import {
     hospitalSuccess,
     hospitalFailed
 } from "../redux/eventSlice";
+import LeafletMap from "./leafmap";
 function DangkySukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const accessToken = user?.accessToken
@@ -178,6 +179,30 @@ function DangkySukien() {
         }
     }
 
+    //MAP
+    const [showMap, setShowMap] = useState(false);
+    const [eventLocation, setEventLocation] = useState(null);
+
+    const handleDirections = async (e) => {
+        e.preventDefault();
+        if (!eventLocation) {
+            const location = await getCoordinates(eventDetail.address);
+            setEventLocation(location);
+        }
+        setShowMap(true);
+    };
+    async function getCoordinates(address) {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        const data = await response.json();
+        if (data.length > 0) {
+            return {
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon)
+            };
+        }
+        return null;
+    }
+
 
     return (
         <>
@@ -306,6 +331,11 @@ function DangkySukien() {
                                 className="img-fluid rounded-square mx-auto"
                                 style={{ width: 300 }}
                             />
+                        </div>
+                        <div>
+                            <a href="" className="btn btn-secondary" style={{ margin: "8px 0px 0px 0px", width: 255 }} onClick={handleDirections}>
+                                Xem đường đi
+                            </a>
                         </div>
                     </div>
                     <div className="col-lg-9">
@@ -539,6 +569,11 @@ function DangkySukien() {
                             </Modal.Body>
                         </Modal>
                     </div>
+                    {showMap && eventLocation && (
+                        <div className="row map-container mt-4">
+                            <LeafletMap eventLocation={{ ...eventLocation, address: eventDetail.address }} />
+                        </div>
+                    )}
                 </div>
             </div>
             <ToastContainer>

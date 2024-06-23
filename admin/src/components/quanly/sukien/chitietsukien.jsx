@@ -55,6 +55,57 @@ function ChiTietSuKien() {
     const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
 
     useEffect(() => {
+        if(refresh){
+            const fetchData = async () => {
+                dispatch(eventdetailStart());
+                try {
+                    // Fetch event detail
+                    const responseDetail = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!responseDetail.ok) {
+                        dispatch(eventdetailFailed());
+                    } else {
+                        const dataDetail = await responseDetail.json();
+                        dispatch(eventdetailSuccess(dataDetail));
+                    }
+    
+                    // Fetch event statistics
+                    const responseStatistic = await fetch(`http://localhost:8000/v1/admin/statistic/event/${id}`, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!responseStatistic.ok) {
+                        console.log("fetchDataStatistic error");
+                    } else {
+                        const dataEventStatistic = await responseStatistic.json();
+                        setDataEventStatistic(dataEventStatistic);
+                    }
+    
+                    // Fetch event amount blood
+                    const responseAmountBlood = await fetch(`http://localhost:8000/v1/admin/statistic/event/amountblood/${id}`, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!responseAmountBlood.ok) {
+                        console.log("fetchDataAmountBlood error");
+                    } else {
+                        const dataAmountBlood = await responseAmountBlood.json();
+                        setEventDetailAmountBlood(dataAmountBlood);
+                    }
+                } catch (error) {
+                    dispatch(eventdetailFailed());
+                    console.error("Error fetching data:", error);
+                }
+            };
+    
+            fetchData();
+        }
         const fetchData = async () => {
             dispatch(eventdetailStart());
             try {
@@ -104,7 +155,7 @@ function ChiTietSuKien() {
         };
 
         fetchData();
-    }, [id, dispatch]);
+    }, [id, dispatch, refresh]);
 
     // biểu đồ
     useEffect(() => {

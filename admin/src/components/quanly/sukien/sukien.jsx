@@ -16,6 +16,7 @@ import {
 } from "../../../redux/eventSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as XLSX from 'xlsx';
 function SuKien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -370,7 +371,7 @@ function SuKien() {
                                                         onClick={() => fetchDataSearcg(searchQuery)}>
                                                         <i className="mdi mdi-magnify"></i> Search</button>
                                                     <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Import</button>
+                                                        <i className="mdi mdi-file-import"></i> Export</button>
                                                     {/* <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
                                                         <i class="mdi mdi-export"></i> Export</button> */}
                                                 </div>

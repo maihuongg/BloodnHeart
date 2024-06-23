@@ -277,7 +277,7 @@ function NguoiDung() {
                                                         onClick={() => fetchDataSearcg(searchQuery)}>
                                                         <i className="mdi mdi-magnify"></i> Search</button>
                                                     <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Import</button>
+                                                        <i className="mdi mdi-file-import"></i> Export</button>
                                                     {/* <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
                                                         <i className="mdi mdi-export"></i> Export</button> */}
                                                 </div>
