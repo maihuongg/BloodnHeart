@@ -43,6 +43,41 @@ function SuKien() {
     const [msgErr, setMsgErr] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const handleExport = () => {
+        const wb = XLSX.utils.book_new();
+
+        const currentDate = moment();
+        const dataToExport = data.map(row => {
+            const startDate = moment(row.date_start);
+            const endDate = moment(row.date_end);
+            let statusText = "Không xác định";
+
+            if (row.status === "0") {
+                statusText = "Đã đóng";
+            } else if (row.status === "1") {
+                if (endDate.isBefore(currentDate)) {
+                    statusText = "Đã đóng";
+                } else if (startDate.isAfter(currentDate)) {
+                    statusText = "Sắp diễn ra";
+                } else if (currentDate.isBetween(startDate, endDate, null, '[]')) {
+                    statusText = "Đang diễn ra";
+                }
+            }
+
+            return {
+                "Tên sự kiện": row.eventName,
+                "Ngày bắt đầu": moment(row.date_start).format('DD-MM-YYYY'),
+                "Ngày kết thúc": moment(row.date_end).format('DD-MM-YYYY'),
+                "Trạng thái": statusText,
+                "Ngày tạo": moment(row.createdAt).format('DD-MM-YYYY')
+            };
+        });
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách sự kiện')
+
+        // Tạo file Excel và tải xuống
+        XLSX.writeFile(wb, 'danhsachsukien.xlsx');
+    };
     useEffect(() => {
         const currentDate = new Date().toISOString().split('T')[0];
         console.log(currentDate);
@@ -370,8 +405,10 @@ function SuKien() {
                                                         type="button"
                                                         onClick={() => fetchDataSearcg(searchQuery)}>
                                                         <i className="mdi mdi-magnify"></i> Search</button>
-                                                    <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Export</button>
+                                                    <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
+                                                        <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                        Export to Excel
+                                                    </button>
                                                     {/* <button class="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
                                                         <i class="mdi mdi-export"></i> Export</button> */}
                                                 </div>

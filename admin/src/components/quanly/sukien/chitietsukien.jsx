@@ -17,7 +17,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
 function ChiTietSuKien() {
-    const chartRef = useRef(null);
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const accessToken = currentAdmin?.accessToken;
@@ -53,7 +52,7 @@ function ChiTietSuKien() {
     const [refresh, setRefresh] = useState(false);
     const [dataEventStatistic, setDataEventStatistic] = useState(null);
     const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
-
+    const [dataEventBlood, setDataEventBlood] = useState(null);
     useEffect(() => {
         if(refresh){
             const fetchData = async () => {
@@ -134,6 +133,8 @@ function ChiTietSuKien() {
                 } else {
                     const dataEventStatistic = await responseStatistic.json();
                     setDataEventStatistic(dataEventStatistic);
+                    setDataEventBlood(dataEventStatistic.countAmountBlood);
+                    console.log(dataEventBlood);
                 }
 
                 // Fetch event amount blood
@@ -439,19 +440,23 @@ function ChiTietSuKien() {
         navigate("/su-kien");
     };
     const handleExport = () => {
-        const wb = XLSX.utils.book_new();
-        const exportData = data.map(item => ({
-            'Tên người đăng ký': item.username,
-            'Ngày đdăng ký hiến máu': item.dateregister,
-            'Nhóm máu': item.bloodgroup,
-            'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ hiến' : 'Chưa hiến',
-            'Số lượng máu (ml)': item.amount_blood,
-        }));
-        const ws = XLSX.utils.json_to_sheet(exportData);
-        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký')
+        if (isHospital) {
+            const wb = XLSX.utils.book_new();
+            const exportData = data.map(item => ({
+                'Tên người đăng ký': item.username,
+                'Ngày đăng ký hiến máu': item.dateregister,
+                'Nhóm máu': item.bloodgroup,
+                'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
+                'Số lượng máu (ml)': item.amount_blood,
+            }));
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký sự kiện')
 
-        // Tạo file Excel và tải xuống
-        XLSX.writeFile(wb, 'danhsachdangky.xlsx');
+            // Tạo file Excel và tải xuống
+            XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
+        }
+        else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
+
     };
     return (
         <>
@@ -613,8 +618,28 @@ function ChiTietSuKien() {
                                             </div>
                                         </div>
                                         <br />
+                                        <h3>Thống kê chung về lượng máu</h3><br />
+                                        <div className="row">
+                                            <div className="col-md-6 mb-2 stretch-card transparent">
+                                                <div className="card card-inverse-info text-center">
+                                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                                        <h5 className="mb-2">Số lượng máu dự kiến nhận được</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countAmountBlood?.dukiennhanduoc ?? 'Loading...'} ml</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 mb-2 stretch-card transparent">
+                                                <div className="card card-inverse-success text-center">
+                                                    <div className="card-body d-flex justify-content-between align-items-center ">
+                                                        <h5 className="mb-2">Số lượng máu thực tế nhận được</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countAmountBlood?.thucte ?? 'Loading...'} ml</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <br />
-                                        <h3>Thống kê chi tiết lượng máu</h3>
+                                        <h3>Thống kê chi tiết lượng máu</h3><br />
 
                                         <div className="row justify-content-center">
                                             <div className="col-lg-8">
@@ -642,7 +667,7 @@ function ChiTietSuKien() {
                                                 Export to Excel
                                             </button>
                                         </div>
-                                        <br/>
+                                        <br />
 
                                         <Table
                                             dataSource={data}

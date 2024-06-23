@@ -45,7 +45,7 @@ export default function Navbar() {
           </li> */}
           </ul>
           <ul className="navbar-nav navbar-nav-right">
-            <li className="nav-item dropdown">
+            {/* <li className="nav-item dropdown">
               <a
                 className="nav-link count-indicator dropdown-toggle"
                 id="notificationDropdown"
@@ -108,8 +108,8 @@ export default function Navbar() {
                   </div>
                 </a>
               </div>
-            </li>
-            <li className="nav-item nav-profile ">
+            </li> */}
+            {/* <li className="nav-item nav-profile ">
               <a className="nav-link " href="#">
                 <img src={face28}alt="profile" />
               </a>
@@ -123,7 +123,7 @@ export default function Navbar() {
                   Logout
                 </a>
               </div>
-            </li>
+            </li> */}
             <li className="nav-item nav-settings d-none d-lg-flex">
               <a className="nav-link" href="#">
                 <i className="icon-ellipsis" />

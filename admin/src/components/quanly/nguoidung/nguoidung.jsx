@@ -10,12 +10,13 @@ import isEmpty from "validator/lib/isEmpty";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as XLSX from 'xlsx';
 
 function NguoiDung() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
-    
+
     const isAdmin = currentAdmin?.isAdmin;
     const isHospital = currentAdmin?.isHospital;
     const accessToken = currentAdmin?.accessToken;
@@ -248,160 +249,181 @@ function NguoiDung() {
             }
         }
     }
+    const handleExport = () => {
+        const wb = XLSX.utils.book_new();
+        const dataToExport = data.map(row => {
+            return {
+                "CCCD/CMND": row.cccd,
+                "Email": row.email,
+                "Vai trò": row.isAdmin ? "Admin" :
+                    row.isHospital ? "Bệnh viện" :
+                        "Người dùng",
 
-    return (<>
-        <div className="container-scroller">
-            <Navbar></Navbar>
-            <div className="container-fluid page-body-wrapper">
-                <Sidebar></Sidebar>
-                <div className="main-panel">
-                    <div className="content-wrapper">
-                        {/* quản lý người dùng  */}
-                        {isAdmin ? (
-                        <div className="row">
-                            <div className="col-lg-12 grid-margin stretch-card">
+                "Ngày tạo": moment(row.createdAt).format('DD-MM-YYYY')
+            };
+        });
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách tài khoản')
 
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h3 className="card-title">Quản lý tài khoản </h3>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <input type="text"
-                                                    className="form-control"
-                                                    placeholder="Enter email for search"
-                                                    value={searchQuery}
-                                                    onChange={(e) => setSearchQuery(e.target.value)} />
-                                                <div className="input-group-append">
-                                                    <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
-                                                        type="button"
-                                                        onClick={() => fetchDataSearcg(searchQuery)}>
-                                                        <i className="mdi mdi-magnify"></i> Search</button>
-                                                    <button className="btn btn-sm btn btn-outline-info btn-icon-prepend" type="button">
-                                                        <i className="mdi mdi-file-import"></i> Export</button>
-                                                    {/* <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
+        // Tạo file Excel và tải xuống
+        XLSX.writeFile(wb, 'danhsachtaikhoan.xlsx');
+    };
+    return (
+        <>
+            <div className="container-scroller">
+                <Navbar></Navbar>
+                <div className="container-fluid page-body-wrapper">
+                    <Sidebar></Sidebar>
+                    <div className="main-panel">
+                        <div className="content-wrapper">
+                            {/* quản lý người dùng  */}
+                            {isAdmin ? (
+                                <div className="row">
+                                    <div className="col-lg-12 grid-margin stretch-card">
+
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <h3 className="card-title">Quản lý tài khoản </h3>
+                                                <div className="form-group">
+                                                    <div className="input-group">
+                                                        <input type="text"
+                                                            className="form-control"
+                                                            placeholder="Enter email for search"
+                                                            value={searchQuery}
+                                                            onChange={(e) => setSearchQuery(e.target.value)} />
+                                                        <div className="input-group-append">
+                                                            <button className="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                                type="button"
+                                                                onClick={() => fetchDataSearcg(searchQuery)}>
+                                                                <i className="mdi mdi-magnify"></i> Search</button>
+                                                            <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
+                                                                <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                                Export to Excel
+                                                            </button>
+                                                            {/* <button className="btn btn-sm btn btn-outline-danger btn-icon-prepend " type="button">
                                                         <i className="mdi mdi-export"></i> Export</button> */}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group">
+                                                    <div className="input-group">
+                                                        <div className="input-group-append">
+                                                            <button
+                                                                className="btn btn-sm btn-outline-primary btn-icon-prepend"
+                                                                onClick={handleShowModal}
+                                                                data-toggle="modal"
+                                                                data-target="#exampleModal"
+                                                            >
+                                                                <i className="mdi mdi-note-plus"></i> Thêm tài khoản
+                                                            </button>
+                                                        </div>
+                                                    </div></div>
+                                                <p className="card-description"></p>
+                                                <Table
+                                                    dataSource={data}
+                                                    columns={columns}
+                                                    loading={loading}
+                                                    rowKey="_id"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>)
+                                : (
+                                    <div className="row">
+                                        <div class="col-lg-12 grid-margin stretch-card">
+                                            <div class="card">
+                                                <div className="card-body text-center">
+                                                    <h3 class="card-title">Xin lỗi! Chức năng này chỉ dành cho Admin hệ thống</h3>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <div className="input-group-append">
-                                                    <button
-                                                        className="btn btn-sm btn-outline-primary btn-icon-prepend"
-                                                        onClick={handleShowModal}
-                                                        data-toggle="modal"
-                                                        data-target="#exampleModal"
-                                                    >
-                                                        <i className="mdi mdi-note-plus"></i> Thêm tài khoản
-                                                    </button>
-                                                </div>
-                                            </div></div>
-                                        <p className="card-description"></p>
-                                        <Table
-                                            dataSource={data}
-                                            columns={columns}
-                                            loading={loading}
-                                            rowKey="_id"
+                                    </div>
+                                )}
+                        </div>
+                    </div>
+                </div >
+
+            </div>
+            {showModal && (
+                <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Thêm tài khoản</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={handleCloseModal}>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleRegister} className="forms-sample">
+                                    {/* ... (other form fields) */}
+                                    <div className="form-group">
+                                        <label className="form-control-label">CCCD/CMND/Số định danh</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="CCCD/CMND/Số định danh"
+                                            onChange={(e) => setCccd(e.target.value)}
                                         />
                                     </div>
-                                </div>
-                            </div>
-                        </div>)
-                        :(
-                            <div className="row">
-                                <div class="col-lg-12 grid-margin stretch-card">
-                                    <div class="card">
-                                        <div className="card-body text-center">
-                                            <h3 class="card-title">Xin lỗi! Chức năng này chỉ dành cho Admin hệ thống</h3>
-                                        </div>
+                                    <div className="form-group">
+                                        <label className="form-control-label" >Email</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            placeholder="Email"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
                                     </div>
-                                </div>
+                                    <div className="form-group">
+                                        <label className="form-control-label" >Mật khẩu</label>
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            placeholder="Mật khẩu"
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label for="exampleSelectGender">Nhập lại mật khẩu</label>
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            placeholder="Mật khẩu"
+                                            onChange={(e) => setRepassword(e.target.value)} />
+                                    </div>
+
+                                    <div className="form-group">
+                                        {/* Error Message */}
+                                        {msgErr && (
+                                            <div className="alert alert-danger" role="alert">
+                                                {msgErr}
+                                            </div>
+                                        )}
+
+                                    </div>
+                                    <div className="form-group">
+                                        {/* Error Message */}
+                                        {successMsg && (
+                                            <div className="alert alert-success" >
+                                                {successMsg}
+                                            </div>
+                                        )}
+
+                                    </div>
+                                    <div className="form-group">
+                                        <button type="submit" className="btn btn-primary">Thêm</button>
+                                        <button type="button" className="btn btn-light" data-dismiss="modal" onClick={handleCloseModal}>Hủy</button>
+                                    </div>
+                                </form>
+
                             </div>
-                        )}
-                    </div>
-                </div>
-            </div >
-
-        </div>
-        {showModal && (
-            <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Thêm tài khoản</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={handleCloseModal}>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <form onSubmit={handleRegister} className="forms-sample">
-                                {/* ... (other form fields) */}
-                                <div className="form-group">
-                                    <label className="form-control-label">CCCD/CMND/Số định danh</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="CCCD/CMND/Số định danh"
-                                        onChange={(e) => setCccd(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-control-label" >Email</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        placeholder="Email"
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-control-label" >Mật khẩu</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        placeholder="Mật khẩu"
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label for="exampleSelectGender">Nhập lại mật khẩu</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        placeholder="Mật khẩu"
-                                        onChange={(e) => setRepassword(e.target.value)} />
-                                </div>
-
-                                <div className="form-group">
-                                    {/* Error Message */}
-                                    {msgErr && (
-                                        <div className="alert alert-danger" role="alert">
-                                            {msgErr}
-                                        </div>
-                                    )}
-
-                                </div>
-                                <div className="form-group">
-                                    {/* Error Message */}
-                                    {successMsg && (
-                                        <div className="alert alert-success" >
-                                            {successMsg}
-                                        </div>
-                                    )}
-
-                                </div>
-                                <div className="form-group">
-                                    <button type="submit" className="btn btn-primary">Thêm</button>
-                                    <button type="button" className="btn btn-light" data-dismiss="modal" onClick={handleCloseModal}>Hủy</button>
-                                </div>
-                            </form>
-
                         </div>
                     </div>
                 </div>
-            </div>
-        )}
-        <ToastContainer></ToastContainer>
-    </>
+            )}
+            <ToastContainer></ToastContainer>
+        </>
     )
 };
 
