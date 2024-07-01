@@ -36,7 +36,7 @@ function Trangchu() {
     useEffect(() => {
         const handleHospital = async () => {
             try {
-                const response = await fetch("https://bn-h-api.vercel.app/v1//user/getfour", {
+                const response = await fetch("https://bn-h-api.vercel.app/v1/user/getfour", {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ function Trangchu() {
         const handleEvent = async () => {
             dispatch(allEventStart());
             try {
-                const response1 = await fetch("https://bn-h-api.vercel.app/v1//user/event", {
+                const response1 = await fetch("https://bn-h-api.vercel.app/v1/user/event", {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ function Trangchu() {
         handleEvent();
         const handleBestEvent = async () => {
             try {
-                const response2 = await fetch("https://bn-h-api.vercel.app/v1//user/bestevent", {
+                const response2 = await fetch("https://bn-h-api.vercel.app/v1/user/bestevent", {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ function Trangchu() {
         e.preventDefault();
         dispatch(hospitalStart());
         try {
-            const response2 = await fetch("https://bn-h-api.vercel.app/v1//user/hospital/" + hospitalId, {
+            const response2 = await fetch("https://bn-h-api.vercel.app/v1/user/hospital/" + hospitalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ function Trangchu() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("https://bn-h-api.vercel.app/v1//auth/logout", {
+            const res = await fetch("https://bn-h-api.vercel.app/v1/auth/logout", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
