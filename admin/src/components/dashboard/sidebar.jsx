@@ -17,6 +17,7 @@ import {
 } from "../../redux/hospitalSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {baseUrl} from '../../utils/constans'
 import { useDispatch, useSelector } from "react-redux";
 export default function Sidebar() {
   const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
