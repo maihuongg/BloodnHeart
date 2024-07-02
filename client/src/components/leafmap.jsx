@@ -6,6 +6,7 @@ import L from 'leaflet';
 import 'leaflet-routing-machine';
 import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import markerShadowPng from 'leaflet/dist/images/marker-shadow.png';
+import baseUrl from "../utils/constant";
 
 // Fix for default marker icons not appearing
 L.Marker.prototype.options.icon = L.icon({

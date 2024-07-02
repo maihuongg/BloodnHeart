@@ -10,7 +10,7 @@ import {
 } from "../redux/authSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import baseUrl from "../../../utils/constans";
+import baseUrl from "../utils/constant";
 
 function Lienhe() {
 
