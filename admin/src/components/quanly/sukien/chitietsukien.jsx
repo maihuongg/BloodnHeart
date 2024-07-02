@@ -30,8 +30,8 @@ function ChiTietSuKien() {
     const data = event.listusers.user;
     const [images, setImages] = useState(event.images);
     const [eventName, setEventName] = useState(event.eventName);
-    const [date_start, setDate_start] = useState(event.date_start);
-    const [date_end, setDate_end] = useState(event.date_end);
+    const [date_start, setDate_start] = useState(moment(event.date_start).format('YYYY-MM-DD'));
+    const [date_end, setDate_end] = useState(moment(event.date_end).format('YYYY-MM-DD'));
     const [amount, setAmount] = useState(event.amount);
     const [address, setAddress] = useState(event.address);
 
@@ -54,6 +54,7 @@ function ChiTietSuKien() {
     const [dataEventStatistic, setDataEventStatistic] = useState(null);
     const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
     const [dataEventBlood, setDataEventBlood] = useState(null);
+    
     useEffect(() => {
         if(refresh){
             const fetchData = async () => {
