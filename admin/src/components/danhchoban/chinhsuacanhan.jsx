@@ -5,11 +5,6 @@ import Sidebar from "../dashboard/sidebar";
 import { useAsyncError, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-// import {
-//     userprofileStart,
-//     userprofileSuccess,
-//     userprofileFailed
-// } from "../../redux/adminSlice";
 import {
     adminprofileFailed,
     adminprofileStart,
@@ -22,7 +17,7 @@ import {
 } from "../../redux/hospitalSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import baseUrl from "../../utils/constans";
 function ChinhSuaCaNhan() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -91,8 +86,8 @@ function ChinhSuaCaNhan() {
             const formData = new FormData();
             formData.append('images', images);
             const urlAPI = isAdmin
-                ? `http://localhost:8000/v1/admin/profile-update-image/${id}`
-                : `http://localhost:8000/v1/admin/hospital-update-image/${id}`;
+                ? `${baseUrl}/v1/admin/profile-update-image/${id}`
+                : `${baseUrl}/v1/admin/hospital-update-image/${id}`;
 
             const response = await fetch(urlAPI, {
                 method: 'PUT',
@@ -141,8 +136,8 @@ function ChinhSuaCaNhan() {
                 };
 
             const urlAPI = isAdmin
-                ? `http://localhost:8000/v1/admin/profile-update-info/${id}`
-                : `http://localhost:8000/v1/admin/hospital-update-info/${id}`;
+                ? `${baseUrl}/v1/admin/profile-update-info/${id}`
+                : `${baseUrl}/v1/admin/hospital-update-info/${id}`;
             const response = await fetch(urlAPI, {
                 method: 'PUT',
                 body: JSON.stringify(newInfo),

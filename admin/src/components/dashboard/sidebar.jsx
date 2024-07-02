@@ -27,7 +27,7 @@ export default function Sidebar() {
     e.preventDefault();
     dispatch(logOutStart());
     try {
-        const res = await fetch("http://localhost:8000/v1/auth/logout", {
+        const res = await fetch(`${baseUrl}/v1/auth/logout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

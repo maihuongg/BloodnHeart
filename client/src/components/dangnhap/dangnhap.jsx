@@ -12,6 +12,7 @@ import {
     loginStart,
     loginSuccess,
 } from "../../redux/authSlice";
+import baseUrl from "../../../utils/constant";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
     const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ function Dangnhap() {
         };
         dispatch(loginStart());
         try {
-            const response = await fetch('http://localhost:8000/v1/auth/login', {
+            const response = await fetch(`${baseUrl}/v1/auth/login`, {
                 method: 'POST',
                 body: JSON.stringify(newUser),
                 headers: {
@@ -47,7 +48,7 @@ function Dangnhap() {
                 const accessToken = data.accessToken;
                 dispatch(userprofileStart());
                 try {
-                    const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                    const response1 = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

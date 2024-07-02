@@ -8,6 +8,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import baseUrl from "../../utils/constant";
 function Gioithieu() {
 
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -20,7 +21,7 @@ function Gioithieu() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

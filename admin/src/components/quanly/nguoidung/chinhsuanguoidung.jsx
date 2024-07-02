@@ -13,7 +13,7 @@ import {
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import baseUrl from "../../../utils/constans";
 function ChinhSuaNguoiDung() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,7 +40,7 @@ function ChinhSuaNguoiDung() {
     useEffect(() => {
         const getAccountRole = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/v1/admin/account/${id}`, {
+                const response = await fetch(`${baseUrl}/v1/admin/account/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function ChinhSuaNguoiDung() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/v1/admin/profile/info/${id}`, {
+                const response = await fetch(`${baseUrl}/v1/admin/profile/info/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ function ChinhSuaNguoiDung() {
         try {
             const formData = new FormData();
             formData.append('images', images);
-            const response = await fetch(`http://localhost:8000/v1/admin/update-image/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/update-image/${id}`, {
                 method: 'PUT',
                 body: formData,
                 headers: {
@@ -153,7 +153,7 @@ function ChinhSuaNguoiDung() {
                 address: address,
             }
     
-            const response = await fetch(`http://localhost:8000/v1/admin/update-info/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/update-info/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(newInfo),
                 headers: {

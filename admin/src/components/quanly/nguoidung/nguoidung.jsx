@@ -11,7 +11,7 @@ import isEmpty from "validator/lib/isEmpty";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
-
+import baseUrl from "../../../utils/constans";
 function NguoiDung() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ function NguoiDung() {
     const [searchQuery, setSearchQuery] = useState("");
     const fetchData = async () => {
         try {
-            const response2 = await fetch("http://localhost:8000/v1/admin/users", {
+            const response2 = await fetch(`${baseUrl}/v1/admin/users`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function NguoiDung() {
     };
     const fetchDataSearcg = async (keyword) => {
         try {
-            const response2 = await fetch(`http://localhost:8000/v1/admin/search/account?keyword=${keyword}`, {
+            const response2 = await fetch(`${baseUrl}/v1/admin/search/account?keyword=${keyword}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ function NguoiDung() {
         // Function to fetch data from the API
         const fetchData = async () => {
             try {
-                const response2 = await fetch("http://localhost:8000/v1/admin/users", {
+                const response2 = await fetch(`${baseUrl}/v1/admin/users`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ function NguoiDung() {
     };
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8000/v1/admin/account/delete/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/account/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ function NguoiDung() {
         } else {
             if (repw == newUser.password) {
                 try {
-                    const response = await fetch('http://localhost:8000/v1/auth/register', {
+                    const response = await fetch(`${baseUrl}/v1/auth/register`, {
                         method: 'POST',
                         body: JSON.stringify(newUser),
                         headers: {

@@ -12,10 +12,11 @@ import Panel from "./dashboard/panel";
 import "../redux/adminSlice"
 import "../redux/authSlice"
 import moment from 'moment'
+import baseUrl from "../utils/constans";
 async function totalUser(accessToken) {
 
   try {
-    const response2 = await fetch("http://localhost:8000/v1/admin/users", {
+    const response2 = await fetch(`${baseUrl}/v1/admin/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +35,7 @@ async function totalUser(accessToken) {
 }
 async function totalEvents(){
   try {
-    const responseTotalEvent = await fetch("http://localhost:8000/v1/admin/totalEvent", {
+    const responseTotalEvent = await fetch(`${baseUrl}/v1/admin/totalEvent`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

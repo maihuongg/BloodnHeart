@@ -19,6 +19,7 @@ import {
     hospitalFailed
 } from "../redux/eventSlice";
 import LeafletMap from "./leafmap";
+import baseUrl from "../../utils/constant";
 function DangkySukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const accessToken = user?.accessToken
@@ -68,7 +69,7 @@ function DangkySukien() {
             date: dateRegister,
         };
         try {
-            const response = await fetch("http://localhost:8000/v1/user/event/checkdate", {
+            const response = await fetch(`${baseUrl}/v1/user/event/checkdate`, {
                 method: 'POST',
                 body: JSON.stringify(checkdate),
                 headers: {
@@ -109,7 +110,7 @@ function DangkySukien() {
             showNotificationErr("Cần cập nhập hồ sơ đầy đủ!");
         } else {
             try {
-                const response = await fetch("http://localhost:8000/v1/user/event/register", {
+                const response = await fetch(`${baseUrl}/v1/user/event/register`, {
                     method: 'POST',
                     body: JSON.stringify(register),
                     headers: {
@@ -139,7 +140,7 @@ function DangkySukien() {
         e.preventDefault();
         dispatch(hospitalStart());
         try {
-            const response2 = await fetch("http://localhost:8000/v1/user/hospital/" + hospitalId, {
+            const response2 = await fetch(`${baseUrl}/v1/user/hospital/` + hospitalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -161,7 +162,7 @@ function DangkySukien() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

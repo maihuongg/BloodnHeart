@@ -44,7 +44,7 @@ function Lienhe() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function Lienhe() {
         console.log('Request Payload:', JSON.stringify(tobeHospital));
 
         try {
-            const response = await fetch('http://localhost:8000/v1/hospital/be-hospital/', {
+            const response = await fetch(`${baseUrl}/v1/hospital/be-hospital/`, {
                 method: 'POST',
                 body: JSON.stringify(tobeHospital),
                 headers: {

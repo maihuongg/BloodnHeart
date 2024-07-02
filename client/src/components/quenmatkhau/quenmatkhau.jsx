@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import baseUrl from "../../../utils/constant";
 function QuenMatKhau() {
     const [cccd, setCccd] = useState("");
     const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ function QuenMatKhau() {
         };
         console.log('request :', requestForgot)
         try {
-            const response = await fetch('http://localhost:8000/v1/user/forgot-password', {
+            const response = await fetch(`${baseUrl}/v1/user/forgot-password`, {
                 method: 'POST',
                 body: JSON.stringify(requestForgot),
                 headers: {

@@ -17,7 +17,7 @@ import {
 } from "../../redux/hospitalSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import baseUrl from "../../utils/constans";
 function DoiMatKhau() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -49,7 +49,7 @@ function DoiMatKhau() {
                 confirmPassword: confirmPassword
             };
 
-            const response = await fetch(`http://localhost:8000/v1/auth/change-password/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/auth/change-password/${id}`, {
                 method: 'POST',
                 body: JSON.stringify(newInfo),
                 headers: {

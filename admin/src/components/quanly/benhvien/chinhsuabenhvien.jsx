@@ -13,7 +13,7 @@ import {
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import baseUrl from "../../../utils/constans";
 function ChinhSuaBenhVien() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -39,7 +39,7 @@ function ChinhSuaBenhVien() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/v1/admin/hospital/${id}`, {
+                const response = await fetch(`${baseUrl}/v1/admin/hospital/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function ChinhSuaBenhVien() {
         try {
             const formData = new FormData();
             formData.append('images', images);
-            const response = await fetch(`http://localhost:8000/v1/admin/hospital/update-image/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/hospital/update-image/${id}`, {
                 method: 'PUT',
                 body: formData,
                 headers: {
@@ -125,7 +125,7 @@ function ChinhSuaBenhVien() {
                 address: address
             }
             console.log("NewInfo: ", newInfo)
-            const response = await fetch(`http://localhost:8000/v1/admin/hospital/update-info/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/hospital/update-info/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(newInfo),
                 headers: {

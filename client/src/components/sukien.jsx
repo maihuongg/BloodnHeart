@@ -23,6 +23,7 @@ import {
 } from "../redux/authSlice";
 import Button from "react-bootstrap/Button";
 import moment from "moment";
+import baseUrl from "../../utils/constant";
 function Sukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -40,7 +41,7 @@ function Sukien() {
         const handleEvent = async () => {
             dispatch(allEventStart());
             try {
-                const response = await fetch("http://localhost:8000/v1/user/event", {
+                const response = await fetch(`${baseUrl}/v1/user/event`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -66,7 +67,7 @@ function Sukien() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ function Sukien() {
         if (user) {
             dispatch(eventProfileStart());
             try {
-                const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + eventId, {
+                const response1 = await fetch(`${baseUrl}/v1/user/getevent/` + eventId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,7 +109,7 @@ function Sukien() {
 
             dispatch(hospitalStart());
             try {
-                const response2 = await fetch("http://localhost:8000/v1/user/gethospital/" + hospitalId, {
+                const response2 = await fetch(`${baseUrl}/v1/user/gethospital/` + hospitalId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -138,7 +139,7 @@ function Sukien() {
             date_end: date_end
         }
         try {
-            const response = await fetch("http://localhost:8000/v1/user/event/filter", {
+            const response = await fetch(`${baseUrl}/v1/user/event/filter`, {
                 method: 'POST',
                 body: JSON.stringify(filter),
                 headers: {
@@ -160,7 +161,7 @@ function Sukien() {
 
     const fetchDataSearcg = async (keyword) => {
         try {
-            const response2 = await fetch(`http://localhost:8000/v1/user/search/event?keyword=${keyword}`, {
+            const response2 = await fetch(`${baseUrl}/v1/user/search/event?keyword=${keyword}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

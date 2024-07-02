@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
+import baseUrl from "../../../utils/constans";
 function ChiTietSuKien() {
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
@@ -59,7 +60,7 @@ function ChiTietSuKien() {
                 dispatch(eventdetailStart());
                 try {
                     // Fetch event detail
-                    const responseDetail = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+                    const responseDetail = await fetch(`${baseUrl}/v1/hospital/detail/${id}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json'
@@ -73,7 +74,7 @@ function ChiTietSuKien() {
                     }
     
                     // Fetch event statistics
-                    const responseStatistic = await fetch(`http://localhost:8000/v1/admin/statistic/event/${id}`, {
+                    const responseStatistic = await fetch(`${baseUrl}/v1/admin/statistic/event/${id}`, {
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -86,7 +87,7 @@ function ChiTietSuKien() {
                     }
     
                     // Fetch event amount blood
-                    const responseAmountBlood = await fetch(`http://localhost:8000/v1/admin/statistic/event/amountblood/${id}`, {
+                    const responseAmountBlood = await fetch(`${baseUrl}/v1/admin/statistic/event/amountblood/${id}`, {
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -109,7 +110,7 @@ function ChiTietSuKien() {
             dispatch(eventdetailStart());
             try {
                 // Fetch event detail
-                const responseDetail = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+                const responseDetail = await fetch(`${baseUrl}/v1/hospital/detail/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -123,7 +124,7 @@ function ChiTietSuKien() {
                 }
 
                 // Fetch event statistics
-                const responseStatistic = await fetch(`http://localhost:8000/v1/admin/statistic/event/${id}`, {
+                const responseStatistic = await fetch(`${baseUrl}/v1/admin/statistic/event/${id}`, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -138,7 +139,7 @@ function ChiTietSuKien() {
                 }
 
                 // Fetch event amount blood
-                const responseAmountBlood = await fetch(`http://localhost:8000/v1/admin/statistic/event/amountblood/${id}`, {
+                const responseAmountBlood = await fetch(`${baseUrl}/v1/admin/statistic/event/amountblood/${id}`, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -301,7 +302,7 @@ function ChiTietSuKien() {
 
     const handleUserInfo = async (userid) => {
         try {
-            const response = await fetch(`http://localhost:8000/v1/hospital/userprofile/${userid}`, {
+            const response = await fetch(`${baseUrl}/v1/hospital/userprofile/${userid}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -337,7 +338,7 @@ function ChiTietSuKien() {
                 const formData = new FormData();
                 formData.append('images', images);
                 console.log("formdata", formData);
-                const response = await fetch(`http://localhost:8000/v1/hospital/update-image/${id}`, {
+                const response = await fetch(`${baseUrl}/v1/hospital/update-image/${id}`, {
                     method: 'PUT',
                     body: formData,
                     headers: {
@@ -376,7 +377,7 @@ function ChiTietSuKien() {
         }
         if (isHospital) {
             try {
-                const response1 = await fetch("http://localhost:8000/v1/hospital/update-status1", {
+                const response1 = await fetch(`${baseUrl}/v1/hospital/update-status1`, {
                     method: 'PUT',
                     body: JSON.stringify(update),
                     headers: {
@@ -412,7 +413,7 @@ function ChiTietSuKien() {
                     address: address
                 }
                 console.log("NewInfo: ", newInfo)
-                const response = await fetch(`http://localhost:8000/v1/hospital/update-profile/${id}`, {
+                const response = await fetch(`${baseUrl}/v1/hospital/update-profile/${id}`, {
                     method: 'PUT',
                     body: JSON.stringify(newInfo),
                     headers: {

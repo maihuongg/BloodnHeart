@@ -18,6 +18,7 @@ import {
 } from "../redux/hospitalSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import baseUrl from "../utils/constans";
 // import { isHospital } from "../../../server/middlewares/auth";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
@@ -33,7 +34,7 @@ function Dangnhap() {
         };
         dispatch(loginStart());
         try {
-            const response = await fetch('http://localhost:8000/v1/auth/login', {
+            const response = await fetch(`${baseUrl}/v1/auth/login`, {
                 method: 'POST',
                 body: JSON.stringify(newUser),
                 headers: {
@@ -50,7 +51,7 @@ function Dangnhap() {
                     dispatch(loginSuccess(data));
                     dispatch(adminprofileStart());
                     try {
-                        const response2 = await fetch("http://localhost:8000/v1/admin/profile/" + accountId, {
+                        const response2 = await fetch(`${baseUrl}/v1/admin/profile/` + accountId, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ function Dangnhap() {
                         dispatch(loginSuccess(data));
                         dispatch(hospitalprofileStart());
                         try {
-                            const response3 = await fetch("http://localhost:8000/v1/hospital/profile/" + accountId, {
+                            const response3 = await fetch(`${baseUrl}/v1/hospital/profile/` + accountId, {
                                 method: 'GET',
                                 headers: {
                                     'Content-Type': 'application/json',

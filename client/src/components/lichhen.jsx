@@ -24,6 +24,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
+import baseUrl from "../../utils/constant";
 function LichHen() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -46,7 +47,7 @@ function LichHen() {
             const handleProfile = async () => {
                 dispatch(userprofileStart());
                 try {
-                    const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                    const response1 = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ function LichHen() {
         const handleProfile = async () => {
             dispatch(userprofileStart());
             try {
-                const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                const response1 = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ function LichHen() {
 
     const handleShow = async (eventid) => {
         try {
-            const response1 = await fetch("http://localhost:8000/v1/user/getevent/" + eventid, {
+            const response1 = await fetch(`${baseUrl}/v1/user/getevent/` + eventid, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ function LichHen() {
             date: dateRegister,
         }
         try {
-            const response1 = await fetch("http://localhost:8000/v1/user/event/updateRegisterDate", {
+            const response1 = await fetch(`${baseUrl}/v1/user/event/updateRegisterDate`, {
                 method: 'PUT',
                 body: JSON.stringify(update),
                 headers: {
@@ -164,7 +165,7 @@ function LichHen() {
             userId: userPro._id,
         }
         try {
-            const response1 = await fetch("http://localhost:8000/v1/user/event/deleteRegister", {
+            const response1 = await fetch(`${baseUrl}/v1/user/event/deleteRegister`, {
                 method: 'DELETE',
                 body: JSON.stringify(deleteRegister),
                 headers: {
@@ -190,7 +191,7 @@ function LichHen() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

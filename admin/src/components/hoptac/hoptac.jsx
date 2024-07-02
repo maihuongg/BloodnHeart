@@ -9,7 +9,7 @@ import Navbar from "../dashboard/navbar";
 import Sidebar from "../dashboard/sidebar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
+import baseUrl from "../../utils/constans";
 function HopTac() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ function HopTac() {
                 repeatPassword: repeatPassword
             };
             console.log("request", request)
-            const response = await fetch('http://localhost:8000/v1/admin/accept-hospital', {
+            const response = await fetch(`${baseUrl}/v1/admin/accept-hospital`, {
                 method: 'POST',
                 body: JSON.stringify(request),
                 headers: {
@@ -81,7 +81,7 @@ function HopTac() {
         // Function to fetch data from the API
         const fetchData = async () => {
             try {
-                const response2 = await fetch("http://localhost:8000/v1/admin/hospital-profile-accid", {
+                const response2 = await fetch(`${baseUrl}/v1/admin/hospital-profile-accid`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -18,6 +18,7 @@ import {
 } from "../redux/authSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import baseUrl from "../../utils/constant";
 function Hoso() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -78,7 +79,7 @@ function Hoso() {
         const handleProfile = async () => {
             dispatch(userprofileStart());
             try {
-                const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                const response1 = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,7 +109,7 @@ function Hoso() {
         };
         dispatch(userprofileStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+            const response = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                 method: 'PUT',
                 body: JSON.stringify(updateUser),
                 headers: {
@@ -141,7 +142,7 @@ function Hoso() {
         };
         dispatch(userprofileStart());
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+            const response = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                 method: 'PUT',
                 body: JSON.stringify(updateUser),
                 headers: {
@@ -169,7 +170,7 @@ function Hoso() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -197,10 +198,8 @@ function Hoso() {
 
         dispatch(userprofileStart());
 
-        console.log('Fetch URL:', "http://localhost:8000/v1/user/profileimage/" + userId);
-
         try {
-            const response = await fetch("http://localhost:8000/v1/user/profileimage/" + userId, {
+            const response = await fetch(`${baseUrl}/v1/user/profileimage/` + userId, {
                 method: 'PUT',
                 body: formData,
                 headers: {
@@ -231,7 +230,7 @@ function Hoso() {
             account_id: userPro.account_id,
         };
         try {
-            const response = await fetch("http://localhost:8000/v1/user/updatePassword", {
+            const response = await fetch(`${baseUrl}/v1/user/updatePassword`, {
                 method: 'PUT',
                 body: JSON.stringify(updatePassword),
                 headers: {

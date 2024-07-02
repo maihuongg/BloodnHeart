@@ -15,7 +15,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
-
+import baseUrl from "../../utils/constant";
 function DiemThuong() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;
@@ -28,7 +28,7 @@ function DiemThuong() {
         const handleProfile = async () => {
             dispatch(userprofileStart());
             try {
-                const response1 = await fetch("http://localhost:8000/v1/user/profile/" + userId, {
+                const response1 = await fetch(`${baseUrl}/v1/user/profile/` + userId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ function DiemThuong() {
         e.preventDefault();
         dispatch(logOutStart());
         try {
-            const res = await fetch("http://localhost:8000/v1/auth/logout", {
+            const res = await fetch(`${baseUrl}/v1/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

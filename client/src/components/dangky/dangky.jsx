@@ -9,6 +9,7 @@ import {
     registerSuccess,
     registerFailed
 } from "../../redux/authSlice";
+import baseUrl from "../../../utils/constant";
 function Dangky(){
     const [email, setEmail] = useState("");
     const [cccd, setCccd] = useState("");
@@ -33,7 +34,7 @@ function Dangky(){
         }else{
             if (repw == newUser.password){
                 try {
-                    const response = await fetch('http://localhost:8000/v1/auth/register', {
+                    const response = await fetch(`${baseUrl}/v1/auth/register`, {
                         method: 'POST',
                         body: JSON.stringify(newUser),
                         headers: {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
+import baseUrl from "../../../utils/constant";
 function ResetMatKhau() {
     const [isTokenValid, setIsTokenValid] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -16,7 +16,7 @@ function ResetMatKhau() {
             token: resetToken
         }
         try {
-            const response = await fetch('http://localhost:8000/v1/user/valid-reset-token', {
+            const response = await fetch(`${baseUrl}/v1/user/valid-reset-token`, {
                 method: 'POST',
                 body: JSON.stringify(requestToken),
                 headers: {
@@ -53,7 +53,7 @@ function ResetMatKhau() {
                     };
                     console.log(resetToken)
 
-                    const response = await fetch('http://localhost:8000/v1/user/reset-password', {
+                    const response = await fetch(`${baseUrl}/v1/user/reset-password`, {
                         method: 'PUT',
                         body: JSON.stringify(requestForgot),
                         headers: {
@@ -63,8 +63,8 @@ function ResetMatKhau() {
                     });
         
                     if (!response.ok) {
-                        const errorData = await response.json();                        setMsgSuccess("Password changed successfully!");
-                        setMsgSuccess();
+                        const errorData = await response.json();                        
+                        setMsgSuccess("Password changed successfully!");
                         setMsgErr(errorData.message);
                     } else {
                         setMsgErr();

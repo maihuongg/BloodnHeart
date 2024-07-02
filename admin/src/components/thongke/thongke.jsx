@@ -10,7 +10,7 @@ import Sidebar from "../dashboard/sidebar";
 import Navbar from "../dashboard/navbar";
 import footer from "../dashboard/footer";
 import Chart from "chart.js/auto";
-
+import baseUrl from "../../utils/constans";
 function ThongKe() {
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const adminProfile = useSelector((state) => state.admin.profile.getadmin);
@@ -32,7 +32,7 @@ function ThongKe() {
         // Fetch data from your API endpoint
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8000/v1/admin/statistic/account', {
+                const response = await fetch(`${baseUrl}/v1/admin/statistic/account`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },
@@ -50,7 +50,7 @@ function ThongKe() {
         };
         const fetchDataBar = async () => {
             try {
-                const response = await fetch('http://localhost:8000/v1/admin/statistic/event', {
+                const response = await fetch(`${baseUrl}/v1/admin/statistic/event`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },
@@ -68,7 +68,7 @@ function ThongKe() {
         };
         const fetchHospitalStatistics = async () => {
             try {
-                const response = await fetch('http://localhost:8000/v1/admin/statistic/hospital', {
+                const response = await fetch(`${baseUrl}/v1/admin/statistic/hospital`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },
@@ -86,7 +86,7 @@ function ThongKe() {
         };
         const fetchAccountbyDate = async () => {
             try {
-                const response = await fetch('http://localhost:8000/v1/admin/statistic/account-register', {
+                const response = await fetch(`${baseUrl}/v1/admin/statistic/account-register`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },

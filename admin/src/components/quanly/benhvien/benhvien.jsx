@@ -16,6 +16,7 @@ import {
     hospitalprofileSuccess,
     hospitalrofileFailed
 } from "../../../redux/hospitalSlice"
+import baseUrl from "../../../utils/constans";
 function BenhVien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,7 +41,7 @@ function BenhVien() {
     const [successMsg, setSuccessMsg] = useState(null);
     const fetchDataSearcg = async (keyword) => {
         try {
-            const response2 = await fetch(`http://localhost:8000/v1/admin/search/hospital?keyword=${keyword}`, {
+            const response2 = await fetch(`${baseUrl}/v1/admin/search/hospital?keyword=${keyword}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ function BenhVien() {
     };
     const fetchData = async () => {
         try {
-            const response2 = await fetch('http://localhost:8000/v1/admin/hospital', {
+            const response2 = await fetch(`${baseUrl}/v1/admin/hospital`, {
                 method: 'GET',
                 headers: {
 
@@ -89,7 +90,7 @@ function BenhVien() {
         // Function to fetch data from the API
         const fetchData = async () => {
             try {
-                const response2 = await fetch('http://localhost:8000/v1/admin/hospital', {
+                const response2 = await fetch(`${baseUrl}/v1/admin/hospital`, {
                     method: 'GET',
                     headers: {
 
@@ -121,7 +122,7 @@ function BenhVien() {
     const handleGetInfoHospital = async (id) => {
         dispatch(hospitalprofileStart());
         try {
-            const response = await fetch(`http://localhost:8000/v1/admin/hospital/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/admin/hospital/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -219,7 +220,7 @@ function BenhVien() {
                 cccd: cccd
             }
             try {
-                const response = await fetch("http://localhost:8000/v1/admin/hospital/add", {
+                const response = await fetch(`${baseUrl}/v1/admin/hospital/add`, {
                     method: 'POST',
                     body: JSON.stringify(newHospital),
                     headers: {

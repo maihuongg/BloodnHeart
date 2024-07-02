@@ -17,6 +17,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
+import baseUrl from "../../../utils/constans";
 function SuKien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -87,7 +88,7 @@ function SuKien() {
                 //Function to fetch data from the API
                 const fetchData1 = async () => {
                     try {
-                        const response1 = await fetch("http://localhost:8000/v1/admin/event", {
+                        const response1 = await fetch(`${baseUrl}/v1/admin/event`, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -114,7 +115,7 @@ function SuKien() {
                     //Function to fetch data from the API
                     const fetchData2 = async () => {
                         try {
-                            const response2 = await fetch("http://localhost:8000/v1/hospital/event/" + hospitalId, {
+                            const response2 = await fetch(`${baseUrl}/v1/hospital/event/` + hospitalId, {
                                 method: 'GET',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -145,7 +146,7 @@ function SuKien() {
     }, [showModal]);
     const fetchDataSearcg = async (keyword) => {
         try {
-            const response2 = await fetch(`http://localhost:8000/v1/admin/search/event?keyword=${keyword}`, {
+            const response2 = await fetch(`${baseUrl}/v1/admin/search/event?keyword=${keyword}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -273,7 +274,7 @@ function SuKien() {
 
     const handleCloseEvent = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8000/v1/hospital/close/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/hospital/close/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -302,7 +303,7 @@ function SuKien() {
         //e.preventDefault();
         dispatch(eventdetailStart());
         try {
-            const response = await fetch(`http://localhost:8000/v1/hospital/detail/${id}`, {
+            const response = await fetch(`${baseUrl}/v1/hospital/detail/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -352,7 +353,7 @@ function SuKien() {
                 address: address
             }
             try {
-                const response = await fetch("http://localhost:8000/v1/hospital/event/add", {
+                const response = await fetch(`${baseUrl}/v1/hospital/event/add`, {
                     method: 'POST',
                     body: JSON.stringify(newEvent),
                     headers: {
