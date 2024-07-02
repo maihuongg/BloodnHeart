@@ -30,8 +30,8 @@ function ChiTietSuKien() {
     const data = event.listusers.user;
     const [images, setImages] = useState(event.images);
     const [eventName, setEventName] = useState(event.eventName);
-    const [date_start, setDate_start] = useState(moment(event.date_start).format('DD-MM-YYYY'));
-    const [date_end, setDate_end] = useState(moment(event.date_end).format('DD-MM-YYYY'));
+    // const [date_start, setDate_start] = useState(moment(event.date_start).format('DD-MM-YYYY'));
+    // const [date_end, setDate_end] = useState(moment(event.date_end).format('DD-MM-YYYY'));
     const [amount, setAmount] = useState(event.amount);
     const [address, setAddress] = useState(event.address);
 
@@ -54,7 +54,18 @@ function ChiTietSuKien() {
     const [dataEventStatistic, setDataEventStatistic] = useState(null);
     const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
     const [dataEventBlood, setDataEventBlood] = useState(null);
-    
+    const [date_start, setDate_start] = useState('');
+    const [date_end, setDate_end] = useState('');
+  
+    useEffect(() => {
+      if (event && event.date_start) {
+        setDate_start(moment(event.date_start).format('YYYY-MM-DD'));
+      }
+      if (event && event.date_end) {
+        setDate_end(moment(event.date_end).format('YYYY-MM-DD'));
+      }
+    }, [event]);
+  
     useEffect(() => {
         if(refresh){
             const fetchData = async () => {
@@ -531,7 +542,9 @@ function ChiTietSuKien() {
                                                     <input
                                                         type="date"
                                                         className="form-control"
-                                                        defaultValue={moment(event.date_start).format('DD-MM-YYYY')}
+                                                        value={date_start}
+
+                                                        // defaultValue={moment(event.date_start).format('DD-MM-YYYY')}
                                                         onChange={(e) => setDate_start(e.target.value)}
                                                     />
                                                 </div>
@@ -540,7 +553,9 @@ function ChiTietSuKien() {
                                                     <input
                                                         type="date"
                                                         className="form-control"
-                                                        defaultValue={moment(event.date_end).format('DD-MM-YYYY')}
+                                                        value={date_end}
+
+                                                        // defaultValue={moment(event.date_end).format('DD-MM-YYYY')}
                                                         onChange={(e) => setDate_end(e.target.value)}
                                                     />
                                                 </div>
