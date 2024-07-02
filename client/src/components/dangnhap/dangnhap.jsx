@@ -12,7 +12,7 @@ import {
     loginStart,
     loginSuccess,
 } from "../../redux/authSlice";
-import baseUrl from "../../../utils/constant";
+import baseUrl from "../../utils/constant";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
     const [password, setPassword] = useState("");

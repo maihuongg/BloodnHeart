@@ -16,7 +16,7 @@ import {
 } from "../redux/authSlice";
 import { toPng } from 'html-to-image';
 import { Table, Button, Modal } from "antd";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function LichSuHienMau() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;

@@ -18,7 +18,7 @@ import {
 } from "../redux/authSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function Hoso() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;

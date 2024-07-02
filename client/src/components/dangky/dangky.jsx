@@ -9,7 +9,7 @@ import {
     registerSuccess,
     registerFailed
 } from "../../redux/authSlice";
-import baseUrl from "../../../utils/constant";
+import baseUrl from "../../utils/constant";
 function Dangky(){
     const [email, setEmail] = useState("");
     const [cccd, setCccd] = useState("");

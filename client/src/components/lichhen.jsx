@@ -24,7 +24,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function LichHen() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;

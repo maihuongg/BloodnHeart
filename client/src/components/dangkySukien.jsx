@@ -19,7 +19,7 @@ import {
     hospitalFailed
 } from "../redux/eventSlice";
 import LeafletMap from "./leafmap";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function DangkySukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const accessToken = user?.accessToken

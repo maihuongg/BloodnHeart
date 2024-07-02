@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import baseUrl from "../../../utils/constant";
+import baseUrl from "../../utils/constant";
 function QuenMatKhau() {
     const [cccd, setCccd] = useState("");
     const [email, setEmail] = useState("");

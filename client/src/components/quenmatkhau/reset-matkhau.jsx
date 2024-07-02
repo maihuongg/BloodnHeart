@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import baseUrl from "../../../utils/constant";
+import baseUrl from "../../utils/constant";
 function ResetMatKhau() {
     const [isTokenValid, setIsTokenValid] = useState("");
     const [newPassword, setNewPassword] = useState("");

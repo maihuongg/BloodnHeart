@@ -23,7 +23,7 @@ import {
 } from "../redux/authSlice";
 import Button from "react-bootstrap/Button";
 import moment from "moment";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function Sukien() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;

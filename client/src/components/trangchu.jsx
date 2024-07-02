@@ -24,7 +24,7 @@ import {
 } from "../redux/authSlice";
 import { GoogleMap, LoadScript, Marker, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 import LeafletMap from "./leafmap";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function Trangchu() {
     const user = useSelector((state) => state.auth.login.currentUser);
     const userId = user?._id;

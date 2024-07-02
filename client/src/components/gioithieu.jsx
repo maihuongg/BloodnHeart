@@ -8,7 +8,7 @@ import {
     logOutSuccess,
     logOutFailed
 } from "../redux/authSlice";
-import baseUrl from "../../utils/constant";
+import baseUrl from "../utils/constant";
 function Gioithieu() {
 
     const user = useSelector((state) => state.auth.login.currentUser);
