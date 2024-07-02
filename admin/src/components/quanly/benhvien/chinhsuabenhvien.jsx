@@ -13,7 +13,7 @@ import {
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import baseUrl from "../../../utils/constanst";
+import baseUrl from "../../../utils/constant";
 function ChinhSuaBenhVien() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
