@@ -16,7 +16,7 @@ import {
     hospitalprofileSuccess,
     hospitalrofileFailed
 } from "../../../redux/hospitalSlice"
-import baseUrl from "../../../utils/constans";
+import baseUrl from "../../../utils/constant";
 function BenhVien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);

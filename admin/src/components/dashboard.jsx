@@ -12,7 +12,7 @@ import Panel from "./dashboard/panel";
 import "../redux/adminSlice"
 import "../redux/authSlice"
 import moment from 'moment'
-import baseUrl from "../utils/constans";
+import baseUrl from "../utils/constant";
 async function totalUser(accessToken) {
 
   try {

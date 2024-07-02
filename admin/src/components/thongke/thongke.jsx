@@ -10,7 +10,7 @@ import Sidebar from "../dashboard/sidebar";
 import Navbar from "../dashboard/navbar";
 import footer from "../dashboard/footer";
 import Chart from "chart.js/auto";
-import baseUrl from "../../utils/constans";
+import baseUrl from "../../utils/constant";
 function ThongKe() {
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const adminProfile = useSelector((state) => state.admin.profile.getadmin);

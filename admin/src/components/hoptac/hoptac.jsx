@@ -9,7 +9,7 @@ import Navbar from "../dashboard/navbar";
 import Sidebar from "../dashboard/sidebar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import baseUrl from "../../utils/constans";
+import baseUrl from "../../utils/constant";
 function HopTac() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);

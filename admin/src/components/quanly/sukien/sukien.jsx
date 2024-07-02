@@ -17,7 +17,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
-import baseUrl from "../../../utils/constans";
+import baseUrl from "../../../utils/constant";
 function SuKien() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);

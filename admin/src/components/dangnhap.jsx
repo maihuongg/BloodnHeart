@@ -18,7 +18,7 @@ import {
 } from "../redux/hospitalSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import baseUrl from "../utils/constans";
+import baseUrl from "../utils/constant";
 // import { isHospital } from "../../../server/middlewares/auth";
 function Dangnhap() {
     const [cccd, setCccd] = useState("");
