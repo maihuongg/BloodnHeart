@@ -30,8 +30,8 @@ function ChiTietSuKien() {
     const data = event.listusers.user;
     const [images, setImages] = useState(event.images);
     const [eventName, setEventName] = useState(event.eventName);
-    const [date_start, setDate_start] = useState(moment(event.date_start).format('YYYY-MM-DD'));
-    const [date_end, setDate_end] = useState(moment(event.date_end).format('YYYY-MM-DD'));
+    const [date_start, setDate_start] = useState(moment(event.date_start).format('DD-MM-YYYY'));
+    const [date_end, setDate_end] = useState(moment(event.date_end).format('DD-MM-YYYY'));
     const [amount, setAmount] = useState(event.amount);
     const [address, setAddress] = useState(event.address);
 
