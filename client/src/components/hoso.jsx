@@ -48,7 +48,7 @@ function Hoso() {
     const handleShow3 = () => setShow3(true);
 
     const [fullName, setfullName] = useState(userPro?.fullName);
-    const [birthDay, setbirthDay] = useState(moment(userPro?.birthDay).format('DD-MM-YYYY'));
+    const [birthDay, setbirthDay] = useState('');
 
     const [gender, setGender] = useState(userPro?.gender);
     const [bloodgroup, setbloodGroup] = useState(userPro?.bloodgroup);
@@ -74,6 +74,12 @@ function Hoso() {
             // position: toast.POSITION.BOTTOM_CENTER,
         });
     };
+
+    useEffect(() => {
+        if (userPro && userPro.birthDay) {
+          setbirthDay(moment(userPro.birthDay).format('YYYY-MM-DD'));
+        }
+      }, [userPro]);
 
     useEffect(() => {
         const handleProfile = async () => {
@@ -554,9 +560,7 @@ function Hoso() {
                                                     <input
                                                         type="date"
                                                         className="form-control border-1"
-                                                        placeholder="VD: 01/01/2000"
-                                                        required="required"
-                                                        defaultValue={moment(userPro?.birthDay).format('DD-MM-YYYY')}
+                                                        value={birthDay}
                                                         onChange={(e) => setbirthDay(e.target.value)}
                                                     />
                                                 </div>

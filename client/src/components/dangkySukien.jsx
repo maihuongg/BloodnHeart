@@ -85,7 +85,11 @@ function DangkySukien() {
                 if (result === 0) {
                     showNotificationErr('Bạn không thể đăng ký vì chưa đủ tối thiểu 90 ngày so với ngày hiến máu gần nhất.')
                 } else {
-                    setShow(true);
+                    if (result === -1) {
+                        showNotificationErr('Vui lòng kiểm tra lại lịch hẹn, mỗi lịch hẹn yêu cầu cách nhau tối thiểu 90 ngày.')
+                    } else {
+                        setShow(true);
+                    }  
                 }
             }
         } catch (error) {
