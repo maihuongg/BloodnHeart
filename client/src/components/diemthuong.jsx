@@ -232,15 +232,14 @@ function DiemThuong() {
                         <h1 className="mb-4">Các lưu ý về điểm thưởng</h1>
                         <div className="text-left pb-2">
                             <ul className="list-group">
-                                <li className="list-group-item">Lưu ý 1: Đăng ký sự kiện để nhận điểm thưởng. Mỗi lần đăng ký sẽ được 1 điểm thưởng.</li>
+                                <li className="list-group-item">Lưu ý 1: Mỗi lần hoàn thành hiến máu sẽ được 1 điểm thưởng.</li>
                                 <li className="list-group-item">Lưu ý 2: Điểm thưởng sẽ được làm mới theo chu kỳ 1 năm, bắt đầu mỗi chu kỳ là ngày 1/1 hàng năm.</li>
                                 <li className="list-group-item">Lưu ý 3: Đạt được các mốc điểm cố định sẽ được phần quà tương ứng.</li>
-                                <li className="list-group-item">Lưu ý 4: Nếu hủy lịch hẹn thì điểm thưởng được cộng khi đăng ký sự kiện đó sẽ trừ đi.</li>
-                                <li className="list-group-item">Lưu ý 5: Quà tặng sẽ được tặng khi đến cơ sở hiến máu.</li>
-                                <li className="list-group-item">Lưu ý 6: Lưu ý đây là quà tặng khi tích lũy điểm thưởng trên hệ thống nên sẽ được tách biệt
+                                <li className="list-group-item">Lưu ý 4: Quà tặng sẽ được tặng khi đến cơ sở hiến máu.</li>
+                                <li className="list-group-item">Lưu ý 5: Lưu ý đây là quà tặng khi tích lũy điểm thưởng trên hệ thống nên sẽ được tách biệt
                                     với các quà tặng khác khi đi hiến máu tại các cơ sở bệnh viện khác nhau,
                                     người dùng tránh nhầm lẫn và chú ý để nhận đầy đủ các phần quà khi đi hiến máu.</li>
-                                <li className="list-group-item">Lưu ý 7: Vui lòng liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về điểm thưởng.</li>
+                                <li className="list-group-item">Lưu ý 6: Vui lòng liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào về điểm thưởng.</li>
                             </ul>
                         </div>
                     </div>
