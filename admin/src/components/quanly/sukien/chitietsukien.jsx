@@ -423,6 +423,9 @@ function ChiTietSuKien() {
                 if (blood_status == 1 && status_user == 1) {
                     setActiveStep(3);
                 }
+                if (bloodStatus == 0) {
+                    setActiveStep(1); // Directly set to end step if not qualified
+                }
 
             }
         } catch (error) {
@@ -542,6 +545,7 @@ function ChiTietSuKien() {
     ];
 
     const handleNext = async (e) => {
+
         // 
         if (activeStep === 0) {
             // Gọi API để cập nhật blood_status và description
@@ -1015,13 +1019,22 @@ function ChiTietSuKien() {
                                                                         fullWidth
                                                                         margin="normal"
                                                                     >
-                                                                        {/* Menu items for reasons */}
+                                                                        <MenuItem value="Vừa uống rượu, bia">Vừa uống rượu, bia</MenuItem>
+                                                                        <MenuItem value="Có các bệnh mãn tính">Có các bệnh mãn tính</MenuItem>
+                                                                        <MenuItem value="Đang mắc các bệnh cấp tính">Đang mắc các bệnh cấp tính</MenuItem>
+                                                                        <MenuItem value="Đã nhiễm nhiễm HIV, viêm gan B, C">Đã nhiễm nhiễm HIV, viêm gan B, C</MenuItem>
+                                                                        <MenuItem value="Có nguy cơ cao lây nhiễm HIV, viêm gan B, C">Có nguy cơ cao lây nhiễm HIV, viêm gan B, C</MenuItem>
+                                                                        <MenuItem value="Nghiện ma túy">Nghiện ma túy</MenuItem>
+                                                                        <MenuItem value="Có quan hệ tình dục không an toàn">Có quan hệ tình dục không an toàn</MenuItem>
+                                                                        <MenuItem value="Nam giới có quan hệ tình dục với người cùng giới khác">Nam giới có quan hệ tình dục với người cùng giới khác</MenuItem>
+                                                                        <MenuItem value="Người đang bị bệnh thiếu máu">Người đang bị bệnh thiếu máu</MenuItem>
                                                                     </TextField>
                                                                 )}
                                                             </>
                                                         )}
-                                                        <div style={{ marginTop: 12 }}>
-                                                            {index !== steps.length - 1 && (
+                                                       
+                                                        {index !== 1 && (
+                                                            <div style={{ marginTop: 12 }}>
                                                                 <Button
                                                                     variant="contained"
                                                                     color="primary"
@@ -1030,27 +1043,50 @@ function ChiTietSuKien() {
                                                                 >
                                                                     {activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'}
                                                                 </Button>
-                                                            )}
+
+                                                            </div>
+                                                        )}
+
+                                                        {index === 1 && bloodStatus === '0' && (
+                                                            <Typography variant="h8" color="error">
+                                                                Không đủ điều kiện hiến máu
+                                                            </Typography>
+                                                        )}
+                                                        <div style={{ marginTop: 12 }}>
                                                             <Button disabled={activeStep === 0} onClick={handleBack}>
                                                                 Quay lại
-                                                            </Button>
-                                                        </div>
+                                                            </Button></div>
                                                     </StepContent>
                                                 </Step>
                                             ))}
                                         </Stepper>
+
                                         {activeStep === steps.length - 1 && (
+                                            // <Paper square elevation={0} style={{ padding: 20, textAlign: 'center' }}>
+                                            //     <Typography variant="h8" gutterBottom>
+                                            //         Quá trình hoàn thành
+                                            //     </Typography>
+
+
+                                            //     <Button
+                                            //         variant="contained"
+                                            //         color="primary"
+                                            //         onClick={handleReset}
+                                            //         style={{ marginLeft: 10 }}
+                                            //     >
+                                            //         Đặt lại
+                                            //     </Button>
+
+                                            // </Paper>
                                             <Paper square elevation={0} style={{ padding: 20, textAlign: 'center' }}>
-                                                <Typography variant="h8" gutterBottom>
-                                                    Quá trình hoàn thành
+                                                <Typography variant="h6" gutterBottom>
+                                                    {bloodStatus === '0' ? 'Không đủ tiêu chuẩn hiến máu' : 'Quá trình hoàn thành'}
                                                 </Typography>
-
-
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
                                                     onClick={handleReset}
-                                                    style={{ marginLeft: 10 }}
+                                                    style={{ marginTop: 20 }}
                                                 >
                                                     Đặt lại
                                                 </Button>
