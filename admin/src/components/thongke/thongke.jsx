@@ -11,6 +11,7 @@ import Navbar from "../dashboard/navbar";
 import footer from "../dashboard/footer";
 import Chart from "chart.js/auto";
 import baseUrl from "../../utils/constant";
+
 function ThongKe() {
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
     const adminProfile = useSelector((state) => state.admin.profile.getadmin);
@@ -25,9 +26,20 @@ function ThongKe() {
     const [hospitalStatistics, setHospitalStatistics] = useState(null);
     const [accountbyDate, setAccountbyDate] = useState(null);
     const [lineChart, setLineChart] = useState(null);
+    const [registerbyDate, setRegisterbyDate] = useState(null);
+    const [date_from, setDateFrom] = useState(null);
+    const [date_to, setDateTo] = useState(null);
 
     const [currentTime, setCurrentTime] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
     const [userTotal, setUserTotal] = useState(null);
+
+    const formatDate = (date) => {
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${month}/${day}/${year}`;
+    };
+
     useEffect(() => {
         // Fetch data from your API endpoint
         const fetchData = async () => {
@@ -97,7 +109,7 @@ function ThongKe() {
                 }
 
                 const data = await response.json();
-                console.log('API Response:', data); // Log the API response
+
 
                 setAccountbyDate(data);
             } catch (error) {
@@ -105,10 +117,44 @@ function ThongKe() {
             }
         };
 
+        const fetchRegiterbyDate = async () => {
+            const currentdate = new Date();
+            const date = new Date(currentdate);
+            date.setDate(currentdate.getDate() - 10);
+            const datecurrent = formatDate(currentdate);
+            const datetenago = formatDate(date);
+            const filter = {
+                date_from: datetenago,
+                date_to: datecurrent
+            }
+            try {
+                const response = await fetch(`${baseUrl}/v1/admin/statistic/register-event`, {
+                    method: 'POST',
+                    body: JSON.stringify(filter),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch registration statistics by date');
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data); // Log the API response
+
+                setRegisterbyDate(data);
+
+            } catch (error) {
+                console.error('Error fetching registration statistics by date:', error);
+            }
+        }
+
         fetchAccountbyDate();
         fetchHospitalStatistics();
         fetchDataBar();
         fetchData();
+        fetchRegiterbyDate();
     }, [accessToken]);
 
     useEffect(() => {
@@ -212,7 +258,7 @@ function ThongKe() {
     useEffect(() => {
         if (accountbyDate) {
             const lineChartCanvas = document.getElementById('lineChart');
-    
+
             if (lineChartCanvas) {
                 new Chart(lineChartCanvas, {
                     type: 'line',
@@ -277,7 +323,76 @@ function ThongKe() {
             }
         }
     }, [accountbyDate]);
-    
+
+    useEffect(() => {
+        let registerChartInstance;
+        if (registerbyDate) {
+            const registerChartCanvas = document.getElementById('registerChart');
+            if (registerChartCanvas) {
+                registerChartInstance = new Chart(registerChartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: registerbyDate.map(r => r.date), // Các ngày
+                        datasets: [
+                            {
+                                label: 'Số lượng đăng ký',
+                                data: registerbyDate.map(r => r.registrations), // Số lượng đăng ký cho từng ngày
+                                borderColor: 'rgb(54, 162, 235)',
+                                borderWidth: 2,
+                                pointRadius: 5,
+                                fill: false,
+                            },
+                        ],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                },
+                            },
+                        },
+                    },
+                });
+            }
+        }
+        return () => {
+            if (registerChartInstance) {
+                registerChartInstance.destroy();
+            }
+        };
+    }, [registerbyDate]);
+
+    const handleRegiterbyDate = async () => {
+        const datecurrent = formatDate(new Date(date_to));
+        const datetenago = formatDate(new Date(date_from));
+        const filter = {
+            date_from: datetenago,
+            date_to: datecurrent
+        }
+        try {
+            const response = await fetch(`${baseUrl}/v1/admin/statistic/register-event`, {
+                method: 'POST',
+                body: JSON.stringify(filter),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch registration statistics by date');
+            }
+
+            const data = await response.json();
+            console.log('API Response:', data); // Log the API response
+
+            setRegisterbyDate(data);
+
+        } catch (error) {
+            console.error('Error fetching registration statistics by date:', error);
+        }
+    }
     return (
         <div className="container-scroller">
             <Navbar />
@@ -324,6 +439,44 @@ function ThongKe() {
                             </div>
                         </div>
 
+                        <div>
+
+                            <div className="col-lg-12 ">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h4 className="card-title">Thống kê số lượng đăng ký sự kiện hiến máu</h4>
+                                        <div className="row">
+                                            <div className="col-lg-5">
+                                                <label className="form-control-label label">Từ ngày:</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control border-1"
+                                                    placeholder="VD: 01/01/2000"
+                                                    required="required"
+                                                    onChange={(e) => setDateFrom(e.target.value)}
+                                                />
+                                            </div>
+                                            <br />
+                                            <div className="col-lg-5">
+                                                <label className="form-control-label label">Đến ngày:</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control border-1"
+                                                    placeholder="VD: 01/01/2000"
+                                                    required="required"
+                                                    onChange={(e) => setDateTo(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="col-lg-2">
+                                                <br />
+                                                <button type="button" className="btn btn-outline-success btn-icon-text ml-auto mt-2" onClick={handleRegiterbyDate}>Lọc</button>
+                                            </div>
+                                        </div>
+                                        <canvas id="registerChart" ></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <footer />

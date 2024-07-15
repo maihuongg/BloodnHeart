@@ -10,11 +10,22 @@ function QuenMatKhau() {
     const [msgSuccess, setMsgSuccess] = useState(null);
     const navigate = useNavigate();
 
+    const generateRandomDigits = () => {
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            const randomDigit = Math.floor(Math.random() * 10); // Sinh số ngẫu nhiên từ 0 đến 9
+            result += randomDigit.toString();
+        }
+        return result;
+    };
+
     const handleForgotPassword = async (e) => {
         e.preventDefault();
+        const random = generateRandomDigits();
         const requestForgot = {
             cccd: cccd,
-            email: email
+            email: email,
+            code: random
         };
         console.log('request :', requestForgot)
         try {
@@ -35,6 +46,7 @@ function QuenMatKhau() {
                 const successMsg = await response.json();
                 setMsgErr(null);
                 setMsgSuccess(successMsg.message);
+                navigate("/codeforgotpassword");
             }
         } catch (error) {
             setMsgErr("Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.");
