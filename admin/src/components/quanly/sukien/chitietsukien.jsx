@@ -393,8 +393,6 @@ function ChiTietSuKien() {
         console.log("UserID selected: ", userId)
         setRefresh(false);
         setShow1(true);
-
-
         try {
             const response1 = await fetch(`${baseUrl}/v1/hospital/find-user-in-event/?eventId=${id}&userId=${userId}`, {
                 method: 'GET',
@@ -411,9 +409,14 @@ function ChiTietSuKien() {
 
                 const blood_status = dataUserProfile.blood_status;
                 console.log(' blood_status: ', blood_status)
+                setBloodStatus(blood_status);
+
                 const status_user = dataUserProfile.status_user;
                 if (blood_status == null)
                     setActiveStep(0);
+                if (bloodStatus == 0) {
+                    setActiveStep(1); // Directly set to end step if not qualified
+                }
                 if (blood_status == 1 && status_user == -1) {
                     setActiveStep(1);
                 }
@@ -423,17 +426,46 @@ function ChiTietSuKien() {
                 if (blood_status == 1 && status_user == 1) {
                     setActiveStep(3);
                 }
-                if (bloodStatus == 0) {
-                    setActiveStep(1); // Directly set to end step if not qualified
-                }
-
             }
         } catch (error) {
             console.log(error)
         }
 
     }
+    const fetchUserData = async () => {
+        if (!userid) return;
 
+        try {
+            const response1 = await fetch(`${baseUrl}/v1/hospital/find-user-in-event/?eventId=${id}&userId=${userid}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response1.ok) {
+                const err = await response1.json();
+                console.error(err.message);
+            } else {
+                const dataUserProfile = await response1.json();
+                const blood_status = dataUserProfile.blood_status;
+                console.log("blood_status:",blood_status)
+                const status_user = dataUserProfile.status_user;
+                setBloodStatus(blood_status)
+                if (blood_status == null) setActiveStep(0);
+                else if (blood_status === 0) setActiveStep(1); // Directly set to step 1 if not qualified
+                else if (blood_status === 1 && status_user === -1) setActiveStep(1);
+                else if (blood_status === 1 && status_user === 0) setActiveStep(2);
+                else if (blood_status === 1 && status_user === 1) setActiveStep(3);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, [userid, refresh, show1]);
     const handleUpdate = async () => {
         const update = {
             eventId: id,
@@ -572,7 +604,7 @@ function ChiTietSuKien() {
                 // Xử lý lỗi khi cập nhật không thành công
             }
         }
-        if (activeStep === 1) {
+        if (activeStep === 1 ) {
             // 
             try {
                 const updateCheckinData = {
@@ -598,10 +630,8 @@ function ChiTietSuKien() {
                 console.error('Lỗi khi cập nhật:', error);
                 // Xử lý lỗi khi cập nhật không thành công
             }
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
         }
-        if (activeStep === 2) {
+        if (activeStep === 2 ) {
             // 
             try {
                 const updateCheckoutData = {
@@ -627,8 +657,6 @@ function ChiTietSuKien() {
                 console.error('Lỗi khi cập nhật:', error);
                 // Xử lý lỗi khi cập nhật không thành công
             }
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
         }
     };
 
@@ -1032,8 +1060,8 @@ function ChiTietSuKien() {
                                                                 )}
                                                             </>
                                                         )}
-                                                       
-                                                        {index !== 1 && (
+
+                                                        {(activeStep === 0 || (activeStep === 1 && bloodStatus !== '0') || (bloodStatus !== '0')) && (
                                                             <div style={{ marginTop: 12 }}>
                                                                 <Button
                                                                     variant="contained"
@@ -1047,7 +1075,7 @@ function ChiTietSuKien() {
                                                             </div>
                                                         )}
 
-                                                        {index === 1 && bloodStatus === '0' && (
+                                                        {activeStep === 1 && bloodStatus === '0' && (
                                                             <Typography variant="h8" color="error">
                                                                 Không đủ điều kiện hiến máu
                                                             </Typography>
