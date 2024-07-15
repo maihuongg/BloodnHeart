@@ -56,10 +56,28 @@ function ChiTietSuKien() {
     const [reward, setReward] = useState(0);
     const [show, setShow] = useState(false);
     const [show1, setShow1] = useState(false);
+    const [show2, setShow2] = useState(false);
+    const [show3, setShow3] = useState(false);
+    const [show4, setShow4] = useState(false);
     const [userid, setUserid] = useState("");
     const [status, setStatus] = useState("-1");
     const handleClose = () => setShow(false);
-    const handleClose1 = () => setShow1(false);
+    const handleClose1 = () => {
+        setShow1(false);
+        setRefresh(true);
+    }
+    const handleShow2 = () => setShow2(true);
+    const handleClose2 = () => setShow2(false);
+    const handleClose3 = () => setShow3(false);
+    const handleShow4 = () => {
+        setShow3(false);
+        setShow4(true);
+        setRefresh(false);
+    }
+    const handleClose4 = () => setShow4(false);
+    const [dateRegister, setDateRegister] = useState("");
+    const [amount_blood, setAmountblood] = useState(350);
+    const [min, setMin] = useState("");
     const [refresh, setRefresh] = useState(false);
     const [dataEventStatistic, setDataEventStatistic] = useState(null);
     const [eventDetailAmountBlood, setEventDetailAmountBlood] = useState(null)
@@ -78,6 +96,17 @@ function ChiTietSuKien() {
             setDate_end(moment(event.date_end).format('YYYY-MM-DD'));
         }
     }, [event]);
+
+    useEffect(() => {
+        const currentDate = new Date();
+        const minDate = new Date(event.date_start);
+        if (currentDate < minDate) {
+            setMin(new Date(event.date_start).toISOString().split('T')[0]);
+        } else {
+            setMin(new Date().toISOString().split('T')[0]);
+        }
+        console.log("date", min);
+    }, [setMin]);
 
     useEffect(() => {
         if (refresh) {
@@ -449,7 +478,7 @@ function ChiTietSuKien() {
             } else {
                 const dataUserProfile = await response1.json();
                 const blood_status = dataUserProfile.blood_status;
-                console.log("blood_status:",blood_status)
+                console.log("blood_status:", blood_status)
                 const status_user = dataUserProfile.status_user;
                 setBloodStatus(blood_status)
                 if (blood_status == null) setActiveStep(0);
@@ -604,7 +633,7 @@ function ChiTietSuKien() {
                 // Xử lý lỗi khi cập nhật không thành công
             }
         }
-        if (activeStep === 1 ) {
+        if (activeStep === 1) {
             // 
             try {
                 const updateCheckinData = {
@@ -631,7 +660,7 @@ function ChiTietSuKien() {
                 // Xử lý lỗi khi cập nhật không thành công
             }
         }
-        if (activeStep === 2 ) {
+        if (activeStep === 2) {
             // 
             try {
                 const updateCheckoutData = {
@@ -667,6 +696,74 @@ function ChiTietSuKien() {
     const handleReset = () => {
         setActiveStep(0);
     };
+    const handleAddUserNotAccount = async (e) => {
+        e.preventDefault();
+        const user = {
+            cccd: cccd,
+            fullName: fullName,
+            gender: gender,
+            birthDay: birthDay,
+            bloodgroup: bloodgroup,
+            address: address_user,
+            email: email,
+            phone: phone
+        };
+        try {
+            const response = await fetch(`${baseUrl}/v1/hospital/addusernotaccount`, {
+                method: 'POST',
+                body: JSON.stringify(user),
+                headers: {
+                    'Content-Type': 'application/json',
+                    token: `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                showNotificationErr("Đăng ký thất bại!");
+            } else {
+                const data = await response.json();
+                setUserid(data._id);
+                setShow3(true);
+            }
+        } catch (error) {
+
+        }
+    }
+    const handleRegisterEvent = async (e) => {
+        e.preventDefault();
+        if (isHospital) {
+            const register = {
+                eventId: event._id,
+                userId: userid,
+                bloodGroup: bloodgroup,
+                dateRegister: dateRegister,
+                amount_blood: amount_blood,
+            };
+            try {
+                const response = await fetch(`${baseUrl}/v1/hospital/event/register`, {
+                    method: 'POST',
+                    body: JSON.stringify(register),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    setShow(false);
+                    showNotificationErr(err.message);
+                } else {
+                    setShow4(false);
+                    setRefresh(true);
+                    showNotification("Đăng ký thành công!");
+                }
+            } catch (error) {
+                showNotificationErr("Đăng ký thất bại!");
+            }
+
+        } else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
+
+    }
     return (
         <>
             <div className="container-scroller">
@@ -875,10 +972,16 @@ function ChiTietSuKien() {
                                     <div className="card-body">
                                         <div className="row align-items-center mx-auto">
                                             <h3>Danh sách người đăng ký sự kiện</h3>
-                                            <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text ml-auto">
-                                                <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
-                                                Export to Excel
-                                            </button>
+                                            <div style={{ marginLeft: "500px" }}>
+                                                <button type="button" onClick={handleShow2} class="btn btn-outline-primary btn-icon-text mx-2">
+                                                    <i class="mdi mdi-file-export btn-icon-prepend" fontSize={24}></i>
+                                                    Thêm đăng ký
+                                                </button>
+                                                <button type="button" onClick={handleExport} class="btn btn-outline-success btn-icon-text">
+                                                    <i class="mdi mdi-magnify btn-icon-prepend" fontSize={24}></i>
+                                                    Export to Excel
+                                                </button>
+                                            </div>
                                         </div>
                                         <br />
 
@@ -1129,6 +1232,275 @@ function ChiTietSuKien() {
                                         <a className="btn btn-sm btn-primary btn-icon-prepend text-white float-right" onClick={handleClose1}>
                                             Hủy
                                         </a>
+                                    </div>
+                                </Modal.Body>
+                            </Modal>
+                            <Modal show={show2} onHide={handleClose2}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Điền thông tin người đăng ký</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <form onSubmit={handleAddUserNotAccount}>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">CCCD/CMND/Số định danh</label>
+                                            <input
+                                                type="text"
+                                                className="form-control border-1"
+                                                required="required"
+                                                onChange={(e) => setCCCD(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Họ và tên(*)</label>
+                                            <input
+                                                type="text"
+                                                className="form-control border-1"
+                                                placeholder="VD: Nguyễn Văn A"
+                                                required="required"
+                                                onChange={(e) => setfullName(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Ngày sinh(*)</label>
+                                            <input
+                                                type="date"
+                                                className="form-control border-1"
+                                                onChange={(e) => setbirthDay(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Giới tính(*)</label>
+                                            <select className="form-control" name="gender" required onChange={(e) => setgender(e.target.value)}>
+                                                <option value="" disabled selected>Chọn giới tính</option>
+                                                <option value="Nam">Nam</option>
+                                                <option value="Nữ">Nữ</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Nhóm máu(*)</label>
+                                            <p style={{ margin: "0px 0px 0px", fontStyle: "italic" }}>Chọn 1 trong các nhóm A, B, AB, O, Rh+, Rh-</p>
+                                            <p style={{ margin: "0px 0px 0px", fontStyle: "italic" }}>Nếu chưa biết nhóm máu vui lòng chọn "Không rõ"</p>
+                                            <select className="form-control" name="bloodType" required onChange={(e) => setbloodgroup(e.target.value)}>
+                                                <option value="" disabled selected>Chọn nhóm máu</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                                <option value="AB">AB</option>
+                                                <option value="O">O</option>
+                                                <option value="Rh+">Rh+</option>
+                                                <option value="Rh-">Rh-</option>
+                                                <option value="Không rõ">Không rõ</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Địa chỉ liên lạc</label>
+                                            <input
+                                                type="text"
+                                                className="form-control border-1"
+                                                placeholder="VD: Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM"
+                                                required="required"
+                                                onChange={(e) => setaddressuser(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Số điện thoại</label>
+                                            <input
+                                                type="number"
+                                                className="form-control border-1"
+                                                placeholder="VD: 0303030303"
+                                                required="required"
+                                                onChange={(e) => setphone(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-control-label label">Email</label>
+                                            <input
+                                                type="email"
+                                                className="form-control border-1"
+                                                placeholder="VD: a@gmail.com"
+                                                required="required"
+                                                onChange={(e) => setemail(e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Button variant="contained" color="primary" type="submit" className="float-right" onClick={handleClose2}>
+                                                Tiếp tục
+                                            </Button>
+                                            <Button variant="contained" color="secondary" className="float-right btnclose mx-2" onClick={handleClose2}>
+                                                Hủy
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </Modal.Body>
+                            </Modal>
+                            <Modal show={show3} onHide={handleClose3}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Đăng ký tham gia sự kiện</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <div className="infor_box">
+                                        <div className="row padding">
+                                            <div className="col-lg-4">
+                                                <label>Chọn Ngày:</label>
+                                            </div>
+                                            <input
+                                                type="date"
+                                                className="form-control border-1"
+                                                placeholder="VD: 01/01/2000"
+                                                required="required"
+                                                min={min}
+                                                max={(new Date(event.date_end)).toISOString().split('T')[0]}
+                                                style={{ width: 500 }}
+                                                onChange={(e) => setDateRegister(e.target.value)}
+                                            />
+                                        </div>
+                                        <br />
+                                        <div className="row padding">
+                                            <div className="col-lg-4">
+                                                <label>Chọn lượng máu:</label>
+                                            </div>
+                                            <select name="amount_blood" required defaultValue={amount_blood} onChange={(e) => setAmountblood(e.target.value)}>
+                                                <option value={350}>350 ml</option>
+                                                <option value={250}>250 ml</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <Button variant="contained" color="primary" className=" btn-primary float-right" onClick={handleShow4}>
+                                                Tiếp tục
+                                            </Button>
+                                            <Button variant="contained" color="secondary" className="float-right btn-secondary mx-2" onClick={handleClose3}>
+                                                Hủy
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
+                            </Modal>
+                            <Modal show={show4} onHide={handleClose4}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Xác thực thông tin đăng ký</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <div className="infor_box">
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    CCCD/CMND:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{cccd}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Họ và tên:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{fullName}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Giới tính:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{gender}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Ngày sinh:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{moment(birthDay).format('DD-MM-YYYY')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Nhóm máu:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{bloodgroup}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Địa chỉ liên lạc:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{address_user}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Email:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{email}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Số điện thoại:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{phone}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Sự kiện đăng ký:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{event.eventName}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Ngày đăng ký hiến máu:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{moment(dateRegister).format('DD-MM-YYYY')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="row padding">
+                                            <div className="col-lg-5">
+                                                <li>
+                                                    Lượng máu đăng ký hiến:
+                                                </li>
+                                            </div>
+                                            <div className="col-lg-7 break">
+                                                <p style={{ margin: "0px 0px 0px" }}>{amount_blood} ml</p>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <br />
+                                    <div>
+                                        <Button variant="contained" color="primary" type="button" className="float-right" onClick={handleRegisterEvent}>
+                                            Xác nhận
+                                        </Button>
+                                        <Button variant="contained" color="secondary" className="float-right mx-2" onClick={handleClose4}>
+                                            Hủy
+                                        </Button>
                                     </div>
                                 </Modal.Body>
                             </Modal>
