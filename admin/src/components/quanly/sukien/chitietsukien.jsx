@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../dashboard/navbar";
 import Sidebar from "../../dashboard/sidebar";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
 import { Table } from "antd";
@@ -17,6 +17,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import Chart from 'chart.js/auto';
 import * as XLSX from 'xlsx';
 import baseUrl from "../../../utils/constant";
+import {
+    Stepper,
+    Step,
+    StepLabel,
+    StepContent,
+    Button, Box, Paper,
+    Typography,
+    TextField,
+    MenuItem
+} from '@mui/material';
 function ChiTietSuKien() {
 
     const currentAdmin = useSelector((state) => state.auth.login.currentAdmin);
@@ -56,18 +66,21 @@ function ChiTietSuKien() {
     const [dataEventBlood, setDataEventBlood] = useState(null);
     const [date_start, setDate_start] = useState('');
     const [date_end, setDate_end] = useState('');
-  
+
+    const [activeStep, setActiveStep] = useState(1);
+    const [bloodStatus, setBloodStatus] = useState('');
+    const [description, setDescription] = useState('');
     useEffect(() => {
-      if (event && event.date_start) {
-        setDate_start(moment(event.date_start).format('YYYY-MM-DD'));
-      }
-      if (event && event.date_end) {
-        setDate_end(moment(event.date_end).format('YYYY-MM-DD'));
-      }
+        if (event && event.date_start) {
+            setDate_start(moment(event.date_start).format('YYYY-MM-DD'));
+        }
+        if (event && event.date_end) {
+            setDate_end(moment(event.date_end).format('YYYY-MM-DD'));
+        }
     }, [event]);
-  
+
     useEffect(() => {
-        if(refresh){
+        if (refresh) {
             const fetchData = async () => {
                 dispatch(eventdetailStart());
                 try {
@@ -84,7 +97,7 @@ function ChiTietSuKien() {
                         const dataDetail = await responseDetail.json();
                         dispatch(eventdetailSuccess(dataDetail));
                     }
-    
+
                     // Fetch event statistics
                     const responseStatistic = await fetch(`${baseUrl}/v1/admin/statistic/event/${id}`, {
                         headers: {
@@ -97,7 +110,7 @@ function ChiTietSuKien() {
                         const dataEventStatistic = await responseStatistic.json();
                         setDataEventStatistic(dataEventStatistic);
                     }
-    
+
                     // Fetch event amount blood
                     const responseAmountBlood = await fetch(`${baseUrl}/v1/admin/statistic/event/amountblood/${id}`, {
                         headers: {
@@ -115,7 +128,7 @@ function ChiTietSuKien() {
                     console.error("Error fetching data:", error);
                 }
             };
-    
+
             fetchData();
         }
         const fetchData = async () => {
@@ -284,8 +297,8 @@ function ChiTietSuKien() {
                 } else {
                     if (status === "-1" || status === "0") {
                         return (
-                            <Button className="btn btn-sm btn-outline-primary btn-icon-prepend text-white"
-                                onClick={() => handleOpenModal(record.userid)}>Cập nhật</Button>
+                            <a className="btn btn-sm btn-primary btn-icon-prepend text-white"
+                                onClick={() => handleOpenModal(record.userid)}>Cập nhật</a>
                         )
                     } else {
                         return <span>Không xác định</span>;
@@ -375,10 +388,50 @@ function ChiTietSuKien() {
         else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
     }
 
-    const handleOpenModal = (userId) => {
+    const handleOpenModal = async (userId) => {
         setUserid(userId);
+        console.log("UserID selected: ", userId)
         setRefresh(false);
         setShow1(true);
+
+
+        try {
+            const response1 = await fetch(`${baseUrl}/v1/hospital/find-user-in-event/?eventId=${id}&userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (!response1.ok) {
+                const err = await response1.json();
+                // showNotificationErr(err.message);
+            } else {
+                const dataUserProfile = await response1.json();
+                console.log('dataUserProfile:', dataUserProfile)
+
+                const blood_status = dataUserProfile.blood_status;
+                console.log(' blood_status: ', blood_status)
+                const status_user = dataUserProfile.status_user;
+                if (blood_status == null)
+                    setActiveStep(0);
+                if (blood_status == 1 && status_user == -1) {
+                    setActiveStep(1);
+                }
+                if (blood_status == 1 && status_user == 0) {
+                    setActiveStep(2);
+                }
+                if (blood_status == 1 && status_user == 1) {
+                    setActiveStep(3);
+                }
+                if (bloodStatus == 0) {
+                    setActiveStep(1); // Directly set to end step if not qualified
+                }
+
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     const handleUpdate = async () => {
@@ -470,6 +523,121 @@ function ChiTietSuKien() {
         }
         else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
 
+    };
+    // STEPPER
+    const steps = [
+        {
+            label: 'Kiểm tra tiêu chuẩn máu',
+            description: `Đang kiểm tra chất lượng máu của người hiến.`,
+        },
+        {
+            label: 'Đang chờ hiến máu',
+            description: 'Người dùng đang chờ để hiến máu.',
+        },
+        {
+            label: 'Đang hiến máu',
+            description: 'Người dùng đang hiến máu.',
+        },
+        {
+            label: 'Đã hiến máu xong',
+            description: 'Người dùng đã hoàn thành quá trình hiến máu.',
+        },
+    ];
+
+    const handleNext = async (e) => {
+
+        // 
+        if (activeStep === 0) {
+            // Gọi API để cập nhật blood_status và description
+            try {
+                const updateBloodStatus = {
+                    eventId: id,
+                    userId: userid,
+                    bloodStatus: bloodStatus,
+                    description: description,
+                }
+                const response = await fetch(`${baseUrl}/v1/hospital/update-blood-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json', token: `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(updateBloodStatus),
+                });
+                if (!response.ok) {
+                    throw new Error('Cập nhật không thành công');
+                }
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            } catch (error) {
+                console.error('Lỗi khi cập nhật:', error);
+                // Xử lý lỗi khi cập nhật không thành công
+            }
+        }
+        if (activeStep === 1) {
+            // 
+            try {
+                const updateCheckinData = {
+                    eventId: id,
+                    userId: userid,
+                    checkin_time: new Date(), // Assuming this is the current time
+                    status_user: 0, // Assuming this is the status update value
+                };
+
+                const response = await fetch(`${baseUrl}/v1/hospital/update-checkin`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json', token: `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(updateCheckinData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Cập nhật không thành công');
+                }
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            } catch (error) {
+                console.error('Lỗi khi cập nhật:', error);
+                // Xử lý lỗi khi cập nhật không thành công
+            }
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+        }
+        if (activeStep === 2) {
+            // 
+            try {
+                const updateCheckoutData = {
+                    eventId: id,
+                    userId: userid,
+                    checkout_time: new Date(), // Assuming this is the current time
+                    status_user: 1, // Assuming this is the status update value
+                };
+
+                const response = await fetch(`${baseUrl}/v1/hospital/update-checkout`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json', token: `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(updateCheckoutData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Cập nhật không thành công');
+                }
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            } catch (error) {
+                console.error('Lỗi khi cập nhật:', error);
+                // Xử lý lỗi khi cập nhật không thành công
+            }
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+        }
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
     };
     return (
         <>
@@ -796,9 +964,9 @@ function ChiTietSuKien() {
 
                                     <br />
                                     <div>
-                                        <Button variant="secondary" className="float-right" onClick={handleClose}>
+                                        <a variant="secondary" className="float-right" onClick={handleClose}>
                                             Quay lại
-                                        </Button>
+                                        </a>
                                     </div>
                                 </Modal.Body>
                             </Modal>
@@ -807,7 +975,7 @@ function ChiTietSuKien() {
                                     <Modal.Title>Cập nhật trạng thái người dùng</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <div className="card" style={{ height: "100%" }}>
+                                    {/* <div className="card" style={{ height: "100%" }}>
                                         <div className="card-body">
                                             <div className="row padding">
                                                 <div className="col-lg-4">
@@ -820,15 +988,119 @@ function ChiTietSuKien() {
                                                 </select>
                                             </div>
                                         </div>
+                                    </div> */}
+                                    {/* stepp cũ  */}
+                                    <div>
+                                        <Stepper activeStep={activeStep} orientation="vertical">
+                                            {steps.map((step, index) => (
+                                                <Step key={step.label}>
+                                                    <StepLabel>{step.label}</StepLabel>
+                                                    <StepContent>
+                                                        <Typography>{step.description}</Typography>
+                                                        {index === 0 && (
+                                                            <>
+                                                                <TextField
+                                                                    select
+                                                                    label="Chọn trạng thái máu"
+                                                                    value={bloodStatus}
+                                                                    onChange={(e) => setBloodStatus(e.target.value)}
+                                                                    fullWidth
+                                                                    margin="normal"
+                                                                >
+                                                                    <MenuItem value="1">Máu đạt tiêu chuẩn</MenuItem>
+                                                                    <MenuItem value="0">Máu không đạt tiêu chuẩn</MenuItem>
+                                                                </TextField>
+                                                                {bloodStatus === '0' && (
+                                                                    <TextField
+                                                                        select
+                                                                        label="Lý do không đạt tiêu chuẩn"
+                                                                        value={description}
+                                                                        onChange={(e) => setDescription(e.target.value)}
+                                                                        fullWidth
+                                                                        margin="normal"
+                                                                    >
+                                                                        <MenuItem value="Vừa uống rượu, bia">Vừa uống rượu, bia</MenuItem>
+                                                                        <MenuItem value="Có các bệnh mãn tính">Có các bệnh mãn tính</MenuItem>
+                                                                        <MenuItem value="Đang mắc các bệnh cấp tính">Đang mắc các bệnh cấp tính</MenuItem>
+                                                                        <MenuItem value="Đã nhiễm nhiễm HIV, viêm gan B, C">Đã nhiễm nhiễm HIV, viêm gan B, C</MenuItem>
+                                                                        <MenuItem value="Có nguy cơ cao lây nhiễm HIV, viêm gan B, C">Có nguy cơ cao lây nhiễm HIV, viêm gan B, C</MenuItem>
+                                                                        <MenuItem value="Nghiện ma túy">Nghiện ma túy</MenuItem>
+                                                                        <MenuItem value="Có quan hệ tình dục không an toàn">Có quan hệ tình dục không an toàn</MenuItem>
+                                                                        <MenuItem value="Nam giới có quan hệ tình dục với người cùng giới khác">Nam giới có quan hệ tình dục với người cùng giới khác</MenuItem>
+                                                                        <MenuItem value="Người đang bị bệnh thiếu máu">Người đang bị bệnh thiếu máu</MenuItem>
+                                                                    </TextField>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                       
+                                                        {index !== 1 && (
+                                                            <div style={{ marginTop: 12 }}>
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    onClick={handleNext}
+                                                                    style={{ marginRight: 8 }}
+                                                                >
+                                                                    {activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'}
+                                                                </Button>
+
+                                                            </div>
+                                                        )}
+
+                                                        {index === 1 && bloodStatus === '0' && (
+                                                            <Typography variant="h8" color="error">
+                                                                Không đủ điều kiện hiến máu
+                                                            </Typography>
+                                                        )}
+                                                        <div style={{ marginTop: 12 }}>
+                                                            <Button disabled={activeStep === 0} onClick={handleBack}>
+                                                                Quay lại
+                                                            </Button></div>
+                                                    </StepContent>
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+
+                                        {activeStep === steps.length - 1 && (
+                                            // <Paper square elevation={0} style={{ padding: 20, textAlign: 'center' }}>
+                                            //     <Typography variant="h8" gutterBottom>
+                                            //         Quá trình hoàn thành
+                                            //     </Typography>
+
+
+                                            //     <Button
+                                            //         variant="contained"
+                                            //         color="primary"
+                                            //         onClick={handleReset}
+                                            //         style={{ marginLeft: 10 }}
+                                            //     >
+                                            //         Đặt lại
+                                            //     </Button>
+
+                                            // </Paper>
+                                            <Paper square elevation={0} style={{ padding: 20, textAlign: 'center' }}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    {bloodStatus === '0' ? 'Không đủ tiêu chuẩn hiến máu' : 'Quá trình hoàn thành'}
+                                                </Typography>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={handleReset}
+                                                    style={{ marginTop: 20 }}
+                                                >
+                                                    Đặt lại
+                                                </Button>
+
+                                            </Paper>
+                                        )}
                                     </div>
+
+
                                     <br />
                                     <div>
-                                        <Button variant="primary" type="button" className="float-right" onClick={handleUpdate}>
-                                            Cập nhật
-                                        </Button>
-                                        <Button variant="secondary" className="float-right btnclose" onClick={handleClose1}>
+                                        <a className="btn btn-sm btn-primary btn-icon-prepend text-white float-right" onClick={handleClose1}>
                                             Hủy
-                                        </Button>
+                                        </a>
                                     </div>
                                 </Modal.Body>
                             </Modal>
