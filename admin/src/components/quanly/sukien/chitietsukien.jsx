@@ -698,36 +698,38 @@ function ChiTietSuKien() {
     };
     const handleAddUserNotAccount = async (e) => {
         e.preventDefault();
-        const user = {
-            cccd: cccd,
-            fullName: fullName,
-            gender: gender,
-            birthDay: birthDay,
-            bloodgroup: bloodgroup,
-            address: address_user,
-            email: email,
-            phone: phone
-        };
-        try {
-            const response = await fetch(`${baseUrl}/v1/hospital/addusernotaccount`, {
-                method: 'POST',
-                body: JSON.stringify(user),
-                headers: {
-                    'Content-Type': 'application/json',
-                    token: `Bearer ${accessToken}`
+        if (isHospital) {
+            const user = {
+                cccd: cccd,
+                fullName: fullName,
+                gender: gender,
+                birthDay: birthDay,
+                bloodgroup: bloodgroup,
+                address: address_user,
+                email: email,
+                phone: phone
+            };
+            try {
+                const response = await fetch(`${baseUrl}/v1/hospital/addusernotaccount`, {
+                    method: 'POST',
+                    body: JSON.stringify(user),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        token: `Bearer ${accessToken}`
+                    }
+                });
+    
+                if (!response.ok) {
+                    showNotificationErr("Đăng ký thất bại!");
+                } else {
+                    const data = await response.json();
+                    setUserid(data._id);
+                    setShow3(true);
                 }
-            });
-
-            if (!response.ok) {
+            } catch (error) {
                 showNotificationErr("Đăng ký thất bại!");
-            } else {
-                const data = await response.json();
-                setUserid(data._id);
-                setShow3(true);
             }
-        } catch (error) {
-
-        }
+        } else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
     }
     const handleRegisterEvent = async (e) => {
         e.preventDefault();
@@ -923,6 +925,74 @@ function ChiTietSuKien() {
                                                     <div className="card-body">
                                                         <h5 className="mb-2">Đã hoàn thành hiến máu</h5>
                                                         <h3 className="fs-30">{dataEventStatistic?.countStatusUser?.daxong ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-green text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Tổng số người đăng ký trên hệ thống</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.usersWithAccountId ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-danger text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Chưa hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserAccount?.chuahien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đang chờ hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserAccount?.danghien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-dark-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đã hoàn thành hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserAccount?.daxong ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-green text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Tổng số người đăng ký vãng lai</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.usersWithNonAccountId ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-danger text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Chưa hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserNotAccount?.chuahien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-light-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đang chờ hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserNotAccount?.danghien ?? 'Loading...'}</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 mb-2 stretch-card transparent">
+                                                <div className="card card-dark-blue text-center">
+                                                    <div className="card-body">
+                                                        <h5 className="mb-2">Đã hoàn thành hiến máu</h5>
+                                                        <h3 className="fs-30">{dataEventStatistic?.countStatusUserNotAccount?.daxong ?? 'Loading...'}</h3>
                                                     </div>
                                                 </div>
                                             </div>
