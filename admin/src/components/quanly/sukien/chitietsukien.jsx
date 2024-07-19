@@ -566,25 +566,85 @@ function ChiTietSuKien() {
     const handleGoBack = () => {
         navigate("/su-kien");
     };
+    // const handleExport = () => {
+    //     if (isHospital) {
+    //         const wb = XLSX.utils.book_new();
+    //         const exportData = data.map(item => ({
+    //             'Tên người đăng ký': item.username,
+    //             'Ngày đăng ký hiến máu': item.dateregister,
+    //             'Nhóm máu': item.bloodgroup,
+    //             'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
+    //             'Số lượng máu (ml)': item.amount_blood,
+    //         }));
+    //         const ws = XLSX.utils.json_to_sheet(exportData);
+    //         XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký sự kiện')
+
+    //         // Tạo file Excel và tải xuống
+    //         XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
+    //     }
+    //     else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
+
+    // };
     const handleExport = () => {
         if (isHospital) {
             const wb = XLSX.utils.book_new();
             const exportData = data.map(item => ({
                 'Tên người đăng ký': item.username,
-                'Ngày đăng ký hiến máu': item.dateregister,
+                'Ngày đăng ký hiến máu': moment(item.dateregister).format('DD-MM-YYYY'),
                 'Nhóm máu': item.bloodgroup,
                 'Trạng thái': item.status_user === "1" ? 'Đã hiến' : item.status_user === "0" ? 'Đang chờ' : 'Chưa hiến',
                 'Số lượng máu (ml)': item.amount_blood,
             }));
             const ws = XLSX.utils.json_to_sheet(exportData);
-            XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký sự kiện')
-
-            // Tạo file Excel và tải xuống
+    
+            // Set column widths
+            const wscols = [
+                { wch: 20 }, // Tên người đăng ký
+                { wch: 20 }, // Ngày đăng ký hiến máu
+                { wch: 10 }, // Nhóm máu
+                { wch: 10 }, // Trạng thái
+                { wch: 20 }, // Số lượng máu (ml)
+            ];
+            ws['!cols'] = wscols;
+    
+            // Set header styles
+            const headerStyle = {
+                font: { bold: true },
+                alignment: { horizontal: 'center', vertical: 'center' },
+                fill: { fgColor: { rgb: "FFFF00" } }
+            };
+            const headerCells = ['A1', 'B1', 'C1', 'D1', 'E1'];
+            headerCells.forEach(cell => {
+                if (ws[cell]) {
+                    ws[cell].s = headerStyle;
+                }
+            });
+    
+            // Add borders to cells
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cell_address = { c: C, r: R };
+                    const cell_ref = XLSX.utils.encode_cell(cell_address);
+                    if (!ws[cell_ref]) continue;
+                    ws[cell_ref].s = ws[cell_ref].s || {};
+                    ws[cell_ref].s.border = {
+                        top: { style: "thin", color: { rgb: "000000" } },
+                        bottom: { style: "thin", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "000000" } },
+                        right: { style: "thin", color: { rgb: "000000" } }
+                    };
+                }
+            }
+    
+            XLSX.utils.book_append_sheet(wb, ws, 'Danh sách đăng ký sự kiện');
+    
+            // Create Excel file and download
             XLSX.writeFile(wb, 'danhsachdangkysukien.xlsx');
         }
-        else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !")
-
+        else showNotificationErr("Chức năng chỉ dành cho bệnh viện hợp tác !");
     };
+    
     // STEPPER
     const steps = [
         {
